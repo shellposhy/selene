@@ -19,6 +19,12 @@
 		</license>
 	</licenses>
 
+	<!-- modules -->
+	<modules>
+		<module>selene-common</module>
+		<module>selene-searching</module>
+	</modules>
+
 	<!-- properties -->
 	<properties>
 		<!-- Spring -->
@@ -49,7 +55,7 @@
 		<paoding_version>1.0</paoding_version>
 		<lucene_tool_version>1.0</lucene_tool_version>
 		<!-- Lucene Service -->
-		<index_service_version>1.1</index_service_version>
+		<index_service_version>1.0</index_service_version>
 		<!-- Zookeeper -->
 		<zookeeper_version>3.4.13</zookeeper_version>
 		<!-- Thumbnailator -->
@@ -62,7 +68,7 @@
 		<jodd_version>3.6.3</jodd_version>
 		<!-- Tools -->
 		<objenesis_version>2.6</objenesis_version>
-		<lemon_version>2.9</lemon_version>
+		<lemon_version>1.1</lemon_version>
 		<cglib_version>3.1</cglib_version>
 		<commons-codec.version>1.12</commons-codec.version>
 		<!--Database -->
@@ -229,23 +235,18 @@
 				<version>${lucene_version}</version>
 			</dependency>
 			<dependency>
-				<groupId>bangyiba.pepper</groupId>
+				<groupId>nanshantec.pepper</groupId>
 				<artifactId>paoding-analyzer</artifactId>
 				<version>${paoding_version}</version>
 			</dependency>
-			<dependency>
-				<groupId>bangyiba.pepper</groupId>
-				<artifactId>lucene-tools</artifactId>
-				<version>${lucene_tool_version}</version>
-			</dependency>
 			<!-- Lucene Service -->
 			<dependency>
-				<groupId>bangyiba.pepper</groupId>
-				<artifactId>lucene-service</artifactId>
+				<groupId>nanshantec.pepper</groupId>
+				<artifactId>lucene-extension</artifactId>
 				<version>${index_service_version}</version>
 			</dependency>
 			<dependency>
-				<groupId>bangyiba.pepper</groupId>
+				<groupId>nanshantec.pepper</groupId>
 				<artifactId>lucene-spring</artifactId>
 				<version>${index_service_version}</version>
 			</dependency>
@@ -301,8 +302,8 @@
 				<version>${objenesis_version}</version>
 			</dependency>
 			<dependency>
-				<groupId>bangyiba.common</groupId>
-				<artifactId>lemmon</artifactId>
+				<groupId>nanshantec</groupId>
+				<artifactId>lemon</artifactId>
 				<version>${lemon_version}</version>
 			</dependency>
 			<dependency>
