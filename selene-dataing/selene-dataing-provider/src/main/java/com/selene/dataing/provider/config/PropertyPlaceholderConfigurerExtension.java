@@ -19,7 +19,7 @@ import static cn.com.lemon.base.Strings.isNullOrEmpty;
  */
 public class PropertyPlaceholderConfigurerExtension extends PropertyPlaceholderConfigurer {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyPlaceholderConfigurerExtension.class.getName());
-	private static final String SERVER_IP_AND_PORT_KEY = "hts.server.address";
+	private static final String SERVER_IP_AND_PORT_KEY = "dataing.server.address";
 
 	@Override
 	protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)

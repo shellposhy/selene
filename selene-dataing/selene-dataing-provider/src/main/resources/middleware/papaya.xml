@@ -19,11 +19,11 @@
 
 	<!-- papaya middleware -->
 	<bean id="serviceRegistry" class="com.nanshan.papaya.rpc.registry.ServiceRegistry">
-		<constructor-arg name="registryAddress" value="${portal.registry.address}" />
-		<constructor-arg name="registryPath" value="${portal.registry.path}" />
+		<constructor-arg name="registryAddress" value="${dataing.registry.address}" />
+		<constructor-arg name="registryPath" value="${dataing.registry.path}" />
 	</bean>
 	<bean id="rpcServer" class="com.nanshan.papaya.rpc.server.Server">
-		<constructor-arg name="serverAddress" value="${portal.server.address}" />
+		<constructor-arg name="serverAddress" value="${dataing.server.address}" />
 		<constructor-arg name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 </beans>
