@@ -28,6 +28,8 @@
 		<module>selene-computing</module>
 		<module>selene-logging</module>
 		<module>selene-outputting</module>
+		<module>selene-merchants</module>
+		<module>selene-dataing</module>
 	</modules>
 
 	<!-- properties -->

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.selene</groupId>
+		<artifactId>selene-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>selene-dataing</artifactId>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}</name>
+	<url>https://github.com/shellposhy/selene/selene-dataing</url>
+
+	<!-- Modules -->
+	<modules>
+		<module>selene-dataing-model</module>
+	</modules>
+
+	<!-- Dependencies -->
+	<dependencies>
+		<dependency>
+			<groupId>com.selene</groupId>
+			<artifactId>selene-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<!-- Properties -->
+	<properties>
+		<skip_maven_deploy>false</skip_maven_deploy>
+	</properties>
+</project>
