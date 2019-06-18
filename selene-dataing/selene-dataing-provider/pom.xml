@@ -102,7 +102,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.pandora.hts.provider.Bootstrap</mainClass>
+							<mainClass>com.selene.dataing.provider.Bootstrap</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

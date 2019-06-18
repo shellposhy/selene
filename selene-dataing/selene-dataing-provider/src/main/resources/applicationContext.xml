@@ -24,15 +24,16 @@
                     <value>classpath:config.properties</value>
                 </list>
             </property>
+            <property name="ignoreUnresolvablePlaceholders" value="true"/>
 	</bean>
 
 	<!-- data source -->
 	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
 		<!-- Mysql -->
-		<property name="driverClassName"><value>com.mysql.jdbc.Driver</value></property>
-		<property name="url"><value>jdbc:mysql://192.168.2.20:3306/selene-dataing?useUnicode=true&amp;characterEncoding=UTF-8</value></property>
-		<property name="username"><value>test</value></property>
-		<property name="password"><value>1234</value></property>
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://192.168.2.20:3306/selene-dataing?useUnicode=true&amp;characterEncoding=UTF-8"/>
+		<property name="username" value="test"/>
+		<property name="password" value="1234"/>
 		<property name="maxActive" value="100" />
 		<property name="maxIdle" value="10" />
 		<property name="defaultAutoCommit" value="false" />

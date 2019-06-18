@@ -30,112 +30,6 @@
 		<result property="updaterId" column="Updater_ID" />
 	</resultMap>
 	
-	<select id="findByName" resultMap="resultMap" parameterType="String">
-		<![CDATA[ SELECT * FROM data_field WHERE Name = #{name} ORDER BY Order_ID ]]>
-	</select>
-
-	<select id="findByCode" resultMap="resultMap" parameterType="String">
-		<![CDATA[ SELECT * FROM data_field WHERE Code = #{code}  ORDER BY Order_ID]]>
-	</select>
-	
-	<select id="findFieldsByDBId" resultMap="resultMap" parameterType="Integer">
-		<![CDATA[ SELECT f.* FROM data_field f, data_base d, data_base_field_map m WHERE m.Base_ID =d.ID AND m.Field_ID = f.ID AND d.ID = #{dbId} ]]>
-	</select>
-	
-	<select id="findByRequired" resultMap="resultMap" parameterType="boolean">
-		SELECT * FROM data_field WHERE Required = #{required} ORDER BY Order_ID
-	</select>
-	
-	<select id="findFieldsInEveryBase" resultMap="resultMap" parameterType="java.util.List">
-		SELECT DISTINCT f.* FROM data_field f WHERE f.ID IN 
-		(SELECT m.Field_ID FROM data_base d, data_base_field_map m
-		WHERE m.Base_ID = d.ID AND f.For_Order = #{forOrder} AND d.ID in
-		<foreach item="item" index="index" collection="baseIds" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-		GROUP BY m.Field_ID HAVING COUNT(m.Field_ID ) > #{size})
-	</select>
-	
-	<select id="findFieldsInBase" resultMap="resultMap" parameterType="Integer">
-		SELECT DISTINCT f.* FROM data_field f
-		WHERE f.ID IN (SELECT m.Field_ID FROM data_base d, data_base_field_map m
-		WHERE m.Base_ID = d.ID AND f.For_Order = #{forOrder} AND d.ID = #{baseId})
-	</select>
-	
-	<select id="findFieldsInBasesByAccess" resultMap="resultMap" parameterType="java.util.List">
-		SELECT DISTINCT f.* FROM data_field f
-		WHERE f.ID IN (SELECT m.Field_ID FROM data_base d, data_base_field_map m
-		WHERE m.Base_ID = d.ID AND f.Access_Type = #{accessType} AND d.ID in
-		<foreach item="item" index="index" collection="baseIds" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-		GROUP BY m.Field_ID HAVING COUNT(m.Field_ID ) > #{size})
-	</select>
-	
-	<select id="findFieldsInBaseByAccess" resultMap="resultMap" parameterType="Integer">
-		SELECT DISTINCT f.* FROM data_field f
-		WHERE f.ID IN (SELECT m.Field_ID FROM data_base d, data_base_field_map m
-		WHERE m.Base_ID = d.ID AND f.Access_Type = #{accessType} AND d.ID = #{baseId})
-	</select>
-	
-	<select id="findFieldsInBasesByAccesses" resultMap="resultMap" parameterType="java.util.List">
-		SELECT DISTINCT f.* FROM data_field f WHERE f.ID IN (
-		SELECT m.Field_ID FROM data_base d, data_base_field_map m
-		WHERE m.Base_ID = d.ID AND f.Access_Type = #{accessType} AND d.ID in
-		<foreach item="item" index="index" collection="baseIds" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-		GROUP BY m.Field_ID
-		)
-	</select>
-	
-	<select id="findByIsDisplayAndRequire" resultMap="resultMap" parameterType="java.util.Map">
-		SELECT * FROM data_field 
-		<where>
-			For_Display=#{forDisplay} AND Required=#{required}
-		</where>
-	</select>
-	
-	<select id="findByType" resultMap="resultMap">
-	    SELECT * FROM data_field WHERE Type=#{type}
-	</select>
-	
-	<select id="findByTypeAndForDisplay" resultMap="resultMap" parameterType="java.util.Map">
-	    SELECT * FROM data_field WHERE Type=#{type} AND For_Display=#{forDisplay}
-	</select>
-	
-	<select id="getByCode" resultMap="resultMap" parameterType="String">
-		<![CDATA[ SELECT * FROM data_field WHERE Code = #{code}]]>
-	</select>
-	
-	<select id="findFieldsByDBIds" resultMap="resultMap" parameterType="java.util.List">
-		SELECT DISTINCT f.* FROM data_field f, data_base d,data_base_field_map m
-		WHERE m.Base_ID =d.ID AND m.Field_ID = f.ID AND d.ID in
-		<foreach item="item" index="index" collection="baseIds" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-	</select>
-
-	<select id="findDisplayFieldsByDBId" resultMap="resultMap" parameterType="Integer">
-		<![CDATA[ SELECT f.* FROM data_field f, data_base_field_map m WHERE m.Field_ID = f.ID AND m.Base_ID = #{baseId} AND m.Is_Display <> 0 ]]>
-	</select>
-
-	<select id="find" resultMap="resultMap">
-		SELECT * FROM data_field WHERE ID=#{id}
-	</select>
-
-	<select id="findAll" resultMap="resultMap">
-		SELECT * FROM data_field ORDER BY Order_ID
-	</select>
-	
-	<select id="findFieldsByModelId" resultMap="resultMap" parameterType="Integer">
-		<![CDATA[ SELECT f.* FROM data_field f, column_model c, column_model_field_map m WHERE	m.Column_Model_ID =c.ID AND m.Field_ID = f.ID AND c.ID = #{modelId} ORDER BY Order_ID]]>
-	</select>
-	
-	<select id="findDisplayFieldsByModelId" resultMap="resultMap" parameterType="Integer">
-		<![CDATA[ SELECT DISTINCT f.* FROM data_field f LEFT JOIN  column_model_field_map m ON m.Field_ID = f.ID LEFT JOIN column_model c on m.Column_Model_ID =c.ID WHERE f.For_Display = 1 AND c.ID = #{modelId}  ORDER BY Order_ID]]>
-	</select>
-
 	<insert id="insert">
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -146,43 +40,10 @@
 		#{name},#{code},#{codeName},#{dataType},#{nosg},#{leng},#{prec},#{mand},#{uniq},#{multiValue},#{useEnum},#{indexType},#{indexStore},#{required},#{type},#{orderId},#{accessType},#{forDisplay},#{componentID},#{forOrder},#{memo},#{createTime},#{creatorId},#{updateTime},#{updaterId})
 	</insert>
 
-	<update id="update">
-		UPDATE data_field SET
-		Name = #{name},
-		Code = #{code},
-		Code_Name = #{codeName},
-		Data_Type = #{dataType},
-		Nosg = #{nosg},
-		Leng = #{leng},
-		Prec = #{prec},
-		Mand = #{mand},
-		Uniq = #{uniq},
-		Multi_Value = #{multiValue},
-		Use_Enum =#{useEnum},
-		Index_Type = #{indexType},
-		Index_Store = #{indexStore},
-		Required=#{required},
-		Type =#{type},
-		For_Display=#{forDisplay},
-		Component_ID = #{componentID},
-		For_Order = #{forOrder},
-		Order_ID =#{orderId},
-		Access_Type=#{accessType},
-		Memo =#{memo},
-		Create_Time =#{createTime},
-		Creator_ID =#{creatorId},
-		Update_Time =#{updateTime},
-		Updater_ID = #{updaterId}
-	</update>
-
-	<delete id="delete">
-		DELETE FROM data_field WHERE ID=#{id}
-	</delete>
-
 	<select id="findByPage" parameterType="java.util.Map" resultMap="resultMap">
 		SELECT * FROM data_field
 		<if test="qs!=null">
-			WHERE Name like "%"#{qs}"%" 
+			WHERE Name like "%"#{name}"%" 
 		</if>
 		 limit #{first},#{size}
 	</select>
