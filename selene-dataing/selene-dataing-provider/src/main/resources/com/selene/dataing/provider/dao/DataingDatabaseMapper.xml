@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.dataing.provider.dao.DataingDatabaseMapper">
+	<resultMap id="resultMap" type="com.selene.dataing.model.DataingDatabase">
+		<result property="id" column="ID" />
+		<result property="name" column="Name" />
+		<result property="code" column="Code" />
+		<result property="pathCode" column="Path_Code" />
+		<result property="type" column="Type" />
+		<result property="nodeType" column="Node_Type" />
+		<result property="parentId" column="Parent_ID" />
+		<result property="modelId" column="Model_ID" />
+		<result property="tables" column="Tables" />
+		<result property="status" column="Status" />
+		<result property="orderId" column="Order_ID" />
+		<result property="taskId" column="Task_ID" />
+		<result property="dataUpdateTime" column="Data_Update_Time" />
+		<result property="createTime" column="Create_Time" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="updateTime" column="Update_Time" />
+		<result property="updaterId" column="Updater_ID" />
+	</resultMap>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO data_base(
+			Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Tables,Status,Order_ID,
+			Task_ID,Data_Update_Time,Create_Time,Creator_ID,Update_Time,Updater_ID
+		)
+		VALUES(
+			#{name},#{code},#{pathCode},#{type},#{nodeType},#{parentId},#{modelId},#{tables},#{status},#{orderId},
+			#{taskId},#{dataUpdateTime},#{createTime},#{creatorId},#{updateTime},#{updaterId}
+		)
+	</insert>
+</mapper>
