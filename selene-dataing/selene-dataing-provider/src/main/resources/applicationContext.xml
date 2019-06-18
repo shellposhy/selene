@@ -62,4 +62,5 @@
 	<import resource="classpath:middleware/flyway.xml" />
 	<import resource="classpath:middleware/mybatis.xml" />
 	<import resource="classpath:middleware/papaya.xml" />
+	<import resource="classpath:middleware/redis.xml" />
 </beans>

@@ -11,5 +11,8 @@
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EDataFieldType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EDataType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.ELuceneIndexType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.ELibraryNodeType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.ELibraryType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EStatus" />
 	</typeHandlers>
 </configuration>
