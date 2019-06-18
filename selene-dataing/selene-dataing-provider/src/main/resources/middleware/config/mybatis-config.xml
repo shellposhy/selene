@@ -4,6 +4,12 @@
 		"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeHandlers>
+		<!-- Base  Enum -->
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="cn.com.lemon.common.enums.EGender" />
+		<!-- Dataing Enum -->
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EAccessType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EDataFieldType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EDataType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.ELuceneIndexType" />
 	</typeHandlers>
 </configuration>

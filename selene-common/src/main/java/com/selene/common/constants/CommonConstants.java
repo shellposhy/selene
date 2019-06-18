@@ -143,5 +143,4 @@ public interface CommonConstants {
 
 	String PORT_KEY = "port";
 
-	String DUBBO_IP_TO_BIND = "DUBBO_IP_TO_BIND";
 }

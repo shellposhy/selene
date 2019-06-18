@@ -12,14 +12,14 @@ import java.util.Enumeration;
  * @author shaobo shih
  * @version 1.0
  */
-public final class IPs {
+public final class Protocols {
 
 	/**
 	 * Get the local server IP address
 	 * 
 	 * @return {@code String} {@code Inet4Address} address
 	 */
-	public static String local() {
+	public static String ip() {
 		try {
 			Enumeration<?> en = NetworkInterface.getNetworkInterfaces();
 			while (en.hasMoreElements()) {

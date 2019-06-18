@@ -8,7 +8,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
-import static com.selene.common.util.IPs.local;
+import static com.selene.common.util.Protocols.ip;
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
 
 /**
@@ -27,7 +27,7 @@ public class PropertyPlaceholderConfigurerExtension extends PropertyPlaceholderC
 		String serverIPAndPort = props.getProperty(SERVER_IP_AND_PORT_KEY);
 		LOG.info("Old server address=" + serverIPAndPort);
 		String port = serverIPAndPort.split(":")[1];
-		String ip = local();
+		String ip = ip();
 		LOG.info("New server address=" + ip + ":" + port);
 		if (!isNullOrEmpty(serverIPAndPort)) {
 			// props.setProperty(SERVER_IP_AND_PORT_KEY, isNullOrEmpty(ip) ?

@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @version 1.0
  */
 public class Result implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4571438264061689961L;
 	private String code;
 	private String msg;
 
