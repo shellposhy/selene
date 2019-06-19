@@ -8,6 +8,9 @@ package com.selene.common.constants;
  */
 public interface DatabaseConstants {
 	String SELENE_AUTH = "selene";
-	String DB_USERNAME_KEY = "dataing.user";
-	String DB_PASSWORD_KEY = "dataing.pass";
+	String DATAING_USERNAME_KEY = "dataing.user";
+	String DATAING_PASSWORD_KEY = "dataing.pass";
+
+	String MERCHANTS_USERNAME_KEY = "merchants.user";
+	String MERCHANTS_PASSWORD_KEY = "merchants.pass";
 }

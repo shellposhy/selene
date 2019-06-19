@@ -1,4 +1,4 @@
-package com.selene.dataing.provider.config;
+package com.selene.merchants.provider.config;
 
 import java.util.Properties;
 
@@ -22,7 +22,7 @@ import static cn.com.lemon.util.security.ContentEncryptUtil.decrypt;
  */
 public class PropertyPlaceholderConfigurerExtension extends PropertyPlaceholderConfigurer {
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyPlaceholderConfigurerExtension.class.getName());
-	private static final String SERVER_IP_AND_PORT_KEY = "dataing.server.address";
+	private static final String SERVER_IP_AND_PORT_KEY = "merchants.server.address";
 
 	@Override
 	protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)
@@ -36,15 +36,17 @@ public class PropertyPlaceholderConfigurerExtension extends PropertyPlaceholderC
 		if (!isNullOrEmpty(serverIPAndPort)) {
 			props.setProperty(SERVER_IP_AND_PORT_KEY, serverIPAndPort);
 		}
-		// Database user name
-		String userName = props.getProperty(DatabaseConstants.DATAING_USERNAME_KEY);
+		// Merchants user name
+		String userName = props.getProperty(DatabaseConstants.MERCHANTS_USERNAME_KEY);
 		if (!isNullOrEmpty(userName)) {
-			props.setProperty(DatabaseConstants.DATAING_USERNAME_KEY, decrypt(userName, DatabaseConstants.SELENE_AUTH));
+			props.setProperty(DatabaseConstants.MERCHANTS_USERNAME_KEY,
+					decrypt(userName, DatabaseConstants.SELENE_AUTH));
 		}
-		// Database password
-		String userPass = props.getProperty(DatabaseConstants.DATAING_PASSWORD_KEY);
+		// Merchants password
+		String userPass = props.getProperty(DatabaseConstants.MERCHANTS_PASSWORD_KEY);
 		if (!isNullOrEmpty(userPass)) {
-			props.setProperty(DatabaseConstants.DATAING_PASSWORD_KEY, decrypt(userPass, DatabaseConstants.SELENE_AUTH));
+			props.setProperty(DatabaseConstants.MERCHANTS_PASSWORD_KEY,
+					decrypt(userPass, DatabaseConstants.SELENE_AUTH));
 		}
 		super.processProperties(beanFactoryToProcess, props);
 	}
