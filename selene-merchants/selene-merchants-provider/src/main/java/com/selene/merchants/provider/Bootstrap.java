@@ -1,4 +1,4 @@
-package com.selene.dataing.provider;
+package com.selene.merchants.provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,14 +9,14 @@ public class Bootstrap {
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-		LOG.info("Dataing Server is starting!");
+		LOG.info("Merchants Server is starting!");
 		try {
 			if (new ClassPathXmlApplicationContext("applicationContext.xml") != null) {
-				LOG.info("Dataing Server is started!");
+				LOG.info("Merchants Server is started!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOG.error("Dataing Server is started fail!");
+			LOG.error("Merchants Server is started fail!");
 		}
 	}
 
