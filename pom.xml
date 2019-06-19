@@ -30,6 +30,7 @@
 		<module>selene-outputting</module>
 		<module>selene-merchants</module>
 		<module>selene-dataing</module>
+		<module>selene-viewing</module>
 	</modules>
 
 	<!-- properties -->

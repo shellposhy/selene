@@ -29,7 +29,6 @@
 
 	<!-- data source -->
 	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-		<!-- Mysql -->
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 		<property name="url" value="jdbc:mysql://192.168.2.20:3306/selene-dataing?useUnicode=true&amp;characterEncoding=UTF-8"/>
 		<property name="username" value="test"/>
@@ -52,11 +51,11 @@
 	<context:component-scan base-package="com.selene.dataing.provider" />
 	
 	<!-- aspectj -->
-	<!-- <aop:aspectj-autoproxy proxy-target-class="true"/> -->
-	<!-- <task:scheduler id="scheduler" pool-size="10"/> -->
-	<!-- <task:executor id="executor" pool-size="10"/> -->
-	<!-- <task:annotation-driven executor="executor" scheduler="scheduler" proxy-target-class="true"/> -->
-	<task:annotation-driven />
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<task:scheduler id="scheduler" pool-size="10"/>
+	<task:executor id="executor" pool-size="10"/>
+	<task:annotation-driven executor="executor" scheduler="scheduler" proxy-target-class="true"/>
+	<!-- <task:annotation-driven /> -->
 
 	<!-- middleware -->
 	<import resource="classpath:middleware/flyway.xml" />

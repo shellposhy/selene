@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="   
+	http://www.springframework.org/schema/beans    
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd   
+	http://www.springframework.org/schema/context   
+	http://www.springframework.org/schema/context/spring-context-4.3.xsd   
+	http://www.springframework.org/schema/aop    
+	http://www.springframework.org/schema/aop/spring-aop-4.3.xsd   
+	http://www.springframework.org/schema/tx    
+	http://www.springframework.org/schema/tx/spring-tx-4.3.xsd     
+	http://www.springframework.org/schema/util    
+	http://www.springframework.org/schema/util/spring-util-4.3.xsd
+	http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.3.xsd">
+
+	<!-- properties -->
+	<context:property-placeholder location="classpath:config.properties" />
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Activates scanning of @Service -->
+	<context:component-scan base-package="com.selene.viewing.admin" />
+	
+	<!-- aop -->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<task:scheduler id="scheduler" pool-size="10"/>
+	<task:executor id="executor" pool-size="10"/>
+	<task:annotation-driven executor="executor" scheduler="scheduler" proxy-target-class="true"/>
+
+
+	<bean id="serviceDiscovery" class="com.nanshan.papaya.rpc.registry.ServiceDiscovery">
+		<constructor-arg name="registryAddress" value="${zk.registry.address}" />
+		<constructor-arg name="registryPath" value="${zk.registry.path}" />
+	</bean>
+
+	<bean id="protalClient" class="com.nanshan.papaya.rpc.client.Client">
+		<constructor-arg name="serviceDiscovery" ref="serviceDiscovery" />
+	</bean>
+</beans>
