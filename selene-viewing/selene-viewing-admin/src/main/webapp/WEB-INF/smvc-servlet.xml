@@ -11,6 +11,12 @@
         http://www.springframework.org/schema/mvc
 		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 	<mvc:default-servlet-handler />
+	<mvc:resources mapping="/admin/img/**" location="/admin/img/" />
+	<mvc:resources mapping="/admin/css/**" location="/admin/css/" />
+	<mvc:resources mapping="/admin/js/**" location="/admin/js/" />
+	<mvc:resources mapping="/admin/jscript/**" location="/admin/jscript/" />
+	<mvc:resources mapping="/admin/system/library/data/**/*.jpg" location="/pic/upic/" />
+	<mvc:resources mapping="/static/**" location="/static/" />
 	<mvc:resources mapping="/favicon.ico" location="/favicon.ico" />	
 	<context:component-scan base-package="com.selene.viewing.admin"></context:component-scan>
 	<mvc:annotation-driven />
@@ -28,5 +34,11 @@
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="/WEB-INF/messages/messages" />
 		<property name="cacheSeconds" value="0" />
+	</bean>
+	
+	<!-- jsp view -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
 	</bean>
 </beans>
