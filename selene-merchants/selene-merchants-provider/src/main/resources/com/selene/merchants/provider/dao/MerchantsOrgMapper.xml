@@ -58,7 +58,7 @@
 			merchants_org 
 		<set>
 			<if test="name != null">Name = #{name},</if>
-			<if test="Code != null">Code = #{code},</if>
+			<if test="code != null">Code = #{code},</if>
 			<if test="parentId != null">Parent_ID = #{parentId},</if>
 			<if test="orderId != null">Order_ID = #{orderId},</if>
 			<if test="status != null">Status = #{status},</if>

@@ -54,9 +54,9 @@ CREATE TABLE merchants_user (
 );
 ALTER TABLE merchants_user COMMENT '商户用户表';
 
-/*Table structure for table merchants_user_action */
-DROP TABLE IF EXISTS merchants_user_action;
-CREATE TABLE merchants_user_action (
+/*Table structure for table merchants_action */
+DROP TABLE IF EXISTS merchants_action;
+CREATE TABLE merchants_action (
   ID int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   Name varchar(50) NOT NULL COMMENT '名称',
   Code varchar(50) NOT NULL COMMENT '编码',
@@ -67,7 +67,7 @@ CREATE TABLE merchants_user_action (
   Order_ID int(10) DEFAULT NULL COMMENT '排序',
   PRIMARY KEY (ID)
 );
-ALTER TABLE merchants_user_action COMMENT '商户用户权限表';
+ALTER TABLE merchants_action COMMENT '商户用户权限表';
 
 /*Table structure for table merchants_role_action */
 DROP TABLE IF EXISTS merchants_role_action;

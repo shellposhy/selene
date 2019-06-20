@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.selene.merchants.provider.dao.MerchantsRoleMapper">
 	<resultMap id="resultMap" type="com.selene.merchants.model.MerchantsRole">
 		<result property="id" column="ID" />
@@ -35,87 +34,104 @@
 				#{defaultPageUrl},#{secretLevel},#{memo},#{createTime},#{creatorId},#{updateTime},#{updaterId}
 		)
 	</insert>
-
-	<select id="search" parameterType="int" resultMap="resultMap">
-		SELECT * FROM merchants_role limit #{first},#{size}
-	</select>
-
-	<select id="searchByQs" parameterType="java.util.Map" resultMap="resultMap">
-		SELECT * FROM merchants_role WHERE Name like "%"#{qs}"%" limit #{first},#{size}
-	</select>
-
-	<select id="count" resultType="int">
-		SELECT COUNT(*) FROM merchants_role
-	</select>
-
-	<select id="countByQs" parameterType="String" resultType="int">
-		SELECT COUNT(*) FROM merchants_role WHERE Name like "%"#{qs}"%"
-	</select>
-
-	<select id="countByToday" resultType="int">
-		SELECT COUNT(*) FROM merchants_role WHERE DATEDIFF(Create_Time,SYSDATE()) =0
-	</select>
-
-	<delete id="batchDelete" parameterType="java.util.List">
-		DELETE FROM merchants_role WHERE ID IN
-		<foreach item="item" index="index" collection="array" open="("
-			separator="," close=")">
-			#{item}
-		</foreach>
-	</delete>
-
-	<delete id="delete">
-		DELETE FROM merchants_role WHERE ID=#{id}
-	</delete>
-
+	
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
-		SELECT * FROM merchants_role WHERE ID=#{id}
+		SELECT 
+			ID,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
+			Default_Page_ID,Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_role 
+		WHERE 
+			ID=#{id}
 	</select>
 	
 	<select id="findByName" resultMap="resultMap" parameterType="java.lang.String">
-		SELECT * FROM merchants_role WHERE Name=#{name}
+		SELECT 
+			ID,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
+			Default_Page_ID,Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_role 
+		WHERE
+			Name=#{name}
 	</select>
-
-	<update id="update">
-		UPDATE merchants_role SET
-		Name=#{name},
-		CODE=#{code},
-		All_Data_Authority=#{allDataAuthority},
-		All_Admin_Authority=#{allAdminAuthority},
-		All_Front_Authority=#{allFrontAuthority},
-		Default_Page_ID=#{defaultPageID},
-		Secret_Level=#{secretLevel},
-		Memo=#{memo},
-		Update_Time=#{updateTime},
-		Updater_ID=#{updaterId},
-		Default_Page_Type=#{defaultPageType},
-		Default_Page_Url=#{defaultPageUrl}
-		WHERE ID=#{id}
-	</update>
+	
+	<select id="findByCode" resultMap="resultMap">
+		SELECT 
+			ID,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
+			Default_Page_ID,Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_role 
+		WHERE
+			Code=#{code}
+	</select>
+	
+	<select id="findPageByName" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
+			Default_Page_ID,Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_role 
+		WHERE 
+			1=1
+			<if test="name != null">AND Name like "%"#{name}"%"</if>
+		LIMIT #{first},#{size}
+	</select>
+	
+	<select id="countByName" parameterType="String" resultType="int">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			merchants_role 
+		WHERE 
+			1=1
+			<if test="name != null">AND Name like "%"#{name}"%"</if>
+	</select>
 	
 	<select id="findByUserId" resultMap="resultMap">
-		SELECT G.* FROM merchants_role_map M,merchants_role G WHERE M.User_ID=#{userId} And M.Group_ID=G.ID
+		SELECT DISTINCT 
+			a.ID,a.Name,a.Code,a.All_Data_Authority,a.All_Admin_Authority,a.All_Front_Authority,a.Default_Page_Type,
+			a.Default_Page_ID,a.Default_Page_Url,a.Secret_Level,a.Memo,a.Create_Time,a.Creator_ID,a.Update_Time,a.Updater_ID
+		FROM 
+			merchants_role a,merchants_user_role b 
+		WHERE 
+			a.ID=b.Group_ID AND b.User_ID=#{userId}
 	</select>
 
-	<select id="findAll" resultMap="resultMap">
-		SELECT * FROM merchants_role
-	</select>
+	<delete id="batchDelete" parameterType="java.util.List">
+		DELETE FROM 
+			merchants_role 
+		WHERE ID 
+			IN
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	</delete>
 
-	<select id="findHasUser" resultMap="resultMap">
-		SELECT DISTINCT G.* FROM merchants_role_map M RIGHT JOIN merchants_role G on M.Group_ID=G.ID WHERE User_ID IS NOT NULL
-	</select>
+	<delete id="delete">
+		DELETE FROM 
+			merchants_role 
+		WHERE 
+			ID=#{id}
+	</delete>
 
-	<select id="findByCode" resultMap="resultMap">
-		SELECT * FROM merchants_role WHERE Code=#{code}
-	</select>
-
-	<select id="countActionForGroup" resultType="Integer">
-		SELECT COUNT(*) FROM merchants_role g, user_action_map m, user_action a
-		WHERE g.ID =m.Group_ID AND a.ID = m.Action_ID AND a.Code = #{actionCode} AND g.ID= #{groupId}
-	</select>
-
-	<select id="findDefaultPageIdByUserId" resultType="Integer">
-		SELECT g.Default_Page_ID FROM view_page p, merchants_role g, user u,merchants_role_map m
-		WHERE m.User_ID = u.ID AND m.Group_ID = g.ID AND g.Default_Page_ID IS NOT NULL AND u.ID = #{userId} LIMIT 1
-	</select>
+	<update id="update">
+		UPDATE 
+			merchants_role 
+		<set>
+			<if test="name != null">Name=#{name},</if>
+			<if test="Code != null">CODE=#{code},</if>
+			<if test="allDataAuthority != null">All_Data_Authority=#{allDataAuthority},</if>
+			<if test="allAdminAuthority != null">All_Admin_Authority=#{allAdminAuthority},</if>
+			<if test="allFrontAuthority != null">All_Front_Authority=#{allFrontAuthority},</if>
+			<if test="defaultPageId != null">Default_Page_ID=#{defaultPageId},</if>
+			<if test="defaultPageType != null">Default_Page_Type=#{defaultPageType},</if>
+			<if test="defaultPageUrl != null">Default_Page_Url=#{defaultPageUrl},</if>
+			<if test="secretLevel != null">Secret_Level=#{secretLevel},</if>
+			<if test="memo != null">Memo=#{memo},</if>
+			<if test="updaterId != null">Updater_ID=#{updaterId},</if>
+			<if test="updateTime != null">Update_Time=#{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
 </mapper>

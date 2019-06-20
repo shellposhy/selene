@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.merchants.provider.dao.MerchantsActionMapper">
+	<resultMap id="resultMap" type="com.selene.merchants.model.MerchantsAction">
+		<result property="id" column="ID" />
+		<result property="name" column="Name" />
+		<result property="code" column="Code" />
+		<result property="parentId" column="Parent_ID" />
+		<result property="type" column="Type" />
+		<result property="uri" column="Uri" />
+		<result property="iconSkin" column="Icon_Skin" />
+		<result property="orderId" column="Order_ID" />
+	</resultMap>
+
+	<select id="findByType" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT
+			 ID,Name,Code,Parent_ID,Type,Uri,Icon_Skin,Order_ID
+		FROM 
+			merchants_action 
+		WHERE 
+			Type=#{type} 
+		ORDER BY 
+			Order_ID
+	</select>
+
+	<select id="findByCode" resultMap="resultMap">
+		SELECT
+			 ID,Name,Code,Parent_ID,Type,Uri,Icon_Skin,Order_ID
+		FROM 
+			merchants_action 
+		WHERE 
+			Code = #{code} 
+		ORDER BY 
+			Order_ID
+	</select>
+
+	<select id="findByIds" resultMap="resultMap" parameterType="java.util.List">
+		SELECT
+			 ID,Name,Code,Parent_ID,Type,Uri,Icon_Skin,Order_ID
+		FROM 
+			merchants_action 
+		WHERE  
+			ID in <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+		ORDER BY 
+			Order_ID
+	</select>
+</mapper>

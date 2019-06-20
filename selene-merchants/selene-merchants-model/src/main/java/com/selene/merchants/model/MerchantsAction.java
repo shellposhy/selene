@@ -13,7 +13,7 @@ import com.selene.merchants.model.enums.EActionUserType;
  * @author shaobo shih
  * @version 1.0
  */
-public class MerchantsUserAction extends TreeNodeModel<MerchantsUserAction> {
+public class MerchantsAction extends TreeNodeModel<MerchantsAction> {
 	private static final long serialVersionUID = 7390790894380261966L;
 	private String code;
 	private String uri;
