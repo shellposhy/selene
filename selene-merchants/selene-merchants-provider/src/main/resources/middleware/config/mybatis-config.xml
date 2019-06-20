@@ -7,5 +7,9 @@
 		<!-- Base  Enum -->
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="cn.com.lemon.common.enums.EGender" />
 		<!-- Merchants Enum -->
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.merchants.model.enums.EActionUserType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.merchants.model.enums.EOrgStatus" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.merchants.model.enums.EPageType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.merchants.model.enums.ERoleLibraryType" />
 	</typeHandlers>
 </configuration>

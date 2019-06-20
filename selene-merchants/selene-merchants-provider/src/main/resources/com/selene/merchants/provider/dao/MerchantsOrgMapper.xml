@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.merchants.provider.dao.MerchantsOrgMapper">
+	<resultMap id="resultMap" type="com.selene.merchants.model.MerchantsOrg">
+		<result property="id" column="ID" />
+		<result property="name" column="Name" />
+		<result property="code" column="Code" />
+		<result property="parentId" column="Parent_ID" />
+		<result property="orderId" column="Order_ID" />
+		<result property="status" column="Status" />
+		<result property="inherit" column="Inherit" />
+		<result property="createTime" column="Create_Time" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="updateTime" column="Update_Time" />
+		<result property="updaterId" column="Updater_ID" />
+	</resultMap>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO 
+			merchants_org(Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID)
+		VALUES
+			(#{name},#{code},#{parentId},#{orderId},#{status},#{inherit},#{createTime},#{creatorId},#{updateTime},#{updaterId})
+	</insert>
+
+	<select id="find" resultMap="resultMap">
+		SELECT 
+			ID,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM
+			merchants_org 
+		WHERE
+			ID=#{id}
+	</select>
+	
+	<select id="findByParentId" resultMap="resultMap">
+	    SELECT 
+			ID,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM
+			merchants_org 
+		WHERE 
+			Parent_ID=#{parentId}
+	</select>
+	
+	<select id="findByCodeAndParentId" resultMap = "resultMap" parameterType="java.util.Map">
+	    SELECT 
+			ID,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM
+			merchants_org 
+		WHERE 
+		 	Parent_ID=#{parentId} AND Code=#{code}
+	</select>
+	
+	<update id="update">
+		UPDATE 
+			merchants_org 
+		<set>
+			<if test="name != null">Name = #{name},</if>
+			<if test="Code != null">Code = #{code},</if>
+			<if test="parentId != null">Parent_ID = #{parentId},</if>
+			<if test="orderId != null">Order_ID = #{orderId},</if>
+			<if test="status != null">Status = #{status},</if>
+			<if test="inherit != null">Inherit=#{inherit},</if>
+			<if test="updaterId != null">Inherit=#{updaterId},</if>
+			<if test="updateTime != null">Update_Time = #{updateTime}</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM 
+			merchants_org 
+		WHERE
+			ID= #{id}
+	</delete>
+
+</mapper>
