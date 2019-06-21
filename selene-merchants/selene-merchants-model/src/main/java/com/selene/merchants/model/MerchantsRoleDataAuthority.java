@@ -4,7 +4,6 @@ import java.util.Date;
 
 import com.selene.common.BaseModel;
 import com.selene.common.tree.TreeNodeModel;
-import com.selene.merchants.model.enums.ERoleLibraryType;
 
 /**
  * <b>Selene merchants module<b>
@@ -18,7 +17,8 @@ import com.selene.merchants.model.enums.ERoleLibraryType;
 public class MerchantsRoleDataAuthority extends TreeNodeModel<MerchantsRoleDataAuthority> {
 	private static final long serialVersionUID = -8888222162754135863L;
 	private Integer groupId;
-	private ERoleLibraryType objectType;
+	/** {@code ELibraryType} */
+	private Integer objectType;
 	private Integer objectId;
 	private String allowActionType;
 	private boolean allDataTime;
@@ -33,11 +33,11 @@ public class MerchantsRoleDataAuthority extends TreeNodeModel<MerchantsRoleDataA
 		this.groupId = groupId;
 	}
 
-	public ERoleLibraryType getObjectType() {
+	public Integer getObjectType() {
 		return objectType;
 	}
 
-	public void setObjectType(ERoleLibraryType objectType) {
+	public void setObjectType(Integer objectType) {
 		this.objectType = objectType;
 	}
 

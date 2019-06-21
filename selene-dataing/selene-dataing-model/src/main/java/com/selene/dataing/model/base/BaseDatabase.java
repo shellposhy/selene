@@ -5,7 +5,7 @@ import java.util.Date;
 import com.selene.common.tree.TreeNodeModel;
 import com.selene.dataing.model.enums.ELibraryNodeType;
 import com.selene.dataing.model.enums.ELibraryType;
-import com.selene.dataing.model.enums.EStatus;
+import com.selene.dataing.model.enums.EDataStatus;
 
 /**
  * Database base class
@@ -21,7 +21,7 @@ public class BaseDatabase<T extends BaseDatabase<T>> extends TreeNodeModel<T> {
 	private ELibraryType type;
 	private ELibraryNodeType nodeType;
 	private Integer modelId;
-	private EStatus status;
+	private EDataStatus status;
 	private int orderId;
 	private Integer taskId;
 	private Date dataUpdateTime;
@@ -67,11 +67,11 @@ public class BaseDatabase<T extends BaseDatabase<T>> extends TreeNodeModel<T> {
 		this.modelId = modelId;
 	}
 
-	public EStatus getStatus() {
+	public EDataStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(EStatus status) {
+	public void setStatus(EDataStatus status) {
 		this.status = status;
 	}
 
