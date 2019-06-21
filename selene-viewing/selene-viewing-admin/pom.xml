@@ -17,6 +17,17 @@
 
 	<!--dependencies -->
 	<dependencies>
+		<!-- module -->
+		<dependency>
+			<groupId>com.selene</groupId>
+			<artifactId>selene-dataing-model</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.selene</groupId>
+			<artifactId>selene-merchants-model</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
