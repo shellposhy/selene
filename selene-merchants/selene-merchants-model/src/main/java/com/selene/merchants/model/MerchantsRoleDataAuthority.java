@@ -9,7 +9,7 @@ import com.selene.merchants.model.enums.ERoleLibraryType;
 /**
  * <b>Selene merchants module<b>
  * <p>
- * Mapping object for merchants role data Authority
+ * Mapping object for merchants role data authority
  * 
  * @see BaseModel
  * @author shaobo shih

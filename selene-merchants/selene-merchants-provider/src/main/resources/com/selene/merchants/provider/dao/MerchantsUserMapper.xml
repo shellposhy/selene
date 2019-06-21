@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.merchants.provider.dao.MerchantsUserMapper">
+	<resultMap id="resultMap" type="com.selene.merchants.model.MerchantsUser">
+		<result property="id" column="ID" />
+		<result property="type" column="Type" />
+		<result property="userType" column="User_Type" />
+		<result property="name" column="Name" />
+		<result property="realName" column="Real_Name" />
+		<result property="nickName" column="Nick_Name" />
+		<result property="userPassword" column="User_Password" />
+		<result property="orgId" column="Org_ID" />
+		<result property="sex" column="Sex" />
+		<result property="orderId" column="Order_ID" />
+		<result property="ipAddress" column="IP_Address" />
+		<result property="idCard" column="ID_Card" />
+		<result property="phoneNumber" column="Phone_Number" />
+		<result property="email" column="Email" />
+		<result property="position" column="Position" />
+		<result property="pic" column="Pic" />
+		<result property="status" column="Status" />
+		<result property="createTime" column="Create_Time" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="updateTime" column="Update_Time" />
+		<result property="updaterId" column="Updater_ID" />
+	</resultMap>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO
+			merchants_user(
+				Type,User_Type,Name,Nick_Name,Real_Name,User_Password,Org_ID,Sex,Order_ID,Org_ID,IP_Address,
+				ID_Card,Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+			)
+		VALUES(
+			#{type},#{userType},#{name},#{nickName},#{realName},#{userPassword},#{orgID},#{sex},#{orderId},#{ipAddress},
+			#{idCard},#{phoneNumber},#{email},#{position},#{pic},#{status},#{createTime},#{creatorId},#{updateTime},#{updaterId}
+		)
+	</insert>
+	
+	<select id="find" resultMap="resultMap">
+		SELECT
+			ID,Type,User_Type,Name,Nick_Name,Real_Name,Org_ID,Sex,Order_ID,Org_ID,IP_Address,ID_Card,
+			Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_user 
+		WHERE 
+			ID=#{id}
+	</select>
+
+	<select id="findByName" resultMap="resultMap" parameterType="String">
+		SELECT
+			ID,Type,User_Type,Name,Nick_Name,Real_Name,Org_ID,Sex,Order_ID,Org_ID,IP_Address,ID_Card,
+			Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_user 
+		WHERE  
+			Name = #{name} AND Status=1
+	</select>
+	
+	<select id="findByNamePassword" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,Type,User_Type,Name,Nick_Name,Real_Name,Org_ID,Sex,Order_ID,Org_ID,IP_Address,ID_Card,
+			Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_user 
+		WHERE  
+			Name = #{name} AND User_Password = #{pass} AND Status=1
+	</select>
+
+	<select id="findByOrgId" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT
+			ID,Type,User_Type,Name,Nick_Name,Real_Name,Org_ID,Sex,Order_ID,Org_ID,IP_Address,ID_Card,
+			Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_user 
+		WHERE  
+			Org_ID = #{orgId} AND Status=1 
+		ORDER BY ID
+	</select>
+
+	<select id="countByOrgAndName" parameterType="java.util.Map" resultType="int">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			merchants_user 
+		WHERE  
+			Status=1 
+			<if test="orgId != null">AND Org_ID = #{orgId}</if>
+			<if test="name != null"> AND (Name like "%"#{name}"%" Or Real_Name like "%"#{name}"%") </if>
+	</select>
+
+	<select id="findByOrgAndName" parameterType="java.util.Map" resultMap="resultMap">
+		SELECT
+			ID,Type,User_Type,Name,Nick_Name,Real_Name,Org_ID,Sex,Order_ID,Org_ID,IP_Address,ID_Card,
+			Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_user 
+		WHERE   
+			Status=1
+			<if test="orgId != null">AND Org_ID = #{orgId}</if>
+			<if test="name != null"> AND (Name like "%"#{name}"%" Or Real_Name like "%"#{name}"%") </if>
+		LIMIT 
+			#{firstSize}, #{size}
+	</select>
+
+	<update id="update">
+		UPDATE 
+			merchants_user
+		<set>
+			<if test="name != null">Name = #{name},</if>
+			<if test="realName != null">Real_Name =#{realName},</if>
+			<if test="nickName != null">Nick_Name =#{nickName},</if>
+			<if test="userPassword !=null and userPassword !=''">User_Password = #{userPassword},</if>
+			<if test="userType != null">User_Type = #{userType},</if>
+			<if test="sex != null">Sex =#{sex},</if>
+			<if test="orderId != null">Order_ID = #{orderId},</if>
+			<if test="orgId != null">Org_ID=#{orgId},</if>
+			<if test="ipAddress != null">IP_Address=#{ipAddress},</if>
+			<if test="pic != null">Pic = #{pic},</if>
+			<if test="status != null">Status =#{status},</if>
+			<if test="idCard != null">ID_Card=#{idCard},</if>
+			<if test="position != null">Position=#{position},</if>
+			<if test="phoneNumber != null">Phone_Number=#{phoneNumber},</if>
+			<if test="email != null">Email=#{email},</if>
+			<if test="updaterId != null">Updater_ID =#{updaterId},</if>
+			<if test="updateTime != null">Update_Time =#{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+
+	<update id="petrify">
+		UPDATE 
+			merchants_user 
+		SET 
+			Status=0,
+			Name=#{user.name},
+			Die_Name=#{user.nickName} 
+		WHERE 
+			ID=#{user.id}
+	</update>
+</mapper>
