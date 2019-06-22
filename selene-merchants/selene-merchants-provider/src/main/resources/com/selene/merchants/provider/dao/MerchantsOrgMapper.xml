@@ -4,6 +4,9 @@
 <mapper namespace="com.selene.merchants.provider.dao.MerchantsOrgMapper">
 	<resultMap id="resultMap" type="com.selene.merchants.model.MerchantsOrg">
 		<result property="id" column="ID" />
+		<result property="superStatus" column="Super_Status" />
+		<result property="license" column="License" />
+		<result property="orgType" column="Org_Type" />
 		<result property="name" column="Name" />
 		<result property="code" column="Code" />
 		<result property="parentId" column="Parent_ID" />
@@ -21,42 +24,52 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO 
-			merchants_org(Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID)
+			merchants_org(Super_Status,License,Org_Type,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID)
 		VALUES
-			(#{name},#{code},#{parentId},#{orderId},#{status},#{inherit},#{createTime},#{creatorId},#{updateTime},#{updaterId})
+			(#{superStatus},#{license},#{orgType},#{name},#{code},#{parentId},#{orderId},#{status},#{inherit},#{createTime},#{creatorId},#{updateTime},#{updaterId})
 	</insert>
 
 	<select id="find" resultMap="resultMap">
 		SELECT 
-			ID,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
+			ID,Super_Status,License,Org_Type,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
 		FROM
 			merchants_org 
 		WHERE
 			ID=#{id}
 	</select>
 	
-	<select id="findByParentId" resultMap="resultMap">
+	<select id="findByParentId" resultMap = "resultMap" parameterType="java.util.Map">
 	    SELECT 
-			ID,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
+			ID,Super_Status,License,Org_Type,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
 		FROM
 			merchants_org 
 		WHERE 
-			Parent_ID=#{parentId}
+			Parent_ID=#{parentId} AND License=#{license}
 	</select>
 	
 	<select id="findByCodeAndParentId" resultMap = "resultMap" parameterType="java.util.Map">
 	    SELECT 
-			ID,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
+			ID,Super_Status,License,Org_Type,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
 		FROM
 			merchants_org 
 		WHERE 
-		 	Parent_ID=#{parentId} AND Code=#{code}
+		 	Parent_ID=#{parentId} AND Code=#{code} AND License=#{license}
+	</select>
+	
+	<select id="findByLicense" resultMap = "resultMap" parameterType="java.lang.String">
+		 SELECT 
+			ID,Super_Status,License,Org_Type,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM
+			merchants_org 
+		WHERE 
+		 	License=#{license}
 	</select>
 	
 	<update id="update">
 		UPDATE 
 			merchants_org 
 		<set>
+			<if test="orgType != null">Org_Type = #{orgType},</if>
 			<if test="name != null">Name = #{name},</if>
 			<if test="code != null">Code = #{code},</if>
 			<if test="parentId != null">Parent_ID = #{parentId},</if>
@@ -75,5 +88,4 @@
 		WHERE
 			ID= #{id}
 	</delete>
-
 </mapper>

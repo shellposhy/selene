@@ -34,13 +34,13 @@ public class MerchantsOrgServiceImpl implements MerchantsOrgService {
 	}
 
 	@Override
-	public List<MerchantsOrg> findByParentId(Integer parentId) {
-		return merchantsOrgMapper.findByParentId(parentId);
+	public List<MerchantsOrg> findByParentId(Integer parentId, String license) {
+		return merchantsOrgMapper.findByParentId(parentId, license);
 	}
 
 	@Override
-	public List<MerchantsOrg> findByCodeAndParentId(Integer parentId, String code) {
-		return merchantsOrgMapper.findByCodeAndParentId(parentId, code);
+	public List<MerchantsOrg> findByCodeAndParentId(Integer parentId, String code, String license) {
+		return merchantsOrgMapper.findByCodeAndParentId(parentId, code, license);
 	}
 
 	@Override

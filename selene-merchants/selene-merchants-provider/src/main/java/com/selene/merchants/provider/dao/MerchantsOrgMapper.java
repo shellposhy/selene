@@ -18,9 +18,12 @@ public interface MerchantsOrgMapper {
 
 	public MerchantsOrg find(@Param("id") Integer id);
 
-	public List<MerchantsOrg> findByParentId(@Param("parentId") Integer parentId);
+	public List<MerchantsOrg> findByParentId(@Param("parentId") Integer parentId, @Param("license") String license);
 
-	public List<MerchantsOrg> findByCodeAndParentId(@Param("parentId") Integer parentId, @Param("code") String code);
+	public List<MerchantsOrg> findByCodeAndParentId(@Param("parentId") Integer parentId, @Param("code") String code,
+			@Param("license") String license);
+
+	public List<MerchantsOrg> findByLicense(@Param("license") String license);
 
 	public int update(MerchantsOrg org);
 

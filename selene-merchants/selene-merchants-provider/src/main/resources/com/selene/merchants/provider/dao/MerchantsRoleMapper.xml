@@ -4,6 +4,7 @@
 <mapper namespace="com.selene.merchants.provider.dao.MerchantsRoleMapper">
 	<resultMap id="resultMap" type="com.selene.merchants.model.MerchantsRole">
 		<result property="id" column="ID" />
+		<result property="license" column="License"/>
 		<result property="name" column="Name" />
 		<result property="code" column="Code" />
 		<result property="allDataAuthority" column="All_Data_Authority" />
@@ -26,18 +27,18 @@
 		</selectKey>
 		INSERT INTO
 			merchants_role(
-				Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,Default_Page_ID,
+				License,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,Default_Page_ID,
 				Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
 			)
 		VALUES(
-				#{name},#{code},#{allDataAuthority},#{allAdminAuthority},#{allFrontAuthority},#{defaultPageType},#{defaultPageId},
-				#{defaultPageUrl},#{secretLevel},#{memo},#{createTime},#{creatorId},#{updateTime},#{updaterId}
+				#{license},#{name},#{code},#{allDataAuthority},#{allAdminAuthority},#{allFrontAuthority},#{defaultPageType},
+				#{defaultPageId},#{defaultPageUrl},#{secretLevel},#{memo},#{createTime},#{creatorId},#{updateTime},#{updaterId}
 		)
 	</insert>
 	
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT 
-			ID,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
+			ID,License,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
 			Default_Page_ID,Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
 		FROM 
 			merchants_role 

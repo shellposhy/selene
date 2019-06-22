@@ -14,6 +14,7 @@ import com.selene.merchants.model.enums.EPageType;
  */
 public class MerchantsRole extends BaseModel {
 	private static final long serialVersionUID = 7390790894380261966L;
+	private String license;
 	private String name;
 	private String code;
 	private boolean allDataAuthority;
@@ -24,6 +25,14 @@ public class MerchantsRole extends BaseModel {
 	private String defaultPageUrl;
 	private Integer secretLevel;
 	private String memo;
+
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
+	}
 
 	public String getName() {
 		return name;

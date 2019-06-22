@@ -15,9 +15,9 @@ public interface MerchantsOrgService {
 
 	public MerchantsOrg find(Integer id);
 
-	public List<MerchantsOrg> findByParentId(Integer parentId);
+	public List<MerchantsOrg> findByParentId(Integer parentId, String license);
 
-	public List<MerchantsOrg> findByCodeAndParentId(Integer parentId, String code);
+	public List<MerchantsOrg> findByCodeAndParentId(Integer parentId, String code, String license);
 
 	public int update(MerchantsOrg org);
 
