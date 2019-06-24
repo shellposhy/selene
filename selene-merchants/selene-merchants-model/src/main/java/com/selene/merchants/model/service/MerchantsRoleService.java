@@ -15,15 +15,15 @@ public interface MerchantsRoleService {
 
 	public MerchantsRole find(Integer id);
 
-	public List<MerchantsRole> findByName(String name);
+	public List<MerchantsRole> findByName(String name, String license);
 
-	public List<MerchantsRole> findByCode(String code);
+	public List<MerchantsRole> findByCode(String code, String license);
 
-	public List<MerchantsRole> findByUserId(Integer userId);
+	public List<MerchantsRole> findByUserId(Integer userId, String license);
 
-	public List<MerchantsRole> findPageByName(String name, Integer first, Integer size);
+	public List<MerchantsRole> findPageByName(String name, String license, Integer first, Integer size);
 
-	public int countByName(String name);
+	public int countByName(String name, String license);
 
 	public int batchDelete(List<Integer> list);
 

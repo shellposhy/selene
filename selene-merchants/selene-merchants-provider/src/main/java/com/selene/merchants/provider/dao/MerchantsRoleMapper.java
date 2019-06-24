@@ -18,16 +18,16 @@ public interface MerchantsRoleMapper {
 
 	public MerchantsRole find(@Param("id") Integer id);
 
-	public List<MerchantsRole> findByName(@Param("name") String name);
+	public List<MerchantsRole> findByName(@Param("name") String name, @Param("license") String license);
 
-	public List<MerchantsRole> findByCode(@Param("code") String code);
+	public List<MerchantsRole> findByCode(@Param("code") String code, @Param("license") String license);
 
-	public List<MerchantsRole> findByUserId(@Param("userId") Integer userId);
+	public List<MerchantsRole> findByUserId(@Param("userId") Integer userId, @Param("license") String license);
 
-	public List<MerchantsRole> findPageByName(@Param("name") String name, @Param("first") Integer first,
-			@Param("size") Integer size);
+	public List<MerchantsRole> findPageByName(@Param("name") String name, @Param("license") String license,
+			@Param("first") Integer first, @Param("size") Integer size);
 
-	public int countByName(@Param("name") String name);
+	public int countByName(@Param("name") String name, @Param("license") String license);
 
 	public int batchDelete(List<Integer> list);
 

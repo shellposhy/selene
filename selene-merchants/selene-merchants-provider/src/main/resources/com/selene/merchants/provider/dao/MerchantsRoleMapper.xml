@@ -46,24 +46,24 @@
 			ID=#{id}
 	</select>
 	
-	<select id="findByName" resultMap="resultMap" parameterType="java.lang.String">
+	<select id="findByName" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
 			ID,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
 			Default_Page_ID,Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
 		FROM 
 			merchants_role 
 		WHERE
-			Name=#{name}
+			Name=#{name} AND License=#{license}
 	</select>
 	
-	<select id="findByCode" resultMap="resultMap">
+	<select id="findByCode" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
 			ID,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
 			Default_Page_ID,Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
 		FROM 
 			merchants_role 
 		WHERE
-			Code=#{code}
+			Code=#{code} AND License=#{license}
 	</select>
 	
 	<select id="findPageByName" resultMap="resultMap" parameterType="java.util.Map">
@@ -73,29 +73,29 @@
 		FROM 
 			merchants_role 
 		WHERE 
-			1=1
+			License=#{license}
 			<if test="name != null">AND Name like "%"#{name}"%"</if>
 		LIMIT #{first},#{size}
 	</select>
 	
-	<select id="countByName" parameterType="String" resultType="int">
+	<select id="countByName" resultType="int" parameterType="java.util.Map">
 		SELECT 
 			COUNT(*) 
 		FROM 
 			merchants_role 
 		WHERE 
-			1=1
+			License=#{license}
 			<if test="name != null">AND Name like "%"#{name}"%"</if>
 	</select>
 	
-	<select id="findByUserId" resultMap="resultMap">
+	<select id="findByUserId" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT DISTINCT 
 			a.ID,a.Name,a.Code,a.All_Data_Authority,a.All_Admin_Authority,a.All_Front_Authority,a.Default_Page_Type,
 			a.Default_Page_ID,a.Default_Page_Url,a.Secret_Level,a.Memo,a.Create_Time,a.Creator_ID,a.Update_Time,a.Updater_ID
 		FROM 
 			merchants_role a,merchants_user_role b 
 		WHERE 
-			a.ID=b.Group_ID AND b.User_ID=#{userId}
+			License=#{license} AND a.ID=b.Group_ID AND b.User_ID=#{userId} 
 	</select>
 
 	<delete id="batchDelete" parameterType="java.util.List">

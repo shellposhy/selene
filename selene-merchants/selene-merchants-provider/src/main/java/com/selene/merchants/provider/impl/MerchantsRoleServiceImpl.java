@@ -34,28 +34,28 @@ public class MerchantsRoleServiceImpl implements MerchantsRoleService {
 	}
 
 	@Override
-	public List<MerchantsRole> findByName(String name) {
-		return merchantsRoleMapper.findByName(name);
+	public List<MerchantsRole> findByName(String name, String license) {
+		return merchantsRoleMapper.findByName(name, license);
 	}
 
 	@Override
-	public List<MerchantsRole> findByCode(String code) {
-		return merchantsRoleMapper.findByCode(code);
+	public List<MerchantsRole> findByCode(String code, String license) {
+		return merchantsRoleMapper.findByCode(code, license);
 	}
 
 	@Override
-	public List<MerchantsRole> findByUserId(Integer userId) {
-		return merchantsRoleMapper.findByUserId(userId);
+	public List<MerchantsRole> findByUserId(Integer userId, String license) {
+		return merchantsRoleMapper.findByUserId(userId, license);
 	}
 
 	@Override
-	public List<MerchantsRole> findPageByName(String name, Integer first, Integer size) {
-		return merchantsRoleMapper.findPageByName(name, first, size);
+	public List<MerchantsRole> findPageByName(String name, String license, Integer first, Integer size) {
+		return merchantsRoleMapper.findPageByName(name, license, first, size);
 	}
 
 	@Override
-	public int countByName(String name) {
-		return merchantsRoleMapper.countByName(name);
+	public int countByName(String name, String license) {
+		return merchantsRoleMapper.countByName(name, license);
 	}
 
 	@Override
