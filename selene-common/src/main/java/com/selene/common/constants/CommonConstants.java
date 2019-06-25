@@ -9,6 +9,9 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 public interface CommonConstants {
+
+	String LOGIN_SESSION_USER = "login_session_user";
+
 	String SELENE = "selene";
 
 	String PROVIDER = "provider";
