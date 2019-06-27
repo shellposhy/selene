@@ -31,7 +31,7 @@ public class BaseFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest servletRequest = (HttpServletRequest) request;
-		servletRequest.setAttribute("appName", "");
+		servletRequest.setAttribute("appName", "内容管理平台");
 		String uri = servletRequest.getRequestURI();
 		if ("/".equals(uri) || matchExcludePath(uri) || matchStaticPath(uri) || matchStaticResource(uri)) {
 			chain.doFilter(request, response);

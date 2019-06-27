@@ -82,11 +82,10 @@ public class BaseController {
 	}
 
 	@ExceptionHandler(Exception.class)
-	public String handleAllExceptions(Exception ex, HttpServletRequest request) {
-		ex.printStackTrace();
-		request.setAttribute("exception", ex);
+	public String handleAllExceptions(Exception e, HttpServletRequest request) {
+		e.printStackTrace();
+		request.setAttribute("exception", e);
 		return "/exception";
-
 	}
 
 }

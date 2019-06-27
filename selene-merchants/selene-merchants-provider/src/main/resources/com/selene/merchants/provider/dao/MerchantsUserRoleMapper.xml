@@ -25,6 +25,15 @@
 		WHERE 
 			User_ID=#{userId}
 	</select>
+	
+	<select id="findAdminGroupIdsByUserId" resultType="java.lang.Integer">
+		SELECT DISTINCT
+			b.ID 
+		FROM 
+			merchants_user_role a ,merchants_role b 
+		WHERE 
+			a.Group_ID=b.ID AND b.All_Admin_Authority=1 AND a.User_ID=#{userId}
+	</select>
 
 	<select id="findUserIdsByGroupId" resultType="java.lang.Integer">
 		SELECT 

@@ -18,5 +18,7 @@ public interface MerchantsActionMapper {
 
 	public List<MerchantsAction> findByCode(@Param("code") String code);
 
+	public List<MerchantsAction> findByUserIdAndType(@Param("userId") Integer userId, @Param("type") Integer type);
+
 	public List<MerchantsAction> findByIds(List<Integer> list);
 }

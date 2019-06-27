@@ -6,6 +6,9 @@ import org.springframework.web.util.HtmlUtils;
 
 /**
  * This is a support class to help build html property editors.
+ * 
+ * @author shaobo shih
+ * @version 1.0
  */
 public class HtmlEscapeEditor extends PropertyEditorSupport {
 

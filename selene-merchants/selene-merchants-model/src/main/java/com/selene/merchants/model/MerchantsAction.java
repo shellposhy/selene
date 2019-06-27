@@ -1,6 +1,7 @@
 package com.selene.merchants.model;
 
 import com.selene.common.BaseModel;
+import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.tree.TreeNodeModel;
 import com.selene.merchants.model.enums.EActionUserType;
 
@@ -61,4 +62,7 @@ public class MerchantsAction extends TreeNodeModel<MerchantsAction> {
 		this.orderId = orderId;
 	}
 
+	public interface MerchantsActionPropertySetter<K extends DefaultTreeNode> {
+		void set(K k, MerchantsAction entity);
+	}
 }

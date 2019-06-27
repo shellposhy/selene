@@ -3,6 +3,7 @@ package com.selene.merchants.model.service;
 import java.util.List;
 
 import com.selene.merchants.model.MerchantsUser;
+import com.selene.merchants.model.enums.EActionUserType;
 
 /**
  * The {@code MerchantsUser} service for RPC
@@ -15,15 +16,17 @@ public interface MerchantsUserService {
 
 	public MerchantsUser find(Integer id);
 
-	public MerchantsUser findByName(String name);
+	public MerchantsUser findByName(String name, EActionUserType type);
 
-	public MerchantsUser findByNamePassword(String name, String pass);
+	public MerchantsUser findByNamePassword(String name, String pass, EActionUserType type);
 
-	public List<MerchantsUser> findByOrgId(Integer orgId);
+	public List<MerchantsUser> findByOrgId(Integer orgId, EActionUserType type, Integer firstSize, Integer size);
 
-	public int countByOrgAndName(Integer orgId, String name);
+	public int countByOrgId(Integer orgId, EActionUserType type);
 
-	public int findByOrgAndName(Integer orgId, String name, Integer firstSize, Integer size);
+	public int countByOrgAndName(Integer orgId, String name, EActionUserType type);
+
+	public int findByOrgAndName(Integer orgId, String name, EActionUserType type, Integer firstSize, Integer size);
 
 	public int update(MerchantsUser user);
 

@@ -34,6 +34,23 @@
 		ORDER BY 
 			Order_ID
 	</select>
+	
+	<select id="findByUserIdAndType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT DISTINCT
+			t.ID,t.Name,t.Code,t.Parent_ID,t.Type,t.Uri,Icon_Skin,t.Order_ID
+		FROM
+		  merchants_action t,merchants_role_action c
+		WHERE 
+			t.ID = c.Action_ID AND t.Type = #{type} AND c.Group_ID IN
+		  	(
+		  		SELECT DISTINCT
+		   			b.ID
+		  		FROM
+		    		merchants_user_role a, merchants_role b
+		  		WHERE 
+		  			a.Group_ID = b.ID AND a.User_ID = #{userId}
+		    )
+	</select>
 
 	<select id="findByIds" resultMap="resultMap" parameterType="java.util.List">
 		SELECT

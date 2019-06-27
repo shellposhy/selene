@@ -34,6 +34,11 @@ public class MerchantsUserRoleServiceImpl implements MerchantsUserRoleService {
 	}
 
 	@Override
+	public List<Integer> findAdminGroupIdsByUserId(Integer userId) {
+		return merchantsUserRoleMapper.findAdminGroupIdsByUserId(userId);
+	}
+
+	@Override
 	public List<Integer> findUserIdsByGroupId(Integer groupId) {
 		return merchantsUserRoleMapper.findUserIdsByGroupId(groupId);
 	}

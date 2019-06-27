@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import com.papaya.common.extension.Rpc;
 import com.selene.merchants.model.MerchantsUser;
+import com.selene.merchants.model.enums.EActionUserType;
 import com.selene.merchants.model.service.MerchantsUserService;
 import com.selene.merchants.provider.dao.MerchantsUserMapper;
 
@@ -34,28 +35,33 @@ public class MerchantsUserServiceImpl implements MerchantsUserService {
 	}
 
 	@Override
-	public MerchantsUser findByName(String name) {
-		return merchantsUserMapper.findByName(name);
+	public MerchantsUser findByName(String name, EActionUserType type) {
+		return merchantsUserMapper.findByName(name, type.ordinal());
 	}
 
 	@Override
-	public MerchantsUser findByNamePassword(String name, String pass) {
-		return merchantsUserMapper.findByNamePassword(name, pass);
+	public MerchantsUser findByNamePassword(String name, String pass, EActionUserType type) {
+		return merchantsUserMapper.findByNamePassword(name, pass, type.ordinal());
 	}
 
 	@Override
-	public List<MerchantsUser> findByOrgId(Integer orgId) {
-		return merchantsUserMapper.findByOrgId(orgId);
+	public List<MerchantsUser> findByOrgId(Integer orgId, EActionUserType type, Integer firstSize, Integer size) {
+		return merchantsUserMapper.findByOrgId(orgId, type.ordinal(), firstSize, size);
 	}
 
 	@Override
-	public int countByOrgAndName(Integer orgId, String name) {
-		return merchantsUserMapper.countByOrgAndName(orgId, name);
+	public int countByOrgId(Integer orgId, EActionUserType type) {
+		return merchantsUserMapper.countByOrgId(orgId, type.ordinal());
 	}
 
 	@Override
-	public int findByOrgAndName(Integer orgId, String name, Integer firstSize, Integer size) {
-		return merchantsUserMapper.findByOrgAndName(orgId, name, firstSize, size);
+	public int findByOrgAndName(Integer orgId, String name, EActionUserType type, Integer firstSize, Integer size) {
+		return merchantsUserMapper.findByOrgAndName(orgId, name, type.ordinal(), firstSize, size);
+	}
+
+	@Override
+	public int countByOrgAndName(Integer orgId, String name, EActionUserType type) {
+		return merchantsUserMapper.countByOrgAndName(orgId, name, type.ordinal());
 	}
 
 	@Override

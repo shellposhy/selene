@@ -7,12 +7,12 @@
 		<result property="id" column="ID" />
 		<result property="groupId" column="Group_ID" />
 		<result property="actionId" column="Action_ID" />
-		<result property="type" column="type" />
+		<result property="type" column="Type" />
 	</resultMap>
 	
 	<insert id="batchInsert" parameterType="java.util.List">
 		INSERT INTO 
-			merchants_role_action(Group_ID,Action_ID,type)
+			merchants_role_action(Group_ID,Action_ID,Type)
 		VALUES
 			<foreach collection="list" item="item" index="index" separator=",">
 				(#{item.groupId},#{item.actionId},#{item.type})
@@ -26,7 +26,7 @@
 			merchants_role_action 
 		WHERE 
 			Group_ID=#{groupId} 
-			<if test="type != null"> AND type = #{type}</if>
+			<if test="type != null"> AND Type = #{type}</if>
 	</select>
 
 	<delete id="deleteByGroupId">

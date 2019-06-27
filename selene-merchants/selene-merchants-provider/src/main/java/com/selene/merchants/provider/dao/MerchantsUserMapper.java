@@ -18,16 +18,21 @@ public interface MerchantsUserMapper {
 
 	public MerchantsUser find(@Param("id") Integer id);
 
-	public MerchantsUser findByName(@Param("name") String name);
+	public MerchantsUser findByName(@Param("name") String name, @Param("type") Integer type);
 
-	public MerchantsUser findByNamePassword(@Param("name") String name, @Param("pass") String pass);
+	public MerchantsUser findByNamePassword(@Param("name") String name, @Param("pass") String pass,
+			@Param("type") Integer type);
 
-	public List<MerchantsUser> findByOrgId(@Param("orgId") Integer orgId);
-
-	public int countByOrgAndName(@Param("orgId") Integer orgId, @Param("name") String name);
-
-	public int findByOrgAndName(@Param("orgId") Integer orgId, @Param("name") String name,
+	public List<MerchantsUser> findByOrgId(@Param("orgId") Integer orgId, @Param("type") Integer type,
 			@Param("firstSize") Integer firstSize, @Param("size") Integer size);
+
+	public int countByOrgId(@Param("orgId") Integer orgId, @Param("type") Integer type);
+
+	public int findByOrgAndName(@Param("orgId") Integer orgId, @Param("name") String name, @Param("type") Integer type,
+			@Param("firstSize") Integer firstSize, @Param("size") Integer size);
+
+	public int countByOrgAndName(@Param("orgId") Integer orgId, @Param("name") String name,
+			@Param("type") Integer type);
 
 	public int update(MerchantsUser user);
 

@@ -20,8 +20,11 @@ public interface MerchantsUserRoleMapper {
 	public List<Integer> findGroupIdsByUserId(@Param("userId") Integer userId);
 
 	public List<Integer> findUserIdsByGroupId(@Param("groupId") Integer groupId);
-	
+
+	public List<Integer> findAdminGroupIdsByUserId(@Param("userId") Integer userId);
+
 	public int deleteByUserId(@Param("userId") Integer userId);
 
 	public int deleteByGroupId(@Param("groupId") Integer groupId);
+
 }

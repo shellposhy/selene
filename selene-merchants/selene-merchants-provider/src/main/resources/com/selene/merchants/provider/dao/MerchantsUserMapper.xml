@@ -51,14 +51,14 @@
 			ID=#{id}
 	</select>
 
-	<select id="findByName" resultMap="resultMap" parameterType="String">
+	<select id="findByName" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
 			ID,Type,User_Type,Name,Nick_Name,Real_Name,Org_ID,Sex,Order_ID,Org_ID,IP_Address,ID_Card,
 			Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
 		FROM 
 			merchants_user 
-		WHERE  
-			Name = #{name} AND Status=1
+		WHERE
+			 Status=1 AND Name = #{name} AND Type=#{type}
 	</select>
 	
 	<select id="findByNamePassword" resultMap="resultMap" parameterType="java.util.Map">
@@ -68,30 +68,29 @@
 		FROM 
 			merchants_user 
 		WHERE  
-			Name = #{name} AND User_Password = #{pass} AND Status=1
+			Status=1 AND Name = #{name} AND User_Password = #{pass} AND Type=#{type}
 	</select>
 
-	<select id="findByOrgId" resultMap="resultMap" parameterType="java.lang.Integer">
+	<select id="findByOrgId" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
 			ID,Type,User_Type,Name,Nick_Name,Real_Name,Org_ID,Sex,Order_ID,Org_ID,IP_Address,ID_Card,
 			Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
 		FROM 
 			merchants_user 
-		WHERE  
-			Org_ID = #{orgId} AND Status=1 
-		ORDER BY ID
+		WHERE 
+			Status=1 AND Org_ID = #{orgId} AND  Type=#{type}
+		LIMIT 
+			#{firstSize}, #{size}
 	</select>
-
-	<select id="countByOrgAndName" parameterType="java.util.Map" resultType="int">
-		SELECT 
-			COUNT(*) 
+	
+	<select id="countByOrgId" resultType="int" parameterType="java.util.Map">
+		SELECT
+			COUNT(*)
 		FROM 
 			merchants_user 
-		WHERE  
-			Status=1 
-			<if test="orgId != null">AND Org_ID = #{orgId}</if>
-			<if test="name != null"> AND (Name like "%"#{name}"%" Or Real_Name like "%"#{name}"%") </if>
-	</select>
+		WHERE 
+			Status=1 AND Org_ID = #{orgId} AND  Type=#{type}
+	</select>	
 
 	<select id="findByOrgAndName" parameterType="java.util.Map" resultMap="resultMap">
 		SELECT
@@ -100,11 +99,22 @@
 		FROM 
 			merchants_user 
 		WHERE   
-			Status=1
+			Status=1 AND Type=#{type}
 			<if test="orgId != null">AND Org_ID = #{orgId}</if>
 			<if test="name != null"> AND (Name like "%"#{name}"%" Or Real_Name like "%"#{name}"%") </if>
 		LIMIT 
 			#{firstSize}, #{size}
+	</select>
+	
+	<select id="countByOrgAndName" resultType="int" parameterType="java.util.Map">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			merchants_user 
+		WHERE  
+			Status=1 AND Type=#{type}
+			<if test="orgId != null">AND Org_ID = #{orgId}</if>
+			<if test="name != null"> AND (Name like "%"#{name}"%" Or Real_Name like "%"#{name}"%") </if>
 	</select>
 
 	<update id="update">
