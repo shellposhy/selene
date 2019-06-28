@@ -25,6 +25,8 @@ public interface MerchantsOrgMapper {
 
 	public List<MerchantsOrg> findByLicense(@Param("license") String license);
 
+	public List<MerchantsOrg> findAll();
+
 	public int update(MerchantsOrg org);
 
 	public int delete(@Param("id") Integer id);

@@ -18,6 +18,18 @@ public class ListResult<T> extends Result {
 	private int pageNo = 1;// current page number
 	private List<T> data;// current data list
 
+	public ListResult() {
+	}
+
+	public ListResult(int code, String msg) {
+		super(code, msg);
+	}
+
+	public ListResult(int code, String msg, List<T> data) {
+		super(code, msg);
+		this.data = data;
+	}
+
 	public int getTotal() {
 		return total;
 	}

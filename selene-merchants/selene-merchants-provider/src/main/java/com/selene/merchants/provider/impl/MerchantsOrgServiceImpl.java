@@ -44,6 +44,11 @@ public class MerchantsOrgServiceImpl implements MerchantsOrgService {
 	}
 
 	@Override
+	public List<MerchantsOrg> findByLicense(String license) {
+		return merchantsOrgMapper.findByLicense(license);
+	}
+
+	@Override
 	public int update(MerchantsOrg org) {
 		return merchantsOrgMapper.update(org);
 	}
@@ -51,6 +56,11 @@ public class MerchantsOrgServiceImpl implements MerchantsOrgService {
 	@Override
 	public int delete(Integer id) {
 		return merchantsOrgMapper.delete(id);
+	}
+
+	@Override
+	public List<MerchantsOrg> findAll(Boolean type) {
+		return merchantsOrgMapper.findAll();
 	}
 
 }

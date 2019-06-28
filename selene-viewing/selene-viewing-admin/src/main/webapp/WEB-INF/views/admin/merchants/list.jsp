@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <html>
 	<body>
-		<div id="content" class="">
+		<div id="content">
+			<!-- breadcrumb -->
 			<div class="breadcrumb_warp">
 				<ul class="breadcrumb ind_f_tree" value="71">
 					<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
@@ -9,7 +10,9 @@
 					</li>
 				</ul>
 			</div>
+			<!-- content -->
 			<div class="box-content">
+				<!-- tab -->
 				<ul id="tab" class="nav nav-tabs nav_tabs_for_datatables">
 					<li class="active"><a href="#ulist_tab" data-toggle="tab">所有用户</a></li>
 					<li><a href="#inputUsers_tab" data-toggle="tab">批量导入</a></li>
@@ -23,11 +26,11 @@
 								<input type="hidden" id="baseId" name="baseId" value="0">
 							</div>
 							<div>
-								<ul id="userOrg" class="ztree green_tree_line leveTree"></ul>
+								<ul id="merchantsOrg" class="ztree green_tree_line leveTree"></ul>
 							</div>
 						</div>
-						<div class="right_con" id="org_user_list">
-							<div class="padlrn span6 action_buttons" id="orgUserEdit">
+						<div class="right_con" id="merchantsList">
+							<div class="padlrn span6 action_buttons" id="merchantsEdit">
 								<a class="btn btn-small add_user" href="${appPath}/admin/user/new" target="_self"><i class="icon-plus"></i> 添加</a>
 								<a class="btn btn-small delete_list" href="#"><i class="icon-trash"></i> 删除</a>
 							</div>
@@ -66,6 +69,6 @@
 				</div>
 			</div>
 		</div>
-	    <script src="${appPath}/admin/jscript/user/user.js"></script>
+	    <script src="${appPath}/admin/jscript/merchants/merchants.js"></script>
 	</body>
 </html>

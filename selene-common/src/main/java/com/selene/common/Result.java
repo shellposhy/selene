@@ -10,14 +10,22 @@ import java.io.Serializable;
  */
 public class Result implements Serializable {
 	private static final long serialVersionUID = -4571438264061689961L;
-	private String code;
+	private int code;
 	private String msg;
 
-	public String getCode() {
+	public Result() {
+	}
+
+	public Result(int code, String msg) {
+		this.code = code;
+		this.msg = msg;
+	}
+
+	public int getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public void setCode(int code) {
 		this.code = code;
 	}
 

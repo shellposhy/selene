@@ -1,69 +1,66 @@
+/**
+ * The script  for merchants and merchants organization.
+ * @author shaobo shih
+ * @version 1.0
+ */
 $(document).ready(function() {
-	init_global_org();
+	loadMerchantsOrgTree();
 	user_init();
 	upload_user();
 });
 
-
-// 初始化用户机构
-function init_global_org() {
-	if ($("#org_user_list").length > 0) {
-		$("#org_user_list").hide();
-		var url = appPath+ "/admin/org/s";
+/**
+ *  merchants list process
+ * */
+// load merchants organization tree
+function loadMerchantsOrgTree() {
+	if ($("#merchantsList").length > 0) {
+		$("#merchantsList").hide();
 		$.ajax({
 			type : "POST",
-			url : url,
+			url : appPath+ "/admin/merchants/org/s",
+			beforeSend: function(request) {//beforeSend
+                request.setRequestHeader("token", token);
+                request.setRequestHeader("refreshToken",refreshToken);
+             },
 			contentType : 'application/json',
 			success : function(data) {
 				if (data.children != null) {
-					menuTreeCom($("#userOrg"), data, true, user_org_tree_link, "org/",null, null, null, null);
+					menuTreeCom($("#merchantsOrg"), data, true, bindTreeClickEvent, "org/",null, null, null, null);
 				} else {
-					$("#userOrg").html("<h3 class='alert alert-info' >暂无机构</h3>");
+					$("#merchantsOrg").html("<h3 class='alert alert-info' >暂无机构</h3>");
 				}
 			},
 			error : function(msg) {
-				$("#userOrg").html("<h3 class='alert alert-info' >暂无机构</h3>");
+				$("#merchantsOrg").html("<h3 class='alert alert-info' >暂无机构</h3>");
 			}
 		});
 	}
 }
-//点击树形节点
-function user_org_tree_link(id) {
-	// 检索机构id检索当前机构用户
-	if ($("#org_user_list .dataTable").length > 0) {
-		oTableUserAll.fnDestroy();
+
+//bind merchants organization tree click event,and show this organization merchants user
+var merchantsDataTable;
+function bindTreeClickEvent(id) {
+	if ($("#merchantsList .dataTable").length > 0) {
+		merchantsDataTable.fnDestroy();//Destroy the history merchants user data
 		$(".selAll").parents("th").html('<label class="checkbox inline"><input type="checkbox" class="selAll" />用户名</label>')
 	}
-	user_init_list(id);
-	$("#org_user_list").show().find(".dataTable").attr("style", "width:100%");
-	$("#orgUserEdit").html("<a class='btn btn-small add_user'" + "  href='"+ appPath+ "/admin/user/"+ id+ "/new' 	target='_self'>"
-			+ "<i class='icon-plus'></i> 添加</a> <a	class='btn btn-small delete_list' href='#'>"+ "<i	class='icon-trash'></i> 删除</a>");
+	loadMerchantsByOrgId(id);
+	$("#merchantsList").show().find(".dataTable").attr("style", "width:100%");
+	var content="<a class='btn btn-small add_user' href='"+ appPath+ "/admin/merchants/"+ id+ "/new' target='_self'><i class='icon-plus'></i> 添加</a>";
+			content+="<a	class='btn btn-small delete_list' href='#'>"+ "<i	class='icon-trash'></i> 删除</a>";
+	$("#merchantsEdit").html(content);
 }
 
-
-function user_init() { // 用户编辑页面部分
-	if ($("#user_new_form").length > 0) {
-		init_user_edit();
-		init_group_list();
-		userTypeChange();
-		userStatus();
-		isModifyPw();
-		addNewUser();
-		intOrgUserEidt();
-	}
-}
-
-
-//定义公共参数
-var oTableUserAll;
-function user_init_list(orgId) {
-	oTableUserAll = $('#user').dataTable({
+//bind merchants organization data table
+function loadMerchantsByOrgId(orgId) {
+	merchantsDataTable = $('#user').dataTable({
 		"sDom" : "<'row-fluid'<'span6 alignr'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
 		"sPaginationType" : "bootstrap",
 		"bProcessing" : true,
 		"bServerSide" : true,
 		"bSort" : false,
-		"sAjaxSource" : "user/" + orgId + "/s",
+		"sAjaxSource" : "merchants/" + orgId + "/s",
 		"fnServerData" : retrieveData,
 		"fnServerParams" : function(aoData) {aoData.push({"name" : "iType","value" : 0});},
 		"iDisplayLength" : 20,
@@ -93,13 +90,31 @@ function user_init_list(orgId) {
 	});
 };
 
+/**
+ *  merchants edit process
+ * */
 // 表格回调--所有用户
 function callback_user_list() {
 	docReady();
 	trHoverEdit();
 	trHoverBtn("wrenchbtn", "icon-wrench", "repair");
-	listDelete("user/delete", oTableUserAll);
+	listDelete("user/delete", merchantsDataTable);
 };
+
+
+function user_init() { // 用户编辑页面部分
+	if ($("#user_new_form").length > 0) {
+		init_user_edit();
+		init_group_list();
+		userTypeChange();
+		userStatus();
+		isModifyPw();
+		addNewUser();
+		intOrgUserEidt();
+	}
+}
+
+
 
 //初始化修改页面
 function init_user_edit() {

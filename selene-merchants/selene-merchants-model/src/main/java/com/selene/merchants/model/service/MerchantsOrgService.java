@@ -19,6 +19,10 @@ public interface MerchantsOrgService {
 
 	public List<MerchantsOrg> findByCodeAndParentId(Integer parentId, String code, String license);
 
+	public List<MerchantsOrg> findByLicense(String license);
+	
+	public List<MerchantsOrg> findAll(Boolean type);
+
 	public int update(MerchantsOrg org);
 
 	public int delete(Integer id);

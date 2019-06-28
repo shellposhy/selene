@@ -15,6 +15,7 @@ import com.selene.common.constants.CommonConstants;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.service.merchants.UserService;
+import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.Strings.MD5;
 
@@ -60,5 +61,24 @@ public class LoginController extends BaseController {
 			return "redirect:" + request.getParameter("from");
 		}
 		return "redirect:/admin/index";
+	}
+
+	@RequestMapping("/index")
+	public String index(HttpServletRequest request) {
+		LOG.debug("Selene view admin index");
+		MerchantsUserVO currentUser = (MerchantsUserVO) request.getSession()
+				.getAttribute(CommonConstants.LOGIN_SESSION_USER);
+		if (null == currentUser) {
+			return "/admin/login";
+		} else {
+			return "/admin/index";
+		}
+	}
+
+	@RequestMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		LOG.debug("Selene view admin logout");
+		request.getSession().setAttribute(CommonConstants.LOGIN_SESSION_USER, null);
+		return "/admin/login";
 	}
 }

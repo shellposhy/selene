@@ -45,6 +45,8 @@
 			merchants_org 
 		WHERE 
 			Parent_ID=#{parentId} AND License=#{license}
+		ORDER BY
+		 	ID
 	</select>
 	
 	<select id="findByCodeAndParentId" resultMap = "resultMap" parameterType="java.util.Map">
@@ -54,6 +56,8 @@
 			merchants_org 
 		WHERE 
 		 	Parent_ID=#{parentId} AND Code=#{code} AND License=#{license}
+		 ORDER BY
+		 	ID
 	</select>
 	
 	<select id="findByLicense" resultMap = "resultMap" parameterType="java.lang.String">
@@ -62,7 +66,18 @@
 		FROM
 			merchants_org 
 		WHERE 
-		 	License=#{license}
+		 	License=#{license} 
+		 ORDER BY
+		 	ID
+	</select>
+	
+	<select id="findAll" resultMap = "resultMap">
+		SELECT 
+			ID,Super_Status,License,Org_Type,Name,Code,Parent_ID,Order_ID,Status,Inherit,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM
+			merchants_org 
+		 ORDER BY
+		 	ID
 	</select>
 	
 	<update id="update">
