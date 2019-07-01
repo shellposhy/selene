@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.common.base.Strings;
 import com.selene.common.constants.CommonConstants;
+import com.selene.common.util.RedisClients;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.service.merchants.UserService;
@@ -25,6 +26,8 @@ public class LoginController extends BaseController {
 	private final static Logger LOG = LoggerFactory.getLogger(LoginController.class.getName());
 	@Resource
 	private UserService userService;
+	@Resource
+	private RedisClients redisClient;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String admin(HttpServletRequest request) {
@@ -52,6 +55,7 @@ public class LoginController extends BaseController {
 		if (null == merchantsUser) {
 			return "/admin/login";
 		}
+		
 		request.getSession().setAttribute("jsonActionTree", userService.findMenuTreeByUser(merchantsUser));
 		request.getSession().setAttribute(CommonConstants.LOGIN_SESSION_USER, merchantsUser);
 		if (!Strings.isNullOrEmpty(request.getParameter("from"))) {

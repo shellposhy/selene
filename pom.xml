@@ -99,6 +99,10 @@
 		<!-- Email -->
 		<aliyun_core_version>3.0.0</aliyun_core_version>
 		<aliyun_core_dm_version>3.1.0</aliyun_core_dm_version>
+		<!-- token -->
+		<token_version>0.7.0</token_version>
+		<!-- Pinyin4j -->
+		<pinyin_version>2.5.1</pinyin_version>
 		<!-- Log -->
 		<slf4j_version>1.7.25</slf4j_version>
 		<log_version>1.2</log_version>
@@ -413,6 +417,18 @@
 				<groupId>com.aliyun</groupId>
 				<artifactId>aliyun-java-sdk-dm</artifactId>
 				<version>${aliyun_core_dm_version}</version>
+			</dependency>
+			<!-- token -->
+			<dependency>
+				<groupId>io.jsonwebtoken</groupId>
+				<artifactId>jjwt</artifactId>
+				<version>${token_version}</version>
+			</dependency>
+			<!-- Pinyin4j -->
+			<dependency>
+				<groupId>com.belerweb</groupId>
+				<artifactId>pinyin4j</artifactId>
+				<version>${pinyin_version}</version>
 			</dependency>
 			<!--Log -->
 			<dependency>

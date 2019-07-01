@@ -78,6 +78,10 @@ public interface CommonConstants {
 
 	int DEFAULT_TIMEOUT = 1000;
 
+	int DEFAULT_TOKEN_TIMEOUT = 7200;// Two hours
+
+	int DEFAULT_TOKEN_LONG_TIMEOUT = 86400;// One day
+
 	String REMOVE_VALUE_PREFIX = "-";
 
 	String PROPERTIES_CHAR_SEPERATOR = "-";

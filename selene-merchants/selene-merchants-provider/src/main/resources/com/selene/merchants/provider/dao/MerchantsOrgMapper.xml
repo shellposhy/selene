@@ -80,6 +80,22 @@
 		 	ID
 	</select>
 	
+	<select id="findOrgLicenseByUserId" resultType = "java.lang.String" parameterType="java.lang.Integer">
+		SELECT 
+			a.License 
+		FROM 
+			merchants_org a 
+		WHERE 
+			a.ID=(
+				SELECT 
+					b.Org_ID 
+				FROM 
+					merchants_user b 
+				WHERE 
+					b.ID=1
+			)
+	</select>
+	
 	<update id="update">
 		UPDATE 
 			merchants_org 

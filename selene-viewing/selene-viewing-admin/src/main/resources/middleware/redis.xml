@@ -16,7 +16,7 @@
 	http://www.springframework.org/schema/task
 	http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 
-	<!-- redis -->
+	<!-- Redis -->
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxIdle" value="${redis.maxIdle}" />
 		<property name="minIdle" value="10" />
@@ -45,4 +45,9 @@
 		<property name="hashKeySerializer" ref="stringRedisSerializer" />
 		<property name="hashValueSerializer" ref="stringRedisSerializer" />
 	</bean>
+	
+	<!-- Common redis utilities -->
+	<bean id="redisClient" class="com.selene.common.util.RedisClients">
+    	<property name="redisTemplate" ref="redisTemplate" />
+    </bean>
 </beans>

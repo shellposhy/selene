@@ -49,6 +49,11 @@ public class MerchantsOrgServiceImpl implements MerchantsOrgService {
 	}
 
 	@Override
+	public String findOrgLicenseByUserId(Integer userId) {
+		return merchantsOrgMapper.findOrgLicenseByUserId(userId);
+	}
+
+	@Override
 	public int update(MerchantsOrg org) {
 		return merchantsOrgMapper.update(org);
 	}

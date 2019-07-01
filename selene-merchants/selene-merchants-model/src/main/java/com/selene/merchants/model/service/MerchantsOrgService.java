@@ -22,6 +22,8 @@ public interface MerchantsOrgService {
 	public List<MerchantsOrg> findByLicense(String license);
 	
 	public List<MerchantsOrg> findAll(Boolean type);
+	
+	public String findOrgLicenseByUserId(Integer userId);
 
 	public int update(MerchantsOrg org);
 
