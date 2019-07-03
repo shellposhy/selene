@@ -1,5 +1,7 @@
 drop table if exists merchants_action;
 
+drop table if exists merchants_login_token;
+
 drop table if exists merchants_org;
 
 drop table if exists merchants_org_role;
@@ -31,6 +33,23 @@ create table merchants_action
 );
 
 alter table merchants_action comment '商户用户权限表';
+
+/*==============================================================*/
+/* Table: merchants_login_token                                 */
+/*==============================================================*/
+create table merchants_login_token
+(
+   ID                   int(11) unsigned not null auto_increment comment '主键',
+   User_ID              int(11) not null comment '商户用户编号',
+   Login_Time           datetime not null comment '登录时间',
+   Redis_Key            char(100) not null comment 'RedisKey',
+   Token                char(100) not null comment 'Token',
+   Refresh_Token        char(200) not null comment 'RefreshToken',
+   Secret_Key           char(200) not null comment '秘钥',
+   primary key (ID)
+);
+
+alter table merchants_login_token comment '商户登录表';
 
 /*==============================================================*/
 /* Table: merchants_org                                         */

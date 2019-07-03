@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.common.base.Strings;
 import com.selene.common.constants.CommonConstants;
+import com.selene.common.token.login.LoginToken;
 import com.selene.common.util.RedisClients;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.viewing.admin.controller.BaseController;
@@ -49,15 +50,22 @@ public class LoginController extends BaseController {
 	@RequestMapping(value = "/security/check", method = RequestMethod.POST)
 	public String excute(HttpServletRequest request) {
 		LOG.debug("Selene view admin security check");
+		// login process
 		String name = request.getParameter("username");
 		String password = request.getParameter("password");
 		MerchantsUser merchantsUser = userService.findByNameAndPass(name, MD5(password));
 		if (null == merchantsUser) {
 			return "/admin/login";
 		}
-		
-		request.getSession().setAttribute("jsonActionTree", userService.findMenuTreeByUser(merchantsUser));
-		request.getSession().setAttribute(CommonConstants.LOGIN_SESSION_USER, merchantsUser);
+		MerchantsUserVO vo = new MerchantsUserVO(merchantsUser);
+		// action process
+		userService.findMenuTreeByUser(vo);
+		vo.setLicense(userService.findLicenseByUserId(merchantsUser.getId()));
+		// token process
+		String jwt = new LoginToken().encrypt(vo.getLicense(), vo.getId().toString(), vo.getLicense());
+		System.out.println(jwt);
+		request.getSession().setAttribute("jsonActionTree", vo.getActionTree());
+		request.getSession().setAttribute(CommonConstants.LOGIN_SESSION_USER, vo);
 		if (!Strings.isNullOrEmpty(request.getParameter("from"))) {
 			if (!Strings.isNullOrEmpty(request.getParameter("from"))) {
 				return "redirect:" + request.getParameter("from");
