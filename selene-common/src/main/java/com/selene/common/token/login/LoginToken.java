@@ -21,6 +21,10 @@ public class LoginToken extends AbstractToken {
 		return super.encrypt(appKey, jti, iss, null, null, null, null, null, null, SignatureAlgorithm.HS256);
 	}
 
+	public String encrypt(String appKey, String jti, String iss, Date exp) {
+		return super.encrypt(appKey, jti, iss, null, null, exp, null, null, null, SignatureAlgorithm.HS256);
+	}
+
 	public String encrypt(String appKey, String jti, String iss, String sub, Date exp) {
 		return super.encrypt(appKey, jti, iss, sub, null, exp, null, null, null, SignatureAlgorithm.HS256);
 	}
@@ -33,8 +37,7 @@ public class LoginToken extends AbstractToken {
 		return super.decrypt(appKey, content).getBody();
 	}
 
-	@SuppressWarnings("rawtypes")
-	public JwsHeader header(String appKey, String content) {
+	public JwsHeader<?> header(String appKey, String content) {
 		return super.decrypt(appKey, content).getHeader();
 	}
 

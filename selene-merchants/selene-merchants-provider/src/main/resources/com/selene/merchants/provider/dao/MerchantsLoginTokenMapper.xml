@@ -10,6 +10,7 @@
 		<result property="token" column="Token" />
 		<result property="refreshToken" column="Refresh_Token" />
 		<result property="secretKey" column="Secret_Key" />
+		<result property="jwt" column="Jwt" />
 	</resultMap>
 
 	<insert id="insert">
@@ -17,14 +18,14 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO 
-			merchants_login_token(User_ID,Login_Time,Redis_Key,Token,Refresh_Token,Secret_Key)
+			merchants_login_token(User_ID,Login_Time,Redis_Key,Token,Refresh_Token,Secret_Key,Jwt)
 		VALUES
-			(#{userId},#{loginTime},#{redisKey},#{token},#{refreshToken},#{secretKey})
+			(#{userId},#{loginTime},#{redisKey},#{token},#{refreshToken},#{secretKey},#{jwt})
 	</insert>
 	
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT
-			 ID,User_ID,Login_Time,Redis_Key,Token,Refresh_Token,Secret_Key
+			 ID,User_ID,Login_Time,Redis_Key,Token,Refresh_Token,Secret_Key,Jwt
 		FROM 
 			merchants_login_token 
 		WHERE 
@@ -33,7 +34,7 @@
 
 	<select id="findByUserId" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT
-			 ID,User_ID,Login_Time,Redis_Key,Token,Refresh_Token,Secret_Key
+			 ID,User_ID,Login_Time,Redis_Key,Token,Refresh_Token,Secret_Key,Jwt
 		FROM 
 			merchants_login_token 
 		WHERE 
@@ -46,9 +47,10 @@
 		<set>
 			<if test="loginTime != null">Login_Time=#{loginTime},</if>
 			<if test="redisKey != null">Redis_Key=#{redisKey},</if>
-			<if test="token != null">token=#{Token},</if>
+			<if test="token != null">Token=#{token},</if>
 			<if test="refreshToken != null">Refresh_Token=#{refreshToken},</if>
-			<if test="secretKey != null">Secret_Key=#{secretKey}</if>
+			<if test="secretKey != null">Secret_Key=#{secretKey},</if>
+			<if test="jwt != null">Jwt=#{jwt}</if>
 		</set>
 		WHERE 
 			ID=#{id}

@@ -46,6 +46,7 @@ create table merchants_login_token
    Token                char(100) not null comment 'Token',
    Refresh_Token        char(200) not null comment 'RefreshToken',
    Secret_Key           char(200) not null comment '秘钥',
+   Jwt                  varchar(2000) not null comment 'jwt',
    primary key (ID)
 );
 

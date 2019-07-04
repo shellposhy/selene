@@ -21,6 +21,21 @@ public class MerchantsLoginToken extends BaseModel {
 	private String token;
 	private String refreshToken;
 	private String secretKey;
+	private String jwt;
+
+	public MerchantsLoginToken() {
+	}
+
+	public MerchantsLoginToken(Integer userId, Date loginTime, String redisKey, String token, String refreshToken,
+			String secretKey, String jwt) {
+		this.userId = userId;
+		this.loginTime = loginTime;
+		this.redisKey = redisKey;
+		this.token = token;
+		this.refreshToken = refreshToken;
+		this.secretKey = secretKey;
+		this.jwt = jwt;
+	}
 
 	public Integer getUserId() {
 		return userId;
@@ -68,6 +83,14 @@ public class MerchantsLoginToken extends BaseModel {
 
 	public void setSecretKey(String secretKey) {
 		this.secretKey = secretKey;
+	}
+
+	public String getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(String jwt) {
+		this.jwt = jwt;
 	}
 
 }

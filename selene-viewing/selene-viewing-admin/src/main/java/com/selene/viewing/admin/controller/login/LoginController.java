@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.common.base.Strings;
 import com.selene.common.constants.CommonConstants;
-import com.selene.common.token.login.LoginToken;
 import com.selene.common.util.RedisClients;
+import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.service.merchants.UserService;
@@ -62,16 +62,18 @@ public class LoginController extends BaseController {
 		userService.findMenuTreeByUser(vo);
 		vo.setLicense(userService.findLicenseByUserId(merchantsUser.getId()));
 		// token process
-		String jwt = new LoginToken().encrypt(vo.getLicense(), vo.getId().toString(), vo.getLicense());
-		System.out.println(jwt);
+		MerchantsLoginToken loginToken = userService.token(vo.getId(), vo.getLicense(), true, true);
+		vo.setLoginTime(loginToken.getLoginTime());
+		vo.setRedisKey(loginToken.getRedisKey());
+		vo.setToken(loginToken.getToken());
+		vo.setRefreshToken(loginToken.getRefreshToken());
+		// redis process
+		System.out.println(redisClient);
+		redisClient.set(vo.getToken(), vo, CommonConstants.DEFAULT_TOKEN_TIMEOUT);
+		redisClient.set(vo.getRefreshToken(), vo, CommonConstants.DEFAULT_TOKEN_LONG_TIMEOUT);
+		// session
 		request.getSession().setAttribute("jsonActionTree", vo.getActionTree());
 		request.getSession().setAttribute(CommonConstants.LOGIN_SESSION_USER, vo);
-		if (!Strings.isNullOrEmpty(request.getParameter("from"))) {
-			if (!Strings.isNullOrEmpty(request.getParameter("from"))) {
-				return "redirect:" + request.getParameter("from");
-			}
-			return "redirect:" + request.getParameter("from");
-		}
 		return "redirect:/admin/index";
 	}
 

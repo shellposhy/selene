@@ -632,7 +632,7 @@ public class RedisClients {
 	}
 
 	// Properties into by spring bean
-	public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+	public RedisClients(RedisTemplate<String, Object> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
 }
