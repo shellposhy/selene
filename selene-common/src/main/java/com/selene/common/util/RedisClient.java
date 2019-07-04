@@ -14,7 +14,7 @@ import org.springframework.util.CollectionUtils;
  * @author shaobo shih
  * @version 1.0
  */
-public class RedisClients {
+public class RedisClient {
 	private RedisTemplate<String, Object> redisTemplate;
 
 	// methods for keys
@@ -632,7 +632,12 @@ public class RedisClients {
 	}
 
 	// Properties into by spring bean
-	public RedisClients(RedisTemplate<String, Object> redisTemplate) {
+	public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
+
+	public RedisTemplate<String, Object> getRedisTemplate() {
+		return redisTemplate;
+	}
+
 }

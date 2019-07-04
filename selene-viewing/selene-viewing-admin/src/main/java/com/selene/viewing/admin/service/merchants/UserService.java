@@ -17,6 +17,7 @@ import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.ServiceConstants;
 import com.selene.common.token.login.LoginToken;
+import com.selene.common.util.RedisClient;
 import com.selene.merchants.model.MerchantsAction;
 import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsUser;
@@ -38,6 +39,8 @@ public class UserService {
 	private Map<String, Object> services = new HashMap<String, Object>();
 	@Resource
 	private Client client;
+	@Resource
+	private RedisClient redisClient;
 
 	@PostConstruct
 	public void init() {
@@ -175,5 +178,10 @@ public class UserService {
 			}
 		}
 		return null;
+	}
+
+	// Properties into by spring bean
+	public RedisClient getRedisClient() {
+		return redisClient;
 	}
 }
