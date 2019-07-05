@@ -14,12 +14,12 @@ public class SpringRedisTest {
 		
 		System.out.println(template);
 
-		template.opsForValue().set("haha", "haha");
+		template.opsForValue().set("wanglili", "wanglili");
 		
 		RedisClient client = new RedisClient();
 		client.setRedisTemplate(template);
 
-		client.set("test", "test");
+		client.set("wanglili1", "wanglili1");
 		
 		ac.close();
 

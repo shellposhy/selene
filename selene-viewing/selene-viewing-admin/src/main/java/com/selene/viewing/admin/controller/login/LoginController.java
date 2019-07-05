@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.common.base.Strings;
 import com.selene.common.constants.CommonConstants;
+import com.selene.common.util.RedisClient;
 import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.viewing.admin.controller.BaseController;
@@ -26,6 +27,8 @@ public class LoginController extends BaseController {
 	private final static Logger LOG = LoggerFactory.getLogger(LoginController.class.getName());
 	@Resource
 	private UserService userService;
+	@Resource
+	private RedisClient redisClient;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String admin(HttpServletRequest request) {
@@ -65,8 +68,8 @@ public class LoginController extends BaseController {
 		vo.setToken(loginToken.getToken());
 		vo.setRefreshToken(loginToken.getRefreshToken());
 		// redis process
-		userService.getRedisClient().set(vo.getToken(), vo, CommonConstants.DEFAULT_TOKEN_TIMEOUT);
-		userService.getRedisClient().set(vo.getRefreshToken(), vo, CommonConstants.DEFAULT_TOKEN_LONG_TIMEOUT);
+		redisClient.set(vo.getToken(), vo, CommonConstants.DEFAULT_TOKEN_TIMEOUT);
+		redisClient.set(vo.getRefreshToken(), vo, CommonConstants.DEFAULT_TOKEN_LONG_TIMEOUT);
 		// session
 		request.getSession().setAttribute("jsonActionTree", vo.getActionTree());
 		request.getSession().setAttribute(CommonConstants.LOGIN_SESSION_USER, vo);

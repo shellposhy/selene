@@ -182,6 +182,8 @@ public class UserService {
 
 	// Properties into by spring bean
 	public RedisClient getRedisClient() {
+		System.out.println("======"+redisClient);
+		System.out.println(redisClient.set("11112333333", "eeeeeeeeeeeeee"));
 		return redisClient;
 	}
 }
