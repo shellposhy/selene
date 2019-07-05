@@ -1,4 +1,4 @@
-package com.selene.viewing.admin.controller.login;
+package com.selene.viewing.admin.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +15,6 @@ import com.selene.common.constants.CommonConstants;
 import com.selene.common.util.RedisClient;
 import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsUser;
-import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.service.merchants.UserService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
