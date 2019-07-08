@@ -149,6 +149,10 @@ public class UserService {
 						jwt.lastIndexOf(CommonConstants.HIDE_KEY_PREFIX));
 				String signature = jwt.substring(jwt.lastIndexOf(CommonConstants.HIDE_KEY_PREFIX) + 1, jwt.length());
 				String token = MD5(payload + format(loginTime, "yyyyMMddHHmmssSSS"));
+				// Delete history token and refresh token
+				redisClient.delete(loginToken.getToken());
+				redisClient.delete(loginToken.getRefreshToken());
+				// Set new token and refresh token
 				loginToken.setLoginTime(loginTime);
 				loginToken.setRedisKey(token);
 				loginToken.setToken(token);
@@ -168,6 +172,8 @@ public class UserService {
 					Date loginTime = new Date();
 					loginTime.setTime(dateTime);
 					String token = MD5(loginToken.getRefreshToken() + format(loginTime, "yyyyMMddHHmmssSSS"));
+					// Delete history token
+					redisClient.delete(loginToken.getToken());
 					// only update new token
 					loginToken.setRedisKey(token);
 					loginToken.setToken(token);
