@@ -22,7 +22,7 @@
 						<!-- org tree -->
 						<div class="left_tree">
 							<div>
-								<a class="btn btn-small" href="${appPath}/admin/org/new" id="add_g_db_btn" target="_self"><i class="icon-plus"></i>添加机构</a>
+								<a class="btn btn-small" href="${appPath}/admin/merchants/org/new" id="add_g_db_btn" target="_self"><i class="icon-plus"></i>添加机构</a>
 								<input type="hidden" id="baseId" name="baseId" value="0">
 							</div>
 							<div>
@@ -37,20 +37,22 @@
 							<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered bootstrap-datatable trHoverEdit" id="user">
 								<thead>
 									<tr>
-										<th><label class="checkbox inline"><input type="checkbox" class="selAll" />用户名</label></th>
-										<th>姓名</th>
-										<th>所属角色</th>
-										<th>登录方式</th>
+										<th><label class="checkbox inline"><input type="checkbox" class="selAll" />账户</label></th>
+										<th>真实姓名</th>
+										<th>性别</th>
+										<th>手机号码</th>
+										<th>电子邮箱</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
 								<tfoot>
 									<tr>
-										<th>用户名</th>
-										<th>姓名</th>
-										<th>所属角色</th>
-										<th>登录方式</th>
+										<th>账户</th>
+										<th>真实姓名</th>
+										<th>性别</th>
+										<th>手机号码</th>
+										<th>电子邮箱</th>
 									</tr>
 								</tfoot>
 							</table>

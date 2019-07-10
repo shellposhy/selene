@@ -150,4 +150,5 @@ public interface CommonConstants {
 
 	String PORT_KEY = "port";
 
+	int SUPER_ADMIN = 1;
 }

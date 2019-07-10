@@ -23,6 +23,8 @@ public class MerchantsOrg extends TreeNodeModel<MerchantsOrg> {
 	private Integer orderId;
 	private EOrgStatus status;
 	private boolean inherit;
+	// Expand field for org role list string
+	private String treeSelId;
 
 	public boolean isSuperStatus() {
 		return superStatus;
@@ -78,6 +80,14 @@ public class MerchantsOrg extends TreeNodeModel<MerchantsOrg> {
 
 	public void setInherit(boolean inherit) {
 		this.inherit = inherit;
+	}
+
+	public String getTreeSelId() {
+		return treeSelId;
+	}
+
+	public void setTreeSelId(String treeSelId) {
+		this.treeSelId = treeSelId;
 	}
 
 }

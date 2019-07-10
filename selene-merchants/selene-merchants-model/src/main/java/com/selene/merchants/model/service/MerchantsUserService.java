@@ -24,9 +24,10 @@ public interface MerchantsUserService {
 
 	public int countByOrgId(Integer orgId, EActionUserType type);
 
-	public int countByOrgAndName(Integer orgId, String name, EActionUserType type);
+	public List<MerchantsUser> findByOrgAndName(Integer orgId, String name, EActionUserType type, Integer firstSize,
+			Integer size);
 
-	public int findByOrgAndName(Integer orgId, String name, EActionUserType type, Integer firstSize, Integer size);
+	public int countByOrgAndName(Integer orgId, String name, EActionUserType type);
 
 	public int update(MerchantsUser user);
 

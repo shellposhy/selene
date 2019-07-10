@@ -1,5 +1,6 @@
 package com.selene.viewing.admin.service.merchants;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,24 +14,31 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.nanshan.papaya.rpc.client.Client;
+import com.selene.common.Node;
 import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.ServiceConstants;
+import com.selene.common.result.ListResult;
 import com.selene.common.token.login.LoginToken;
+import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.util.RedisClient;
 import com.selene.merchants.model.MerchantsAction;
 import com.selene.merchants.model.MerchantsLoginToken;
+import com.selene.merchants.model.MerchantsOrg;
+import com.selene.merchants.model.MerchantsRole;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.merchants.model.enums.EActionUserType;
 import com.selene.merchants.model.service.MerchantsActionService;
 import com.selene.merchants.model.service.MerchantsLoginTokenService;
 import com.selene.merchants.model.service.MerchantsOrgService;
+import com.selene.merchants.model.service.MerchantsRoleService;
 import com.selene.merchants.model.service.MerchantsUserRoleService;
 import com.selene.merchants.model.service.MerchantsUserService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.DateUtil.format;
 import static cn.com.lemon.base.Strings.MD5;
+import static cn.com.lemon.base.Strings.isNullOrEmpty;
 
 @Service
 public class UserService {
@@ -46,6 +54,81 @@ public class UserService {
 	public void init() {
 		LOG.info("[selene-viewing-admin] init " + ServiceConfiger.class.getName() + " service!");
 		configer = new ServiceConfiger(UserService.class.getResource("/").getPath() + "selene.sevice.properties");
+	}
+
+	@SuppressWarnings("static-access")
+	public MerchantsOrg findMerchantsOrgById(Integer id) {
+		// Initialize the required services
+		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
+		if (orgService == null) {
+			orgService = client.create(MerchantsOrgService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
+			services.put(MerchantsOrgService.class.getName(), orgService);
+		}
+		// business process
+		return orgService.find(id);
+	}
+
+	@SuppressWarnings("static-access")
+	public List<Node<Integer, String>> findOrgRole(Integer userId) {
+		// Initialize the required services
+		MerchantsRoleService roleService = (MerchantsRoleService) services.get(MerchantsRoleService.class.getName());
+		if (roleService == null) {
+			roleService = client.create(MerchantsRoleService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
+			services.put(MerchantsRoleService.class.getName(), roleService);
+		}
+		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
+		if (orgService == null) {
+			orgService = client.create(MerchantsOrgService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
+			services.put(MerchantsOrgService.class.getName(), orgService);
+		}
+		// business process
+		List<MerchantsRole> list = roleService.findByUserId(userId, orgService.findOrgLicenseByUserId(userId));
+		if (list != null && list.size() > 0) {
+			List<Node<Integer, String>> result = new ArrayList<Node<Integer, String>>();
+			for (MerchantsRole role : list) {
+				Node<Integer, String> node = new Node<Integer, String>();
+				node.id = role.getId();
+				node.name = role.getName();
+				result.add(node);
+			}
+			return result;
+		}
+		return null;
+	}
+
+	@SuppressWarnings("static-access")
+	public ListResult<MerchantsUser> findOrgUserByPage(Integer orgId, String name, Integer firstSize, Integer size) {
+		// Initialize the required services
+		MerchantsUserService userService = (MerchantsUserService) services.get(MerchantsUserService.class.getName());
+		if (userService == null) {
+			userService = client.create(MerchantsUserService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
+			services.put(MerchantsUserService.class.getName(), userService);
+		}
+		// business process
+		ListResult<MerchantsUser> result = new ListResult<MerchantsUser>();
+		if (isNullOrEmpty(name)) {
+			result.setData(userService.findByOrgId(orgId, EActionUserType.Admin, firstSize, size));
+			result.setTotal(userService.countByOrgId(orgId, EActionUserType.Admin));
+		} else {
+			result.setData(userService.findByOrgAndName(orgId, name, EActionUserType.Admin, firstSize, size));
+			result.setTotal(userService.countByOrgAndName(orgId, name, EActionUserType.Admin));
+		}
+		return result;
+	}
+
+	@SuppressWarnings("static-access")
+	public DefaultTreeNode findUserOrgTree(Integer userId) {
+		// Initialize the required services
+		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
+		if (orgService == null) {
+			orgService = client.create(MerchantsOrgService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
+			services.put(MerchantsOrgService.class.getName(), orgService);
+		}
+		// business process
+		String license = orgService.findOrgLicenseByUserId(userId);
+		List<MerchantsOrg> list = /* Super Administrator */ (userId.intValue() == CommonConstants.SUPER_ADMIN)
+				? orgService.findAll(Boolean.TRUE) : orgService.findByLicense(license);
+		return DefaultTreeNode.parseTree(list);
 	}
 
 	@SuppressWarnings("static-access")

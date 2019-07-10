@@ -28,8 +28,8 @@ public interface MerchantsUserMapper {
 
 	public int countByOrgId(@Param("orgId") Integer orgId, @Param("type") Integer type);
 
-	public int findByOrgAndName(@Param("orgId") Integer orgId, @Param("name") String name, @Param("type") Integer type,
-			@Param("firstSize") Integer firstSize, @Param("size") Integer size);
+	public List<MerchantsUser> findByOrgAndName(@Param("orgId") Integer orgId, @Param("name") String name,
+			@Param("type") Integer type, @Param("firstSize") Integer firstSize, @Param("size") Integer size);
 
 	public int countByOrgAndName(@Param("orgId") Integer orgId, @Param("name") String name,
 			@Param("type") Integer type);

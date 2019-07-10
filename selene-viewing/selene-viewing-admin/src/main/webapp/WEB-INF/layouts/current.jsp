@@ -36,8 +36,8 @@
 		<!-- JQuery global variable -->
 		<script type="text/javascript">
 			var appPath = "${appPath}";
-			var token="${token}";
-			var refreshToken="${refreshToken}";
+			var token="${login_session_user.token}";
+			var refreshToken="${login_session_user.refreshToken}";
 		</script>
 		<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>

@@ -1912,7 +1912,7 @@ table th label {
 }
 
 .left_tree {
-	width: 200px;
+	width: 300px;
 	/*position: absolute;
 	left: 0;
 	top:0;*/
@@ -1921,7 +1921,7 @@ table th label {
 
 .right_con {
 	min-width: 756px;
-	margin-left: 240px;
+	margin-left: 300px;
 }
 
 .tree_separated .box-content {

@@ -92,7 +92,7 @@
 				FROM 
 					merchants_user b 
 				WHERE 
-					b.ID=1
+					b.ID=#{userId}
 			)
 	</select>
 	

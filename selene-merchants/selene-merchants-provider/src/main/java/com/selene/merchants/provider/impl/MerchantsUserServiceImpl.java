@@ -55,7 +55,8 @@ public class MerchantsUserServiceImpl implements MerchantsUserService {
 	}
 
 	@Override
-	public int findByOrgAndName(Integer orgId, String name, EActionUserType type, Integer firstSize, Integer size) {
+	public List<MerchantsUser> findByOrgAndName(Integer orgId, String name, EActionUserType type, Integer firstSize,
+			Integer size) {
 		return merchantsUserMapper.findByOrgAndName(orgId, name, type.ordinal(), firstSize, size);
 	}
 

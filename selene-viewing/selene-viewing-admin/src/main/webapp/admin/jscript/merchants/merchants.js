@@ -4,9 +4,13 @@
  * @version 1.0
  */
 $(document).ready(function() {
+	//merchants list and user
 	loadMerchantsOrgTree();
 	user_init();
 	upload_user();
+	//merchants org
+	loadRadioMerchantsOrgTree();
+	loadUserGuOptions();
 });
 
 /**
@@ -25,8 +29,8 @@ function loadMerchantsOrgTree() {
              },
 			contentType : 'application/json',
 			success : function(data) {
-				if (data.children != null) {
-					menuTreeCom($("#merchantsOrg"), data, true, bindTreeClickEvent, "org/",null, null, null, null);
+				if (data.data.children != null) {
+					menuTreeCom($("#merchantsOrg"), data.data, true, bindTreeClickEvent, "org/",null, null, null, null);
 				} else {
 					$("#merchantsOrg").html("<h3 class='alert alert-info' >暂无机构</h3>");
 				}
@@ -81,19 +85,17 @@ function loadMerchantsByOrgId(orgId) {
 					}
 				}, {
 					"mData" : "realName"
+				},{
+					"mData" : "sex"
 				}, {
-					"mData" : "groupNames"
+					"mData" : "phoneNumber"
 				}, {
-					"mData" : "userTypeName"
+					"mData" : "email"
 				} ],
 		"fnDrawCallback" : callback_user_list
 	});
 };
 
-/**
- *  merchants edit process
- * */
-// 表格回调--所有用户
 function callback_user_list() {
 	docReady();
 	trHoverEdit();
@@ -101,7 +103,84 @@ function callback_user_list() {
 	listDelete("user/delete", merchantsDataTable);
 };
 
+/**
+ *  merchants org process
+ * */
+//load merchants organization tree
+function loadRadioMerchantsOrgTree() {
+	if ($(".treeSelId").length > 0){
+		$.ajax({
+			type : "POST",
+			url : appPath + "/admin/merchants/org/s",
+			beforeSend: function(request) {//beforeSend
+                request.setRequestHeader("token", token);
+                request.setRequestHeader("refreshToken",refreshToken);
+             },
+			contentType : 'application/json',
+			success : function(data) {
+				if (data.data.children != null) {
+					treeRadioCom($("#merchantsOrgTree .treeNew"), data.data, false);
+					setTimeout("$('.treeSelId').click()", 800);
+				}
+			}
+		});
+	}
+}
 
+//Load multiple selected user roles
+function loadUserGuOptions() {
+	if ($("#org_new_form #name").val()) {
+		if ($("#treeSelId").val()) {
+			var trSIdArry = ($("#treeSelId").val()).split(",");
+		}
+		if ($("#groupListJson").text()) {
+			var groupListJson = $("#groupListJson").text();
+			var groupListJsonO = new Function("return" + groupListJson)();
+			var tmpOptions = "";
+			for ( var i = 0; i < groupListJsonO.length; i++) {
+				if ($("#treeSelId").val()) {
+					var tmpOptionsTrue = "";
+					for ( var j = 0; j < trSIdArry.length; j++) {
+						if (trSIdArry[j] == groupListJsonO[i].id) {
+							tmpOptionsTrue = "<option  selected='true' value='"+ groupListJsonO[i].id + "'>"+ groupListJsonO[i].name + "</option>";
+							break;
+						}
+					}
+					if (tmpOptionsTrue != "") {
+						tmpOptions += tmpOptionsTrue;
+					} else {
+						tmpOptions += "<option  value='" + groupListJsonO[i].id+ "'>" + groupListJsonO[i].name + "</option>";
+					}
+				} else {
+					tmpOptions += "<option value='" + groupListJsonO[i].id + "'>" + groupListJsonO[i].name + "</option>";
+				}
+			}
+			$("#org_new_form #treeSelId_box").append(tmpOptions);
+		}
+	} else {
+		if ($("#groupListJson").text()) {
+			var groupListJson = $("#groupListJson").text();
+			var groupListJsonO = new Function("return" + groupListJson)();
+			var temOptions = "";
+			for ( var i = 0; i < groupListJsonO.length; i++) {
+				tmpOptions += "<option value='" + groupListJsonO[i].id + "'>" + groupListJsonO[i].name + "</option>";
+			}
+			$("#org_new_form #treeSelId_box").html(tmpOptions);
+		}
+	}
+	var treeSelIds = $("#org_new_form #treeSelId_box").val();
+	$("#treeSelId").val(treeSelIds);
+
+	$("#org_new_form #treeSelId_box").change(function() {
+		var treeSelIdsn = $("#org_new_form #treeSelId_box").val();
+		$("#treeSelId").val(treeSelIdsn);
+	});
+}
+
+
+/**
+ *  merchants edit process
+ * */
 function user_init() { // 用户编辑页面部分
 	if ($("#user_new_form").length > 0) {
 		init_user_edit();
