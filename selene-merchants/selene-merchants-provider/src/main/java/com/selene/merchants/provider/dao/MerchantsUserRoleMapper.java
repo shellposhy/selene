@@ -27,4 +27,6 @@ public interface MerchantsUserRoleMapper {
 
 	public int deleteByGroupId(@Param("groupId") Integer groupId);
 
+	public int deleteByUserIdAndGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId);
+
 }

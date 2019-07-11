@@ -90,6 +90,16 @@
 			merchants_user 
 		WHERE 
 			Status=1 AND Org_ID = #{orgId} AND  Type=#{type}
+	</select>
+	
+	<select id="findAllByOrgId" parameterType="java.util.Map" resultMap="resultMap">
+		SELECT
+			ID,Type,User_Type,Name,Nick_Name,Real_Name,Org_ID,Sex,Order_ID,Org_ID,IP_Address,ID_Card,
+			Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_user 
+		WHERE 
+			Status=1 AND Org_ID = #{orgId} AND  Type=#{type}
 	</select>	
 
 	<select id="findByOrgAndName" parameterType="java.util.Map" resultMap="resultMap">
@@ -115,6 +125,28 @@
 			Status=1 AND Type=#{type}
 			<if test="orgId != null">AND Org_ID = #{orgId}</if>
 			<if test="name != null"> AND (Name like "%"#{name}"%" Or Real_Name like "%"#{name}"%") </if>
+	</select>
+	
+	<select id="findHaveRoleIdByUserAndOrg" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT 
+			DISTINCT a.Group_ID
+		FROM
+			(
+				SELECT  
+					DISTINCT m.Group_ID 
+				FROM 
+					merchants_org_role m WHERE  m.Org_ID = #{orgId} 
+			) a,
+		  	(
+		  		SELECT  
+		  			DISTINCT n.Group_ID 
+		  		FROM 
+		  			merchants_user_role n,merchants_user p 
+		  		WHERE  
+		  			n.User_ID = p.ID AND p.Status=1 AND p.Org_ID = #{orgId} 
+		  	) b
+		WHERE 
+			a.Group_ID = b.Group_ID
 	</select>
 
 	<update id="update">

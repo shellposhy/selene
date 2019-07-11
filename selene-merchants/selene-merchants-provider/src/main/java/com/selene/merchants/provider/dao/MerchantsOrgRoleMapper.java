@@ -18,7 +18,7 @@ public interface MerchantsOrgRoleMapper {
 
 	public int batchInsert(List<MerchantsOrgRole> list);
 
-	public List<MerchantsOrgRole> findGroupIdsByOrgId(@Param("orgId") Integer orgId);
+	public List<Integer> findGroupIdsByOrgId(@Param("orgId") Integer orgId);
 
 	public int deleteByOrgId(@Param("orgId") Integer orgId);
 	

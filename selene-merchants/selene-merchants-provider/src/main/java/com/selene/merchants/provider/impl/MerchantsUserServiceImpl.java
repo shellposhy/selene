@@ -55,6 +55,11 @@ public class MerchantsUserServiceImpl implements MerchantsUserService {
 	}
 
 	@Override
+	public List<MerchantsUser> findAllByOrgId(Integer orgId, EActionUserType type) {
+		return merchantsUserMapper.findAllByOrgId(orgId, type.ordinal());
+	}
+
+	@Override
 	public List<MerchantsUser> findByOrgAndName(Integer orgId, String name, EActionUserType type, Integer firstSize,
 			Integer size) {
 		return merchantsUserMapper.findByOrgAndName(orgId, name, type.ordinal(), firstSize, size);
@@ -63,6 +68,11 @@ public class MerchantsUserServiceImpl implements MerchantsUserService {
 	@Override
 	public int countByOrgAndName(Integer orgId, String name, EActionUserType type) {
 		return merchantsUserMapper.countByOrgAndName(orgId, name, type.ordinal());
+	}
+
+	@Override
+	public List<Integer> findHaveRoleIdByUserAndOrg(Integer orgId) {
+		return merchantsUserMapper.findHaveRoleIdByUserAndOrg(orgId);
 	}
 
 	@Override

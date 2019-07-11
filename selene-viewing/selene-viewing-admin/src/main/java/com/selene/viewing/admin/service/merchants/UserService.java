@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -25,11 +27,14 @@ import com.selene.common.util.RedisClient;
 import com.selene.merchants.model.MerchantsAction;
 import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsOrg;
+import com.selene.merchants.model.MerchantsOrgRole;
 import com.selene.merchants.model.MerchantsRole;
 import com.selene.merchants.model.MerchantsUser;
+import com.selene.merchants.model.MerchantsUserRole;
 import com.selene.merchants.model.enums.EActionUserType;
 import com.selene.merchants.model.service.MerchantsActionService;
 import com.selene.merchants.model.service.MerchantsLoginTokenService;
+import com.selene.merchants.model.service.MerchantsOrgRoleService;
 import com.selene.merchants.model.service.MerchantsOrgService;
 import com.selene.merchants.model.service.MerchantsRoleService;
 import com.selene.merchants.model.service.MerchantsUserRoleService;
@@ -39,6 +44,7 @@ import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 import static cn.com.lemon.base.DateUtil.format;
 import static cn.com.lemon.base.Strings.MD5;
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
+import static cn.com.lemon.base.Strings.split;
 
 @Service
 public class UserService {
@@ -51,38 +57,185 @@ public class UserService {
 	private RedisClient redisClient;
 
 	@PostConstruct
+	@SuppressWarnings("static-access")
 	public void init() {
 		LOG.info("[selene-viewing-admin] init " + ServiceConfiger.class.getName() + " service!");
+		// Initialization merchants service registry address
 		configer = new ServiceConfiger(UserService.class.getResource("/").getPath() + "selene.sevice.properties");
+		String merchantsService = configer.value(ServiceConstants.MERCHANTS_KEY);
+		// Initialization merchants service
+		services.put(MerchantsOrgService.class.getName(), client.create(MerchantsOrgService.class, merchantsService));
+		services.put(MerchantsRoleService.class.getName(), client.create(MerchantsRoleService.class, merchantsService));
+		services.put(MerchantsUserService.class.getName(), client.create(MerchantsUserService.class, merchantsService));
+		services.put(MerchantsActionService.class.getName(),
+				client.create(MerchantsActionService.class, merchantsService));
+		services.put(MerchantsUserRoleService.class.getName(),
+				client.create(MerchantsUserRoleService.class, merchantsService));
+		services.put(MerchantsLoginTokenService.class.getName(),
+				client.create(MerchantsLoginTokenService.class, merchantsService));
+		services.put(MerchantsOrgRoleService.class.getName(),
+				client.create(MerchantsOrgRoleService.class, merchantsService));
 	}
 
-	@SuppressWarnings("static-access")
+	/**
+	 * Delete Merchants organization
+	 * 
+	 * @param orgId
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int deleteMerchantsOrg(Integer orgId) {
+		if (/* Delete organization */((MerchantsOrgService) services.get(MerchantsOrgService.class.getName()))
+				.delete(orgId) > 0) {
+			return (/* Delete organization role */(MerchantsOrgRoleService) services
+					.get(MerchantsOrgRoleService.class.getName())).deleteByOrgId(orgId);
+		}
+		return 0;
+	}
+
+	/**
+	 * Save Merchants organization
+	 * 
+	 * @param merchantsOrg
+	 *            {@code MerchantsOrg}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveMerchantsOrg(MerchantsOrg merchantsOrg) {
+		// Initialize the required services
+		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
+		MerchantsOrgRoleService orgRoleService = (MerchantsOrgRoleService) services
+				.get(MerchantsOrgRoleService.class.getName());
+		MerchantsUserService merchantsUserService = (MerchantsUserService) services
+				.get(MerchantsUserService.class.getName());
+		MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
+				.get(MerchantsUserRoleService.class.getName());
+		// business process
+		Set<Integer> newRoleSet = new TreeSet<Integer>();
+		String[] newRoleArray = split(CommonConstants.COMMA_SEPARATOR, merchantsOrg.getTreeSelId());
+		if (/* The new role list */newRoleArray != null && newRoleArray.length > 0) {
+			for (String newRoleId : newRoleArray) {
+				newRoleSet.add(Integer.valueOf(newRoleId));
+			}
+		}
+		if (/* The parent role list */merchantsOrg.isInherit() && merchantsOrg.getParentId().intValue() > 0) {
+			List<Integer> parentRoleList = orgRoleService.findGroupIdsByOrgId(merchantsOrg.getParentId());
+			if (parentRoleList != null && parentRoleList.size() > 0) {
+				for (Integer roleId : parentRoleList) {
+					newRoleSet.add(roleId);
+				}
+			}
+		}
+		if (/* Update the organization */merchantsOrg.getId() != null) {
+			int size = countByOrgId(merchantsOrg.getId());
+			if (/* Whether the organization has users */size > 0) {
+				List<MerchantsUser> /* The current organization users */ userList = merchantsUserService
+						.findAllByOrgId(merchantsOrg.getId(), EActionUserType.Admin);
+				List<Integer> /* Roles Shared by users and organizations */ shareRoleIdUserAndOrg = merchantsUserService
+						.findHaveRoleIdByUserAndOrg(merchantsOrg.getId());
+				for/* Delete old user role by organization */ (MerchantsUser merchantsUser : userList) {
+					for (Integer roleId : shareRoleIdUserAndOrg) {
+						userRoleService.deleteByUserIdAndGroupId(merchantsUser.getId(), roleId);
+					}
+				}
+				List<MerchantsUserRole> newOrgUserRoleList = new ArrayList<MerchantsUserRole>();
+				for/* Add new user role by organization */ (MerchantsUser merchantsUser : userList) {
+					if (/* The new organization role */newRoleSet.size() > 0) {
+						for (Integer roleId : newRoleSet) {
+							MerchantsUserRole userRole = new MerchantsUserRole();
+							userRole.setUserId(merchantsUser.getId());
+							userRole.setGroupId(roleId);
+							newOrgUserRoleList.add(userRole);
+						}
+					}
+				}
+				userRoleService.batchInsert(newOrgUserRoleList);
+			}
+			if (/* Delete organization old role */orgRoleService.deleteByOrgId(merchantsOrg.getId()) > 0) {
+				List<MerchantsOrgRole> newOrgRoleList = new ArrayList<MerchantsOrgRole>();
+				if (/* The new organization role */newRoleSet.size() > 0) {
+					for (Integer roleId : newRoleSet) {
+						MerchantsOrgRole orgRole = new MerchantsOrgRole();
+						orgRole.setOrgId(merchantsOrg.getId());
+						orgRole.setGroupId(roleId);
+						newOrgRoleList.add(orgRole);
+					}
+				}
+				orgRoleService.batchInsert(newOrgRoleList);
+			}
+			return orgService.update(merchantsOrg);
+		} /* The new organization */else {
+			int newOrgId = orgService.insert(merchantsOrg);
+			if (newOrgId > 0) {
+				if (/* The new organization role */newRoleSet.size() > 0) {
+					List<MerchantsOrgRole> orgRoleList = new ArrayList<MerchantsOrgRole>();
+					for (Integer roleId : newRoleSet) {
+						MerchantsOrgRole orgRole = new MerchantsOrgRole();
+						orgRole.setGroupId(roleId);
+						orgRole.setOrgId(newOrgId);
+						orgRoleList.add(orgRole);
+					}
+					return orgRoleService.batchInsert(orgRoleList);
+				}
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * Query subagencies of the current organization
+	 * 
+	 * @param parentId
+	 *            parent organization
+	 * @return {@link List}
+	 */
+	public List<MerchantsOrg> findMerchantsOrgByParentId(Integer parentId) {
+		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
+		String license = orgService.find(parentId).getLicense();
+		return orgService.findByParentId(parentId, license);
+	}
+
+	/**
+	 * Find the current organization has admin user number
+	 * 
+	 * @param orgId
+	 * @return int
+	 */
+	public int countByOrgId(Integer orgId) {
+		return ((MerchantsUserService) services.get(MerchantsUserService.class.getName())).countByOrgId(orgId,
+				EActionUserType.Admin);
+	}
+
+	/**
+	 * Find Merchants organization role id list by ID
+	 * 
+	 * @param id
+	 * @return {@code List}
+	 */
+	public List<Integer> findMerchantsOrgRoleById(Integer id) {
+		return ((MerchantsOrgRoleService) services.get(MerchantsOrgRoleService.class.getName()))
+				.findGroupIdsByOrgId(id);
+	}
+
+	/**
+	 * Find Merchants organization by ID
+	 * 
+	 * @param id
+	 * @return {@code MerchantsOrg}
+	 */
 	public MerchantsOrg findMerchantsOrgById(Integer id) {
-		// Initialize the required services
-		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
-		if (orgService == null) {
-			orgService = client.create(MerchantsOrgService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsOrgService.class.getName(), orgService);
-		}
-		// business process
-		return orgService.find(id);
+		return ((MerchantsOrgService) services.get(MerchantsOrgService.class.getName())).find(id);
 	}
 
-	@SuppressWarnings("static-access")
+	/**
+	 * Find all role of the organization
+	 * 
+	 * @param userId
+	 *            current login user ID
+	 * @return {@link List}
+	 */
 	public List<Node<Integer, String>> findOrgRole(Integer userId) {
-		// Initialize the required services
-		MerchantsRoleService roleService = (MerchantsRoleService) services.get(MerchantsRoleService.class.getName());
-		if (roleService == null) {
-			roleService = client.create(MerchantsRoleService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsRoleService.class.getName(), roleService);
-		}
-		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
-		if (orgService == null) {
-			orgService = client.create(MerchantsOrgService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsOrgService.class.getName(), orgService);
-		}
-		// business process
-		List<MerchantsRole> list = roleService.findByUserId(userId, orgService.findOrgLicenseByUserId(userId));
+		List<MerchantsRole> list = ((MerchantsRoleService) services.get(MerchantsRoleService.class.getName()))
+				.findByUserId(userId, ((MerchantsOrgService) services.get(MerchantsOrgService.class.getName()))
+						.findOrgLicenseByUserId(userId));
 		if (list != null && list.size() > 0) {
 			List<Node<Integer, String>> result = new ArrayList<Node<Integer, String>>();
 			for (MerchantsRole role : list) {
@@ -96,14 +249,18 @@ public class UserService {
 		return null;
 	}
 
-	@SuppressWarnings("static-access")
+	/**
+	 * Query all users under the specified organization and paging the result
+	 * 
+	 * @param orgId
+	 * @param name
+	 * @param firstSize
+	 * @param size
+	 * @return {@link List}
+	 */
 	public ListResult<MerchantsUser> findOrgUserByPage(Integer orgId, String name, Integer firstSize, Integer size) {
 		// Initialize the required services
 		MerchantsUserService userService = (MerchantsUserService) services.get(MerchantsUserService.class.getName());
-		if (userService == null) {
-			userService = client.create(MerchantsUserService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsUserService.class.getName(), userService);
-		}
 		// business process
 		ListResult<MerchantsUser> result = new ListResult<MerchantsUser>();
 		if (isNullOrEmpty(name)) {
@@ -116,14 +273,15 @@ public class UserService {
 		return result;
 	}
 
-	@SuppressWarnings("static-access")
+	/**
+	 * Queries all institutional trees under the specified user
+	 * 
+	 * @param userId
+	 * @return {@link DefaultTreeNode}
+	 */
 	public DefaultTreeNode findUserOrgTree(Integer userId) {
 		// Initialize the required services
 		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
-		if (orgService == null) {
-			orgService = client.create(MerchantsOrgService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsOrgService.class.getName(), orgService);
-		}
 		// business process
 		String license = orgService.findOrgLicenseByUserId(userId);
 		List<MerchantsOrg> list = /* Super Administrator */ (userId.intValue() == CommonConstants.SUPER_ADMIN)
@@ -131,34 +289,32 @@ public class UserService {
 		return DefaultTreeNode.parseTree(list);
 	}
 
-	@SuppressWarnings("static-access")
+	/**
+	 * Query users by username and password
+	 * 
+	 * @param name
+	 * @param password
+	 * @return {@link MerchantsUser}
+	 */
 	public MerchantsUser findByNameAndPass(String name, String password) {
-		// Initialize the required services
-		MerchantsUserService userService = (MerchantsUserService) services.get(MerchantsUserService.class.getName());
-		if (userService == null) {
-			userService = client.create(MerchantsUserService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsUserService.class.getName(), userService);
-		}
 		// business process
-		return userService.findByNamePassword(name, password, EActionUserType.Admin);
+		return ((MerchantsUserService) services.get(MerchantsUserService.class.getName())).findByNamePassword(name,
+				password, EActionUserType.Admin);
 	}
 
-	@SuppressWarnings("static-access")
+	/**
+	 * Queries the specified user permission tree and assigns values to the user
+	 * 
+	 * @param userVO
+	 *            {@code MerchantsUserVO}
+	 * @return {@link MerchantsUserVO}
+	 */
 	public MerchantsUserVO findMenuTreeByUser(MerchantsUserVO userVO) {
 		// Initialize the required services
 		MerchantsActionService actionService = (MerchantsActionService) services
 				.get(MerchantsActionService.class.getName());
-		if (actionService == null) {
-			actionService = client.create(MerchantsActionService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsActionService.class.getName(), actionService);
-		}
 		MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
 				.get(MerchantsUserRoleService.class.getName());
-		if (userRoleService == null) {
-			userRoleService = client.create(MerchantsUserRoleService.class,
-					configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsUserRoleService.class.getName(), userRoleService);
-		}
 		// business process
 		List<Integer> roleIdList = userRoleService.findAdminGroupIdsByUserId(userVO.getId());
 		boolean allAction = null != roleIdList && roleIdList.size() > 0 ? true : false;
@@ -173,29 +329,43 @@ public class UserService {
 		return userVO;
 	}
 
-	@SuppressWarnings("static-access")
+	/**
+	 * Query user license
+	 * <p>
+	 * the license is the license of the user's organization.
+	 * 
+	 * @param userId
+	 * @return {@link String}
+	 */
 	public String findLicenseByUserId(Integer userId) {
-		// Initialize the required services
-		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
-		if (orgService == null) {
-			orgService = client.create(MerchantsOrgService.class, configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsOrgService.class.getName(), orgService);
-		}
 		// business process
-		return orgService.findOrgLicenseByUserId(userId);
+		return ((MerchantsOrgService) services.get(MerchantsOrgService.class.getName())).findOrgLicenseByUserId(userId);
 	}
 
-	@SuppressWarnings("static-access")
+	/**
+	 * User login logic processing.
+	 * <p>
+	 * Token and refresh token are generated when the user logs in successfully.
+	 * <p>
+	 * When the token expires and the refresh token does not, refresh and
+	 * produce a new token.
+	 * <p>
+	 * When the token and refresh token expires, refresh and produce a new token
+	 * and new refresh token.
+	 * 
+	 * @param userId
+	 * @param appKey
+	 * @param tokenType
+	 *            Whether token expires
+	 * @param refreshType
+	 *            Whether refreshType token expires
+	 * @return {@link MerchantsLoginToken}
+	 */
 	public MerchantsLoginToken token(Integer userId, String appKey, boolean tokenType, boolean refreshType) {
 		MerchantsLoginToken loginToken = null;
 		// Initialize the required services
 		MerchantsLoginTokenService loginTokenService = (MerchantsLoginTokenService) services
 				.get(MerchantsLoginTokenService.class.getName());
-		if (loginTokenService == null) {
-			loginTokenService = client.create(MerchantsLoginTokenService.class,
-					configer.value(ServiceConstants.MERCHANTS_KEY));
-			services.put(MerchantsLoginTokenService.class.getName(), loginTokenService);
-		}
 		// business process
 		loginToken = loginTokenService.findByUserId(userId);
 		// The first login

@@ -24,8 +24,9 @@ public class MerchantsOrgServiceImpl implements MerchantsOrgService {
 	private MerchantsOrgMapper merchantsOrgMapper;
 
 	@Override
-	public int insert(MerchantsOrg org) {
-		return merchantsOrgMapper.insert(org);
+	public int insert(MerchantsOrg merchantsOrg) {
+		int result = merchantsOrgMapper.insert(merchantsOrg);
+		return result > 0 ? merchantsOrg.getId() : result;
 	}
 
 	@Override
@@ -54,8 +55,8 @@ public class MerchantsOrgServiceImpl implements MerchantsOrgService {
 	}
 
 	@Override
-	public int update(MerchantsOrg org) {
-		return merchantsOrgMapper.update(org);
+	public int update(MerchantsOrg merchantsOrg) {
+		return merchantsOrgMapper.update(merchantsOrg);
 	}
 
 	@Override

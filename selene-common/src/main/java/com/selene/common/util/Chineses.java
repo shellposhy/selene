@@ -15,7 +15,7 @@ import static cn.com.lemon.base.Strings.isNullOrEmpty;
  * @author shaobo shih
  * @version 1.0
  */
-public final class Pinyins {
+public final class Chineses {
 	private static HanyuPinyinOutputFormat format = null;
 
 	static {
@@ -25,23 +25,23 @@ public final class Pinyins {
 		format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
 	}
 
-	public String upper(String content) {
+	public static String upper(String content) {
 		return parse(content, "", Type.UPPER);
 	}
 
-	public String upper(String content, String separator) {
+	public static String upper(String content, String separator) {
 		return parse(content, separator, Type.UPPER);
 	}
 
-	public String lower(String content) {
+	public static String lower(String content) {
 		return parse(content, "", Type.LOWER);
 	}
 
-	public String lower(String content, String separator) {
+	public static String lower(String content, String separator) {
 		return parse(content, separator, Type.LOWER);
 	}
 
-	public String first(String content, Type type) {
+	public static String first(String content, Type type) {
 		String result = null;
 		String py = ((type == Type.UPPER) ? upper(content) : (type == Type.LOWER) ? lower(content) : upper(content));
 		if (py.length() > 1) {
@@ -98,6 +98,6 @@ public final class Pinyins {
 		FIRSTUPPER // first upper
 	}
 
-	private Pinyins() {
+	private Chineses() {
 	}
 }

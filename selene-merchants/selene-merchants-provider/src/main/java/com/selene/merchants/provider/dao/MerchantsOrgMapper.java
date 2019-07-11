@@ -14,7 +14,7 @@ import com.selene.merchants.model.MerchantsOrg;
  * @version 1.0
  */
 public interface MerchantsOrgMapper {
-	public int insert(MerchantsOrg org);
+	public int insert(MerchantsOrg merchantsOrg);
 
 	public MerchantsOrg find(@Param("id") Integer id);
 
@@ -29,7 +29,7 @@ public interface MerchantsOrgMapper {
 
 	public String findOrgLicenseByUserId(@Param("userId") Integer userId);
 
-	public int update(MerchantsOrg org);
+	public int update(MerchantsOrg merchantsOrg);
 
 	public int delete(@Param("id") Integer id);
 }

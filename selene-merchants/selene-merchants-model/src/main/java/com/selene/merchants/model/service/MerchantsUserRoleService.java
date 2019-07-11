@@ -14,12 +14,14 @@ public interface MerchantsUserRoleService {
 	public int batchInsert(List<MerchantsUserRole> list);
 
 	public List<Integer> findGroupIdsByUserId(Integer userId);
-	
-	public List<Integer> findAdminGroupIdsByUserId(Integer userId); 
+
+	public List<Integer> findAdminGroupIdsByUserId(Integer userId);
 
 	public List<Integer> findUserIdsByGroupId(Integer groupId);
 
 	public int deleteByUserId(Integer userId);
 
 	public int deleteByGroupId(Integer groupId);
+
+	public int deleteByUserIdAndGroupId(Integer userId, Integer groupId);
 }

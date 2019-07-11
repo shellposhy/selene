@@ -15,7 +15,7 @@ public interface MerchantsOrgRoleService {
 
 	public int batchInsert(List<MerchantsOrgRole> list);
 
-	public List<MerchantsOrgRole> findGroupIdsByOrgId(Integer orgId);
+	public List<Integer> findGroupIdsByOrgId(Integer orgId);
 
 	public int deleteByOrgId(Integer orgId);
 

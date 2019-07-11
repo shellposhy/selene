@@ -33,6 +33,9 @@ public class MerchantsUser extends BaseModel {
 	private String position;
 	private String pic;
 	private EOrgStatus status;
+	// Expand field for org role list string
+	private String treeSelId;
+	private String oldPassword;
 
 	public EActionUserType getType() {
 		return type;
@@ -160,6 +163,22 @@ public class MerchantsUser extends BaseModel {
 
 	public void setStatus(EOrgStatus status) {
 		this.status = status;
+	}
+
+	public String getTreeSelId() {
+		return treeSelId;
+	}
+
+	public void setTreeSelId(String treeSelId) {
+		this.treeSelId = treeSelId;
+	}
+
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
 	}
 
 }

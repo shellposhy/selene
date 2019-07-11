@@ -35,7 +35,7 @@ public class MerchantsOrgRoleServiceImpl implements MerchantsOrgRoleService {
 	}
 
 	@Override
-	public List<MerchantsOrgRole> findGroupIdsByOrgId(Integer orgId) {
+	public List<Integer> findGroupIdsByOrgId(Integer orgId) {
 		return merchantsOrgRoleMapper.findGroupIdsByOrgId(orgId);
 	}
 

@@ -34,11 +34,11 @@
 				<div class="control-group">
 					<label class="control-label" for="code">商户机构类型 </label>
 					<div class="controls">
-						<label class="radio pt0"><form:radiobutton path="orgType" value="Gov" checked="checked"/>国家机关/党群组织/事业单位</label>
+						<label class="radio pt0"><form:radiobutton path="orgType" value="Gov"/>国家机关/党群组织/事业单位</label>
 						<label class="radio m110"><form:radiobutton path="orgType" value="Edu"/>教育/培训/科研/院校</label>
 						<label class="radio m110"><form:radiobutton path="orgType" value="Media"/>媒体/出版/文化传播</label>
 						<label class="radio m110"><form:radiobutton path="orgType" value="Fin"/>银行/投资/基金/证券/保险</label>
-						<label class="radio m110"><form:radiobutton path="orgType" value="Com"/>国有企业/外资企业/合资企业/民营企业</label>
+						<label class="radio m110"><form:radiobutton path="orgType" value="Com" checked="checked"/>国有企业/外资企业/合资企业/民营企业</label>
 						<label class="radio m110"><form:radiobutton path="orgType" value="Pro"/>房地产/建筑/建材/工程</label>
 						<label class="radio m110"><form:radiobutton path="orgType" value="Other"/>其他</label>
 					</div>

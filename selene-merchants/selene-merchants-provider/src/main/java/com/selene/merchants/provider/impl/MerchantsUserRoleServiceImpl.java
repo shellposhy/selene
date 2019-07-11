@@ -53,4 +53,8 @@ public class MerchantsUserRoleServiceImpl implements MerchantsUserRoleService {
 		return merchantsUserRoleMapper.deleteByGroupId(groupId);
 	}
 
+	@Override
+	public int deleteByUserIdAndGroupId(Integer userId, Integer groupId) {
+		return merchantsUserRoleMapper.deleteByUserIdAndGroupId(userId, groupId);
+	}
 }

@@ -11,7 +11,7 @@ import com.selene.merchants.model.MerchantsOrg;
  * @version 1.0
  */
 public interface MerchantsOrgService {
-	public int insert(MerchantsOrg org);
+	public int insert(MerchantsOrg merchantsOrg);
 
 	public MerchantsOrg find(Integer id);
 
@@ -25,7 +25,7 @@ public interface MerchantsOrgService {
 	
 	public String findOrgLicenseByUserId(Integer userId);
 
-	public int update(MerchantsOrg org);
+	public int update(MerchantsOrg merchantsOrg);
 
 	public int delete(Integer id);
 }

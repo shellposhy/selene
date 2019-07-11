@@ -253,8 +253,12 @@ function menuTreeCom(objTreeId, objzNodes, iSCanSelParent, fnOnClick, strUrl,add
 					type : 'POST',
 					cache : false,
 					async : false,
+					beforeSend: function(request) {//beforeSend
+		                request.setRequestHeader("token", token);
+		                request.setRequestHeader("refreshToken",refreshToken);
+		             },
 					success : function(data) {
-						if (data.error) {
+						if (data.code=='100') {
 							noty({"text" : data.msg,"layout" : "center","type" : "error","closeWith" : [ 'click' ],"animateOpen" : {"opacity" : "show"}});
 							return false;
 						} else {

@@ -11,7 +11,7 @@
 					<li><a href="#">用户编辑</a></li>
 				</ul>
 			</div>
-			<form:form modelAttribute="user" class="form-horizontal u_form" id="user_new_form" action="${appPath}/admin/user" method="post" target="_self">
+			<form:form modelAttribute="user" class="form-horizontal u_form" id="user_new_form" action="${appPath}/admin/merchants/save" method="post" target="_self">
 				<fieldset>
 					<legend>
 						<span class="icon32 icon-user floatl"></span>用户编辑
@@ -28,10 +28,7 @@
 						<div class="control-group">
 							<label class="control-label" for="userType">用户类型 </label>
 							<div class="controls" id="userType">
-								<label class="radio pt0"> <form:radiobutton path="userType" value="0" />密码 </label>
-								<label class="radio ml10"> <form:radiobutton path="userType"  value="1" />IP </label>
-								<label class="radio ml10"> <form:radiobutton path="userType" value="2" />密码+IP </label>
-								<label class="radio ml10"> <form:radiobutton path="userType" value="3" />手机 </label>
+								<label class="radio pt0"><form:radiobutton path="userType" value="0" checked="checked"/>密码 </label>
 							</div>
 						</div>
 					</div>
@@ -40,7 +37,7 @@
 							<div class="control-group">
 								<label class="control-label" for="password">密码 </label>
 								<div class="controls">
-									<form:password path="password" name="password" class="typeahead" id="password" />
+									<form:password path="userPassword" name="userPassword" class="typeahead" id="userPassword" />
 									<form:hidden path="oldPassword" />
 								</div>
 							</div>
@@ -50,34 +47,6 @@
 									<input type="password" name="repassword" class="typeahead" id="repassword" />
 								</div>
 							</div>
-							<div class="span12 ml0 mb20" id="isModifyPw_box">
-								<label class="control-label"></label>
-								<div class="controls">
-									<a class="btn yes"><i class="icon-wrench"></i>修改密码</a>
-									<a class="btn cancel none"><i class="icon icon-darkgray icon-arrowrefresh-n"></i>取消修改</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="user_input_div" id="ip">
-						<div class="ml35">
-							<div class="control-group">
-								<label class="control-label">IP限定 </label>
-								<div class="controls" id="ips_div">
-									<div class="ip_input_div">
-										<span class="one_ip active"><input class="ipVaild" type="text" /> </span>
-										<span class="mut_ip none"><input type="text" /> — <input type="text" /></span>
-										<span class="btn remove mr4"><i class="icon-trash icon-color"></i></span>
-										<div class="mb10">
-											<a class="to_mut_ip" href="#">点此切换至输入IP范围</a>
-											<a class="to_one_ip none" href="#">点此切换至输入精确IP</a>
-										</div>
-									</div>
-									<a href="#" class="btn" id="more_ip">输入更多</a>
-									<div class="error"></div>
-								</div>
-							</div>
-							<form:hidden path="ipAddress" id="ips" value="" />
 						</div>
 					</div>
 					<div class="span10">
@@ -85,7 +54,7 @@
 							<label class="control-label" for="orgID">所属机构</label>
 							<div class="controls">
 								<input class="treeRadio" type="text" value="" readonly="readonly" />
-								<form:hidden path="orgID" id="orgID" name="orgID" class="treeSelId" />
+								<form:hidden path="orgId" id="orgId" name="orgId" class="treeSelId" />
 							</div>
 							<div class="menuContent">
 								<ul id="treeSel_1" class="ztree treeNew"></ul>						
@@ -115,25 +84,30 @@
 					<legend>
 						<h4>扩展信息</h4>
 					</legend>
-						<div class="control-group">
-							<label class="control-label" for="realName">真实姓名 </label>
-							<div class="controls">
-								<form:input path="realName" name="realName" class="typeahead"
-									id="realName" />
-							</div>
+					<div class="control-group">
+						<label class="control-label" for="nickName">昵称 </label>
+						<div class="controls">
+							<form:input path="nickName" name="nickName" class="typeahead" id="nickName" />
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="sex">性别</label>
-							<div class="controls" id="sex">
-								<label class="radio pt0"><form:radiobutton path="sex" value="UNKNOWN" checked="checked"/>未知</label>
-								<label class="radio m110"><form:radiobutton path="sex" value="MALE"/>男</label>
-								<label class="radio m110"><form:radiobutton path="sex" value="FEMALE"/>女</label>
-							</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="realName">真实姓名 </label>
+						<div class="controls">
+							<form:input path="realName" name="realName" class="typeahead" id="realName" />
 						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="sex">性别</label>
+						<div class="controls" id="sex">
+							<label class="radio pt0"><form:radiobutton path="sex" value="Other" />未知</label>
+							<label class="radio m110"><form:radiobutton path="sex" value="Man" checked="checked"/>男</label>
+							<label class="radio m110"><form:radiobutton path="sex" value="Woman"/>女</label>
+						</div>
+					</div>
 						<div class="control-group">
-							<label class="control-label" for="idCardNumber">身份证号</label>
+							<label class="control-label" for="idCard">身份证号</label>
 							<div class="controls">
-								<form:input path="idCardNumber" name="idCardNumber" class="typeahead" id="idCardNumber"/>
+								<form:input path="idCard" name="idCard" class="typeahead" id="idCard"/>
 							</div>
 						</div>
 						<div class="control-group" id="position_div">
@@ -163,6 +137,6 @@
 				</div>
 			</form:form>
 		</div>
-	<script src="${appPath}/admin/jscript/user/user.js"></script>
+	<script src="${appPath}/admin/jscript/merchants/merchants.js"></script>
 	</body>
 </html>

@@ -57,4 +57,11 @@
 			WHERE 
 				User_ID=#{userId}
 	</delete>
+	
+	<delete id="deleteByUserIdAndGroupId" parameterType="java.util.List">
+		DELETE FROM 
+			merchants_user_role 
+		WHERE 
+			User_ID=#{userId} AND Group_ID=#{groupId}
+	</delete>
 </mapper>

@@ -16,6 +16,15 @@ public class MerchantsOrgRole extends BaseModel {
 	private Integer orgId;
 	private Integer groupId;
 
+	public MerchantsOrgRole() {
+	}
+
+	public MerchantsOrgRole(Integer id, Integer orgId, Integer groupId) {
+		this.id = id;
+		this.orgId = orgId;
+		this.groupId = groupId;
+	}
+
 	public Integer getOrgId() {
 		return orgId;
 	}
