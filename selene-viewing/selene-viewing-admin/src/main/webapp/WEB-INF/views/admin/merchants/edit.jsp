@@ -99,7 +99,6 @@
 					<div class="control-group">
 						<label class="control-label" for="sex">性别</label>
 						<div class="controls" id="sex">
-							<label class="radio pt0"><form:radiobutton path="sex" value="Other" />未知</label>
 							<label class="radio m110"><form:radiobutton path="sex" value="Man" checked="checked"/>男</label>
 							<label class="radio m110"><form:radiobutton path="sex" value="Woman"/>女</label>
 						</div>
@@ -119,7 +118,7 @@
 						<div class="control-group" id="phone_div">
 							<label class="control-label" for="phoneNumber">手机号码</label>
 							<div class="controls">
-								<form:input path="phoneNumber" name="phoneNumber" class="typeahead" id="phoneNumber"/>
+								<form:input path="phoneNumber" name="phoneNumber" class="typeahead active" id="phoneNumber"/>
 							</div>
 						</div>
 						<div class="control-group">
@@ -137,6 +136,6 @@
 				</div>
 			</form:form>
 		</div>
-	<script src="${appPath}/admin/jscript/merchants/merchants.js"></script>
+	<script src="${appPath}/admin/jscript/merchants/merchants_user.js"></script>
 	</body>
 </html>

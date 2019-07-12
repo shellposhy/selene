@@ -26,7 +26,8 @@ public class MerchantsUserServiceImpl implements MerchantsUserService {
 
 	@Override
 	public int insert(MerchantsUser user) {
-		return merchantsUserMapper.insert(user);
+		int result = merchantsUserMapper.insert(user);
+		return result > 0 ? user.getId() : result;
 	}
 
 	@Override

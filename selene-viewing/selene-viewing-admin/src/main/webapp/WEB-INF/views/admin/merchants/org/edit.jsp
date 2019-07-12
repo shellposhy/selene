@@ -21,6 +21,7 @@
 					<div class="controls">
 						<form:input path="name" name="name" class="typeahead" id="name" />
 						<form:hidden path="id" />
+						<form:hidden path="license" />
 						<label class="error springerror"><form:errors path="name" cssClass="error" /> </label>
 					</div>
 				</div>

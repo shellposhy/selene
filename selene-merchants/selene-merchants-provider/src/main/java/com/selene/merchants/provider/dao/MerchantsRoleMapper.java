@@ -29,6 +29,8 @@ public interface MerchantsRoleMapper {
 
 	public int countByName(@Param("name") String name, @Param("license") String license);
 
+	public List<MerchantsRole> findByLicense(@Param("license") String license);
+
 	public int batchDelete(List<Integer> list);
 
 	public int delete(@Param("id") Integer id);

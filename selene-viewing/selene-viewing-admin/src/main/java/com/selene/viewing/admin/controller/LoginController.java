@@ -18,7 +18,7 @@ import com.selene.merchants.model.MerchantsUser;
 import com.selene.viewing.admin.service.merchants.UserService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
-import static cn.com.lemon.base.Strings.MD5;
+import static cn.com.lemon.base.Strings.md5;
 
 @Controller
 @RequestMapping("/admin")
@@ -52,7 +52,7 @@ public class LoginController extends BaseController {
 		// login process
 		String name = request.getParameter("username");
 		String password = request.getParameter("password");
-		MerchantsUser merchantsUser = userService.findByNameAndPass(name, MD5(password));
+		MerchantsUser merchantsUser = userService.findByNameAndPass(name, md5(password));
 		if (null == merchantsUser) {
 			return "/admin/login";
 		}

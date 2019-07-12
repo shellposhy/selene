@@ -42,7 +42,7 @@ import com.selene.merchants.model.service.MerchantsUserService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.DateUtil.format;
-import static cn.com.lemon.base.Strings.MD5;
+import static cn.com.lemon.base.Strings.md5;
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
 import static cn.com.lemon.base.Strings.split;
 
@@ -75,6 +75,70 @@ public class UserService {
 				client.create(MerchantsLoginTokenService.class, merchantsService));
 		services.put(MerchantsOrgRoleService.class.getName(),
 				client.create(MerchantsOrgRoleService.class, merchantsService));
+	}
+
+	/**
+	 * Save merchants user
+	 * 
+	 * @param merchantsUser
+	 *            {@code MerchantsUser}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveMerchantsUser(MerchantsUser merchantsUser) {
+		// Initialize the required services
+		MerchantsOrgRoleService orgRoleService = (MerchantsOrgRoleService) services
+				.get(MerchantsOrgRoleService.class.getName());
+		MerchantsUserService merchantsUserService = (MerchantsUserService) services
+				.get(MerchantsUserService.class.getName());
+		MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
+				.get(MerchantsUserRoleService.class.getName());
+		// business process
+		Set<Integer> newRoleSet = new TreeSet<Integer>();
+		String[] newRoleArray = split(CommonConstants.COMMA_SEPARATOR, merchantsUser.getTreeSelId());
+		if (/* The new role list */newRoleArray != null && newRoleArray.length > 0) {
+			for (String newRoleId : newRoleArray) {
+				newRoleSet.add(Integer.valueOf(newRoleId));
+			}
+		}
+		MerchantsOrg merchantsOrg = findMerchantsOrgById(merchantsUser.getOrgId());
+		if (/* User inherit organization role */merchantsOrg.isInherit()) {
+			List<Integer> rogRoleList = orgRoleService.findGroupIdsByOrgId(merchantsUser.getOrgId());
+			if (rogRoleList != null && rogRoleList.size() > 0) {
+				for (Integer roleId : rogRoleList) {
+					newRoleSet.add(roleId);
+				}
+			}
+		}
+		List<MerchantsUserRole> userRoleList = new ArrayList<MerchantsUserRole>();
+		if (/* Update merchants user */merchantsUser.getId() != null) {
+			if (/* Delete old role */userRoleService.deleteByUserId(merchantsUser.getId()) > 0) {
+				if (/* Update */merchantsUserService.update(merchantsUser) > 0) {
+					if (newRoleSet.size() > 0) {
+						for (Integer roleId : newRoleSet) {
+							MerchantsUserRole userRole = new MerchantsUserRole();
+							userRole.setGroupId(roleId);
+							userRole.setUserId(merchantsUser.getId());
+							userRoleList.add(userRole);
+						}
+						return userRoleService.batchInsert(userRoleList);
+					}
+				}
+			}
+		} /* New merchants user */else {
+			int newUserId = merchantsUserService.insert(merchantsUser);
+			if (newUserId > 0) {
+				if (newRoleSet.size() > 0) {
+					for (Integer roleId : newRoleSet) {
+						MerchantsUserRole userRole = new MerchantsUserRole();
+						userRole.setGroupId(roleId);
+						userRole.setUserId(newUserId);
+						userRoleList.add(userRole);
+					}
+					return userRoleService.batchInsert(userRoleList);
+				}
+			}
+		}
+		return 0;
 	}
 
 	/**
@@ -205,6 +269,17 @@ public class UserService {
 	}
 
 	/**
+	 * Find Merchants user role id list by ID
+	 * 
+	 * @param id
+	 * @return {@code List}
+	 */
+	public List<Integer> findMerchantsUserRoleById(Integer id) {
+		return ((MerchantsUserRoleService) services.get(MerchantsUserRoleService.class.getName()))
+				.findGroupIdsByUserId(id);
+	}
+
+	/**
 	 * Find Merchants organization role id list by ID
 	 * 
 	 * @param id
@@ -232,10 +307,9 @@ public class UserService {
 	 *            current login user ID
 	 * @return {@link List}
 	 */
-	public List<Node<Integer, String>> findOrgRole(Integer userId) {
+	public List<Node<Integer, String>> findRoleByLicense(String license) {
 		List<MerchantsRole> list = ((MerchantsRoleService) services.get(MerchantsRoleService.class.getName()))
-				.findByUserId(userId, ((MerchantsOrgService) services.get(MerchantsOrgService.class.getName()))
-						.findOrgLicenseByUserId(userId));
+				.findByLicense(license);
 		if (list != null && list.size() > 0) {
 			List<Node<Integer, String>> result = new ArrayList<Node<Integer, String>>();
 			for (MerchantsRole role : list) {
@@ -300,6 +374,17 @@ public class UserService {
 		// business process
 		return ((MerchantsUserService) services.get(MerchantsUserService.class.getName())).findByNamePassword(name,
 				password, EActionUserType.Admin);
+	}
+
+	/**
+	 * Query users by id
+	 * 
+	 * @param id
+	 * @return {@link MerchantsUser}
+	 */
+	public MerchantsUser find(Integer id) {
+		// business process
+		return ((MerchantsUserService) services.get(MerchantsUserService.class.getName())).find(id);
 	}
 
 	/**
@@ -381,7 +466,7 @@ public class UserService {
 			String payload = jwt.substring(jwt.indexOf(CommonConstants.HIDE_KEY_PREFIX) + 1,
 					jwt.lastIndexOf(CommonConstants.HIDE_KEY_PREFIX));
 			String signature = jwt.substring(jwt.lastIndexOf(CommonConstants.HIDE_KEY_PREFIX) + 1, jwt.length());
-			String token = MD5(payload + format(loginTime, "yyyyMMddHHmmssSSS"));
+			String token = md5(payload + format(loginTime, "yyyyMMddHHmmssSSS"));
 			loginToken = new MerchantsLoginToken(userId, loginTime, token, token, payload, signature, jwt);
 			if (loginTokenService.insert(loginToken) > 0) {
 				return loginToken;
@@ -401,7 +486,7 @@ public class UserService {
 				String payload = jwt.substring(jwt.indexOf(CommonConstants.HIDE_KEY_PREFIX) + 1,
 						jwt.lastIndexOf(CommonConstants.HIDE_KEY_PREFIX));
 				String signature = jwt.substring(jwt.lastIndexOf(CommonConstants.HIDE_KEY_PREFIX) + 1, jwt.length());
-				String token = MD5(payload + format(loginTime, "yyyyMMddHHmmssSSS"));
+				String token = md5(payload + format(loginTime, "yyyyMMddHHmmssSSS"));
 				// Delete history token and refresh token
 				redisClient.delete(loginToken.getToken());
 				redisClient.delete(loginToken.getRefreshToken());
@@ -424,7 +509,7 @@ public class UserService {
 					long dateTime = System.currentTimeMillis();
 					Date loginTime = new Date();
 					loginTime.setTime(dateTime);
-					String token = MD5(loginToken.getRefreshToken() + format(loginTime, "yyyyMMddHHmmssSSS"));
+					String token = md5(loginToken.getRefreshToken() + format(loginTime, "yyyyMMddHHmmssSSS"));
 					// Delete history token
 					redisClient.delete(loginToken.getToken());
 					// only update new token

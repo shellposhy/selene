@@ -197,3 +197,7 @@ function checkMerchantsOrgForm() {
 		onkeyup : false
 	});
 }
+
+/**
+ *  merchants user add  process
+ * */

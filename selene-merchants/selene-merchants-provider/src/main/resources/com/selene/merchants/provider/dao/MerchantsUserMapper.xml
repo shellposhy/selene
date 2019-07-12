@@ -32,11 +32,11 @@
 		</selectKey>
 		INSERT INTO
 			merchants_user(
-				Type,User_Type,Name,Nick_Name,Real_Name,User_Password,Org_ID,Sex,Order_ID,Org_ID,IP_Address,
+				Type,User_Type,Name,Real_Name,Nick_Name,User_Password,Org_ID,Sex,Order_ID,IP_Address,
 				ID_Card,Phone_Number,Email,Position,Pic,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
 			)
 		VALUES(
-			#{type},#{userType},#{name},#{nickName},#{realName},#{userPassword},#{orgID},#{sex},#{orderId},#{ipAddress},
+			#{type},#{userType},#{name},#{realName},#{nickName},#{userPassword},#{orgId},#{sex},#{orderId},#{ipAddress},
 			#{idCard},#{phoneNumber},#{email},#{position},#{pic},#{status},#{createTime},#{creatorId},#{updateTime},#{updaterId}
 		)
 	</insert>

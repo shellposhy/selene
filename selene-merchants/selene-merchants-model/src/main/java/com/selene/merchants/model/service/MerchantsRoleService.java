@@ -25,6 +25,8 @@ public interface MerchantsRoleService {
 
 	public int countByName(String name, String license);
 
+	public List<MerchantsRole> findByLicense(String license);
+
 	public int batchDelete(List<Integer> list);
 
 	public int delete(Integer id);

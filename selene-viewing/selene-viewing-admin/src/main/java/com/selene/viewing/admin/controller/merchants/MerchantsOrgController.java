@@ -30,11 +30,8 @@ import com.selene.viewing.admin.service.merchants.UserService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.util.Jsons.json;
-import static cn.com.lemon.base.Strings.MD5;
 import static cn.com.lemon.base.Strings.join;
 import static cn.com.lemon.base.Strings.toArray;
-import static cn.com.lemon.util.security.ContentEncryptUtil.encrypt;
-import static com.selene.common.util.Chineses.lower;
 import static com.selene.common.util.Containers.toList;
 
 @Controller
@@ -59,24 +56,29 @@ public class MerchantsOrgController extends BaseController {
 		return mv;
 	}
 
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String preNew(Model model, HttpServletRequest request) {
-		MerchantsUserVO vo = commonService.user(request);
-		model.addAttribute("org", new MerchantsOrg());
-		List<Node<Integer, String>> list = userService.findOrgRole(vo.getId());
-		model.addAttribute("groupListJson", json(list));
+	@RequestMapping(value = "/{parentId}/new", method = RequestMethod.GET)
+	public String preNew(@PathVariable("parentId") Integer parentId, Model model, HttpServletRequest request) {
+		MerchantsOrg parentOrg = /* Parent organization */userService.findMerchantsOrgById(parentId);
+		MerchantsOrg newChildOrg = new MerchantsOrg();
+		newChildOrg.setParentId(/* Inherit parent organization */parentId);
+		newChildOrg.setLicense(/* Inherit parent organization license */parentOrg.getLicense());
+		newChildOrg.setOrgType(/* Inherit parent organization type */parentOrg.getOrgType());
+		newChildOrg.setSuperStatus(/* Inherit parent organization super */parentOrg.isSuperStatus());
+		List<Node<Integer, String>> list = userService.findRoleByLicense(
+				/* Role list by parent organization license */parentOrg.getLicense());
+		model.addAttribute("groupListJson", /* to json */json(list));
+		model.addAttribute("org", newChildOrg);
 		return "/admin/merchants/org/edit";
 	}
 
 	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
 	public String edit(@PathVariable("id") Integer id, Model model, HttpServletRequest request) {
-		MerchantsUserVO vo = commonService.user(request);
 		MerchantsOrg merchantsOrg = userService.findMerchantsOrgById(id);
 		List<Integer> orgRoleIdList = userService.findMerchantsOrgRoleById(id);
 		merchantsOrg
 				.setTreeSelId(/* list to join */join(CommonConstants.COMMA_SEPARATOR, toArray(toList(orgRoleIdList))));
 		model.addAttribute("org", merchantsOrg);
-		List<Node<Integer, String>> list = userService.findOrgRole(vo.getId());
+		List<Node<Integer, String>> list = userService.findRoleByLicense(merchantsOrg.getLicense());
 		model.addAttribute("groupListJson", json(list));
 		return "/admin/merchants/org/edit";
 	}
@@ -109,39 +111,27 @@ public class MerchantsOrgController extends BaseController {
 			@Override
 			public void operate() {
 				MerchantsUserVO vo = commonService.user(request);
-				if (/* Super Administrator */vo.getId().intValue() == CommonConstants.SUPER_ADMIN) {
-					if (/* new organization */merchantsOrg.getParentId().intValue() == 0) {
-						String /* Needed extension */ license = MD5(
-								encrypt(lower(merchantsOrg.getName()), CommonConstants.SELENE));
-						merchantsOrg.setLicense(license);
-						merchantsOrg.setSuperStatus(false);
-					} else {
-						MerchantsOrg parentOrg = userService.findMerchantsOrgById(merchantsOrg.getParentId());
-						merchantsOrg.setLicense(parentOrg.getLicense());
-						merchantsOrg.setSuperStatus(parentOrg.isSuperStatus());
-					}
-				} else {
-					if (/* Only add child organization */merchantsOrg.getParentId().intValue() != 0) {
-						MerchantsOrg parentOrg = userService.findMerchantsOrgById(merchantsOrg.getParentId());
-						merchantsOrg.setLicense(parentOrg.getLicense());
-						merchantsOrg.setSuperStatus(parentOrg.isSuperStatus());
-					}
-				}
-				if (null != merchantsOrg.getId()) {
-					MerchantsOrg oldOrg = userService.findMerchantsOrgById(merchantsOrg.getId());
-					merchantsOrg.setCreatorId(oldOrg.getCreatorId());
-					merchantsOrg.setCreateTime(oldOrg.getCreateTime());
-					merchantsOrg.setOrderId(oldOrg.getOrderId());
-				} else {
+				if (/* new organization */merchantsOrg.getId() == null) {
+					MerchantsOrg parentOrg = userService.findMerchantsOrgById(merchantsOrg.getParentId());
 					merchantsOrg.setCreatorId(vo.getId());
 					merchantsOrg.setCreateTime(new Date());
 					merchantsOrg.setOrderId(1);
+					merchantsOrg.setLicense(/* Not allowed edit */parentOrg.getLicense());
+					merchantsOrg.setSuperStatus(/* Not allowed edit */parentOrg.isSuperStatus());
+					merchantsOrg.setOrgType(/* Not allowed edit */parentOrg.getOrgType());
+				} /* Update organization */else {
+					MerchantsOrg oldOrg = userService.findMerchantsOrgById(merchantsOrg.getId());
+					merchantsOrg.setCreatorId(/* Not allowed edit */oldOrg.getCreatorId());
+					merchantsOrg.setCreateTime(/* Not allowed edit */oldOrg.getCreateTime());
+					merchantsOrg.setOrderId(/* Not allowed edit */oldOrg.getOrderId());
+					merchantsOrg.setLicense(/* Not allowed edit */oldOrg.getLicense());
+					merchantsOrg.setSuperStatus(/* Not allowed edit */oldOrg.isSuperStatus());
+					merchantsOrg.setOrgType(/* Not allowed edit */oldOrg.getOrgType());
 				}
 				merchantsOrg.setStatus(EOrgStatus.Normal);
 				merchantsOrg.setUpdaterId(vo.getId());
 				merchantsOrg.setUpdateTime(new Date());
-				// save new organization
-				userService.saveMerchantsOrg(merchantsOrg);
+				userService/* save new organization */.saveMerchantsOrg(merchantsOrg);
 			}
 
 			@Override
@@ -151,8 +141,9 @@ public class MerchantsOrgController extends BaseController {
 
 			@Override
 			public String fail() {
-				model.addAttribute("org", merchantsOrg);
-				return "/admin/merchants/org/edit";
+				model.addAttribute("code", "100");
+				model.addAttribute("msg", "机构保存或修改出错！");
+				return "redirect:/admin/error";
 			}
 
 			@Override

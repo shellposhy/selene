@@ -76,11 +76,12 @@
 		<jodd_version>3.6.3</jodd_version>
 		<!-- Tools -->
 		<objenesis_version>2.6</objenesis_version>
-		<lemon_version>1.1</lemon_version>
+		<lemon_version>1.2</lemon_version>
 		<cglib_version>3.1</cglib_version>
 		<guava_version>15.0</guava_version>
 		<hanlp_version>portable-1.7.3</hanlp_version>
 		<javacsv_version>2.0</javacsv_version>
+		<servlet_version>3.0.1</servlet_version>
 		<!-- Commons -->
 		<commons-codec.version>1.12</commons-codec.version>
 		<commons-pool2.version>2.4.2</commons-pool2.version>
@@ -347,6 +348,12 @@
 				<groupId>net.sourceforge.javacsv</groupId>
 				<artifactId>javacsv</artifactId>
 				<version>${javacsv_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${servlet_version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- commons -->
 			<dependency>
