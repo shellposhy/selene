@@ -25,7 +25,8 @@ public class MerchantsRoleServiceImpl implements MerchantsRoleService {
 
 	@Override
 	public int insert(MerchantsRole role) {
-		return merchantsRoleMapper.insert(role);
+		int result = merchantsRoleMapper.insert(role);
+		return result > 0 ? role.getId() : result;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.selene.merchants.model;
 
+import java.util.Date;
+
 import com.selene.common.BaseModel;
 import com.selene.merchants.model.enums.EActionUserType;
 import com.selene.merchants.model.enums.EOrgStatus;
@@ -36,6 +38,35 @@ public class MerchantsUser extends BaseModel {
 	// Expand field for org role list string
 	private String treeSelId;
 	private String oldPassword;
+
+	public MerchantsUser() {
+	}
+
+	public MerchantsUser(EActionUserType type, int userType, String name, String realName, String nickName,
+			String userPassword, Integer orgId, EGender sex, Integer orderId, String ipAddress, String idCard,
+			String phoneNumber, String email, String position, String pic, EOrgStatus status, Integer creatorId,
+			Date createTime, Integer updaterId, Date updateTime) {
+		this.type = type;
+		this.userType = userType;
+		this.name = name;
+		this.realName = realName;
+		this.nickName = nickName;
+		this.userPassword = userPassword;
+		this.orgId = orgId;
+		this.sex = sex;
+		this.orderId = orderId;
+		this.ipAddress = ipAddress;
+		this.idCard = idCard;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+		this.position = position;
+		this.pic = pic;
+		this.status = status;
+		this.creatorId = creatorId;
+		this.createTime = createTime;
+		this.updaterId = updaterId;
+		this.updateTime = updateTime;
+	}
 
 	public EActionUserType getType() {
 		return type;

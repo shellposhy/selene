@@ -23,7 +23,6 @@
 						<div class="left_tree">
 							<div>
 								<a class="btn btn-small" href="${appPath}/admin/merchants/org/new" id="add_g_db_btn" target="_self"><i class="icon-plus"></i>添加机构</a>
-								<input type="hidden" id="baseId" name="baseId" value="0">
 							</div>
 							<div>
 								<ul id="merchantsOrg" class="ztree green_tree_line leveTree"></ul>

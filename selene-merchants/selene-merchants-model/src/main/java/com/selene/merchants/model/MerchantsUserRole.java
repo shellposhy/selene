@@ -16,6 +16,14 @@ public class MerchantsUserRole extends BaseModel {
 	private Integer groupId;
 	private Integer userId;
 
+	public MerchantsUserRole() {
+	}
+
+	public MerchantsUserRole(Integer groupId, Integer userId) {
+		this.groupId = groupId;
+		this.userId = userId;
+	}
+
 	public Integer getGroupId() {
 		return groupId;
 	}

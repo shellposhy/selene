@@ -1,5 +1,7 @@
 package com.selene.merchants.model;
 
+import java.util.Date;
+
 import com.selene.common.BaseModel;
 import com.selene.merchants.model.enums.EPageType;
 
@@ -25,6 +27,28 @@ public class MerchantsRole extends BaseModel {
 	private String defaultPageUrl;
 	private Integer secretLevel;
 	private String memo;
+
+	public MerchantsRole() {
+	}
+
+	public MerchantsRole(String license, String name, String code, boolean allDataAuthority, boolean allAdminAuthority,
+			boolean allFrontAuthority, EPageType defaultPageType, Integer defaultPageId, String defaultPageUrl,
+			Integer secretLevel, String memo, Integer creatorId, Date createTime, Integer updaterId, Date updateTime) {
+		this.license = license;
+		this.name = name;
+		this.code = code;
+		this.allDataAuthority = allDataAuthority;
+		this.allAdminAuthority = allAdminAuthority;
+		this.allFrontAuthority = allFrontAuthority;
+		this.defaultPageType = defaultPageType;
+		this.defaultPageId = defaultPageId;
+		this.defaultPageUrl = defaultPageUrl;
+		this.memo = memo;
+		this.creatorId = creatorId;
+		this.createTime = createTime;
+		this.updaterId = updaterId;
+		this.updateTime = updateTime;
+	}
 
 	public String getLicense() {
 		return license;

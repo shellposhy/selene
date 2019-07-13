@@ -23,7 +23,9 @@ import com.selene.common.constants.ServiceConstants;
 import com.selene.common.result.ListResult;
 import com.selene.common.token.login.LoginToken;
 import com.selene.common.tree.DefaultTreeNode;
+import com.selene.common.util.Chineses;
 import com.selene.common.util.RedisClient;
+import com.selene.merchants.model.Merchants;
 import com.selene.merchants.model.MerchantsAction;
 import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsOrg;
@@ -32,6 +34,9 @@ import com.selene.merchants.model.MerchantsRole;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.merchants.model.MerchantsUserRole;
 import com.selene.merchants.model.enums.EActionUserType;
+import com.selene.merchants.model.enums.EOrgStatus;
+import com.selene.merchants.model.enums.EOrgType;
+import com.selene.merchants.model.enums.EPageType;
 import com.selene.merchants.model.service.MerchantsActionService;
 import com.selene.merchants.model.service.MerchantsLoginTokenService;
 import com.selene.merchants.model.service.MerchantsOrgRoleService;
@@ -40,6 +45,8 @@ import com.selene.merchants.model.service.MerchantsRoleService;
 import com.selene.merchants.model.service.MerchantsUserRoleService;
 import com.selene.merchants.model.service.MerchantsUserService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
+
+import cn.com.lemon.common.enums.EGender;
 
 import static cn.com.lemon.base.DateUtil.format;
 import static cn.com.lemon.base.Strings.md5;
@@ -75,6 +82,63 @@ public class UserService {
 				client.create(MerchantsLoginTokenService.class, merchantsService));
 		services.put(MerchantsOrgRoleService.class.getName(),
 				client.create(MerchantsOrgRoleService.class, merchantsService));
+	}
+
+	/**
+	 * Save install first merchants
+	 * 
+	 * @param merchants
+	 *            {@code Merchants}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveInstall(Merchants merchants) {
+		if (!isNullOrEmpty(merchants.getLicense())) {
+			MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
+					.get(MerchantsRoleService.class.getName());
+			MerchantsOrgService /* Organization services */ orgService = (MerchantsOrgService) services
+					.get(MerchantsOrgService.class.getName());
+			MerchantsOrgRoleService orgRoleService = (MerchantsOrgRoleService) services
+					.get(MerchantsOrgRoleService.class.getName());
+			MerchantsUserService merchantsUserService = (MerchantsUserService) services
+					.get(MerchantsUserService.class.getName());
+			MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
+					.get(MerchantsUserRoleService.class.getName());
+			String /* When install first,make sure license is legal */ newLicense = merchants.getLicense();
+			List<MerchantsOrg> /* The new license is using */ checkLicense = orgService.findByLicense(newLicense);
+			if (checkLicense != null && checkLicense.size() > 0) {
+				return 0;
+			}
+			String roleCodeAndOrgCode = Chineses.lower(merchants.getOrgName());
+			MerchantsRole /* First create administrator role */ firstAdminRole = new MerchantsRole(newLicense, "全部权限",
+					roleCodeAndOrgCode, true, true, true, EPageType.SysPage, 0, null, 0, "全部权限", 1, new Date(), 1,
+					new Date());
+			int newAdminRoleId = roleService.insert(firstAdminRole);
+			if (newAdminRoleId > 0) {
+				MerchantsOrg /* First create organization */ firstOrg = new MerchantsOrg(false, newLicense,
+						EOrgType.valueOf(merchants.getOrgType()), merchants.getOrgName(), roleCodeAndOrgCode, 0, 1,
+						EOrgStatus.Normal, /* Not inherit admin role */false, 1, new Date(), 1, new Date());
+				int newOrgId = orgService.insert(firstOrg);
+				if (newOrgId > 0) {
+					MerchantsOrgRole orgRole = new MerchantsOrgRole(newOrgId, newAdminRoleId);
+					if (/* First create organization role */orgRoleService.insert(orgRole) > 0) {
+						MerchantsUser firstOrgUser = new MerchantsUser(EActionUserType.Admin, 0, merchants.getAccount(),
+								merchants.getRealname(), merchants.getRealname(), md5(merchants.getAccountPassword()),
+								newOrgId, EGender.values()[merchants.getSex()], 1, merchants.getIpAddress(), null,
+								merchants.getPhoneNumber(), null, null, "1", EOrgStatus.Normal, 1, new Date(), 1,
+								new Date());
+						int newUserId = merchantsUserService.insert(firstOrgUser);
+						if (/* First create organization admin user */newUserId > 0) {
+							MerchantsUserRole userRole = new MerchantsUserRole(newAdminRoleId, newUserId);
+							List<MerchantsUserRole> newUserRoleList = new ArrayList<MerchantsUserRole>();
+							newUserRoleList.add(userRole);
+							/* First create organization admin user role */
+							return userRoleService.batchInsert(newUserRoleList);
+						}
+					}
+				}
+			}
+		}
+		return 0;
 	}
 
 	/**

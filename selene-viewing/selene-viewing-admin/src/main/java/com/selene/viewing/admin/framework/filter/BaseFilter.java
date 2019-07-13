@@ -26,7 +26,7 @@ public class BaseFilter implements Filter {
 			".png", ".doc", ".pdf", ".docx", ".ppt", ".pptx", ".xls", ".xlsx" };
 	private static final String[] staticResourcePath = { "/page", "/static", "/default", "/pic", "/tmp", "/doc" };
 	private static final String[] excludePath = { "/admin/security/check", "/admin/logout", "/admin/login",
-			"/admin/task/progress" };
+			"/admin/install","/admin/install/save", "/admin/task/progress" };
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {

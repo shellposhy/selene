@@ -19,5 +19,4 @@ public class Bootstrap {
 			LOG.error("Merchants Server is started fail!");
 		}
 	}
-
 }

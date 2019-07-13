@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <decorators defaultdir="/WEB-INF/layouts/">
 	<excludes>
+		<pattern>/admin/install</pattern>
+		<pattern>/admin/install/save</pattern>
 		<pattern>/admin/login</pattern>
 		<pattern>/admin/logout</pattern>
 		<pattern>/admin/security/check</pattern>

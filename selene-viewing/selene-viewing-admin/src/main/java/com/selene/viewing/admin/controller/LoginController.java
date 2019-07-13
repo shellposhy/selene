@@ -7,12 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.common.base.Strings;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.util.RedisClient;
+import com.selene.merchants.model.Merchants;
 import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.viewing.admin.service.merchants.UserService;
@@ -28,6 +31,23 @@ public class LoginController extends BaseController {
 	private UserService userService;
 	@Resource
 	private RedisClient redisClient;
+
+	@RequestMapping("/install/save")
+	public String save(@Validated Merchants merchants, BindingResult result, Model model, HttpServletRequest request) {
+		if (userService.saveInstall(merchants) > 0) {
+			return "redirect:/admin/login";
+		} else {
+			model.addAttribute("code", "100");
+			model.addAttribute("msg", "首次安装失败，请联系客服人员！");
+			return "redirect:/admin/error";
+		}
+	}
+
+	@RequestMapping("/install")
+	public String install(Model model) {
+		model.addAttribute("merchants", new Merchants());
+		return "/admin/install";
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String admin(HttpServletRequest request) {

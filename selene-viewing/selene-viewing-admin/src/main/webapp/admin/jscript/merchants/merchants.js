@@ -30,6 +30,8 @@ function loadMerchantsOrgTree() {
 			success : function(data) {
 				if (data.data.children != null) {
 					menuTreeCom($("#merchantsOrg"), data.data, true, bindTreeClickEvent, "merchants/org/",null, null, null, null);
+					$('#add_g_db_btn').attr('disabled',"true");
+					$('#add_g_db_btn').removeAttr('href');
 				} else {
 					$("#merchantsOrg").html("<h3 class='alert alert-info' >暂无机构</h3>");
 				}
@@ -50,6 +52,10 @@ function bindTreeClickEvent(id) {
 	}
 	loadMerchantsByOrgId(id);
 	$("#merchantsList").show().find(".dataTable").attr("style", "width:100%");
+	if(id>0){
+		$('#add_g_db_btn').removeAttr("disabled"); 
+		$("#add_g_db_btn").attr("href",appPath+"/admin/merchants/org/"+id+"/new");
+	}
 	var content="<a class='btn btn-small add_user' href='"+ appPath+ "/admin/merchants/"+ id+ "/new' target='_self'><i class='icon-plus'></i> 添加</a>";
 			content+="<a	class='btn btn-small delete_list' href='#'>"+ "<i	class='icon-trash'></i> 删除</a>";
 	$("#merchantsEdit").html(content);

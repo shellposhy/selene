@@ -1,5 +1,7 @@
 package com.selene.merchants.model;
 
+import java.util.Date;
+
 import com.selene.common.BaseModel;
 import com.selene.common.tree.TreeNodeModel;
 import com.selene.merchants.model.enums.EOrgStatus;
@@ -25,6 +27,27 @@ public class MerchantsOrg extends TreeNodeModel<MerchantsOrg> {
 	private boolean inherit;
 	// Expand field for org role list string
 	private String treeSelId;
+
+	public MerchantsOrg() {
+	}
+
+	public MerchantsOrg(boolean superStatus, String license, EOrgType orgType, String name, String code,
+			Integer parentId, Integer orderId, EOrgStatus status, boolean inherit, Integer creatorId, Date createTime,
+			Integer updaterId, Date updateTime) {
+		this.superStatus = superStatus;
+		this.license = license;
+		this.orgType = orgType;
+		this.name = name;
+		this.code = code;
+		this.parentId = parentId;
+		this.orderId = orderId;
+		this.status = status;
+		this.inherit = inherit;
+		this.creatorId = creatorId;
+		this.createTime = createTime;
+		this.updaterId = updaterId;
+		this.updateTime = updateTime;
+	}
 
 	public boolean isSuperStatus() {
 		return superStatus;

@@ -70,10 +70,13 @@ INSERT INTO
 VALUES('63','数据分类','Data_Sort','60','0','/admin/data/sort/g,/admin/data/sort,/admin/data/sort/(\\d+)/s,/admin/data/sort/(\\d+)/tree,/admin/data/sort/tree/(\\d+),/admin/data/sort/tree,/admin/data/sort/(\\d+)/new,/admin/data/sort/(\\d+)/edit,/admin/data/sort/(\\d+)/delete',NULL,'503');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('70','用户管理','User_Manage','0','0','#','menu_user','600');
+VALUES('70','商户管理','Merchants_Manage','0','0','#','menu_user','600');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('71','所有用户','All_User','70','0','/admin/user,/admin/user/s,/admin/user/(\\d+)/s,/admin/user/(\\d+)/new,/admin/user/(\\d+)/edit,/admin/user/delete,/admin/org,/admin/org/save,/admin/org/s,/admin/org/getNoUserOrgTree,/admin/org/new,/admin/org/(\\d+)/edit,/admin/org/save,/admin/org/(\\d+)/delete',NULL,'601');
+VALUES('71','商户查询','All_User','70','0','/admin/merchants,/admin/merchants/(\\d+)/s,/admin/merchants/org/s,/admin/merchants/org/(\\d+)/new,/admin/merchants/org/(\\d+)/edit,/admin/merchants/org/(\\d+)/delete,/admin/merchants/org/save',NULL,'601');
+INSERT INTO 
+	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
+VALUES('72','用户管理','User_Manage','70','0','/admin/merchants,/admin/merchants/(\\d+)/s,/admin/merchants/org/s,/admin/merchants/(\\d+)/new,/admin/merchants/(\\d+)/edit,/admin/merchants/delete,/admin/merchants/save',NULL,'602');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
 VALUES('80','用户组管理','Group_Manage','0','0','#','menu_users','700');

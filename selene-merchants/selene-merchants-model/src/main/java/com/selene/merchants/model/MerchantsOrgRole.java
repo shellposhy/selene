@@ -19,8 +19,7 @@ public class MerchantsOrgRole extends BaseModel {
 	public MerchantsOrgRole() {
 	}
 
-	public MerchantsOrgRole(Integer id, Integer orgId, Integer groupId) {
-		this.id = id;
+	public MerchantsOrgRole(Integer orgId, Integer groupId) {
 		this.orgId = orgId;
 		this.groupId = groupId;
 	}
