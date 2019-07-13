@@ -79,6 +79,9 @@ INSERT INTO
 VALUES('72','用户管理','User_Manage','70','0','/admin/merchants,/admin/merchants/(\\d+)/s,/admin/merchants/org/s,/admin/merchants/(\\d+)/new,/admin/merchants/(\\d+)/edit,/admin/merchants/delete,/admin/merchants/save',NULL,'602');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
+VALUES('73','角色管理','Role_Manage','70','0','/admin/merchants/role,/admin/merchants/role/s,/admin/merchants/role/new,/admin/merchants/role/(\\d+)/edit,/admin/merchants/role/save',NULL,'603');
+INSERT INTO 
+	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
 VALUES('80','用户组管理','Group_Manage','0','0','#','menu_users','700');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 

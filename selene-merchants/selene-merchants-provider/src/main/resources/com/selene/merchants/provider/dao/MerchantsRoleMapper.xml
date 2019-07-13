@@ -108,6 +108,17 @@
 			License=#{license}
 	</select>
 	
+	<select id="findPageByLicense" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,Name,Code,All_Data_Authority,All_Admin_Authority,All_Front_Authority,Default_Page_Type,
+			Default_Page_ID,Default_Page_Url,Secret_Level,Memo,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			merchants_role 
+		WHERE 
+			License=#{license}
+		LIMIT #{first},#{size}
+	</select>
+	
 	<delete id="batchDelete" parameterType="java.util.List">
 		DELETE FROM 
 			merchants_role 

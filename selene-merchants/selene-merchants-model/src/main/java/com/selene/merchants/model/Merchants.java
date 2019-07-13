@@ -13,11 +13,12 @@ public class Merchants {
 	private int orgType;
 	private String license;
 	private String account;
+	private String password;
 	private String realname;
 	private int sex;
-	private String phoneNumber;
-	private String accountPassword;
-	private String ipAddress;
+	private String phone;
+	private String email;
+	private String ip;
 
 	public String getOrgName() {
 		return orgName;
@@ -67,28 +68,36 @@ public class Merchants {
 		this.sex = sex;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
-	public String getAccountPassword() {
-		return accountPassword;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setAccountPassword(String accountPassword) {
-		this.accountPassword = accountPassword;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public String getIpAddress() {
-		return ipAddress;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 
 }

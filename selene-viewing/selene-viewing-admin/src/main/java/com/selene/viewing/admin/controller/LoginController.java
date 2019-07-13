@@ -34,6 +34,7 @@ public class LoginController extends BaseController {
 
 	@RequestMapping("/install/save")
 	public String save(@Validated Merchants merchants, BindingResult result, Model model, HttpServletRequest request) {
+		merchants/* Set IP */.setIp(cn.com.lemon.base.Strings.ip(request));
 		if (userService.saveInstall(merchants) > 0) {
 			return "redirect:/admin/login";
 		} else {

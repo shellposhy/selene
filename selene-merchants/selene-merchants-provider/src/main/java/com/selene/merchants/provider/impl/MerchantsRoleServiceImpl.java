@@ -65,6 +65,11 @@ public class MerchantsRoleServiceImpl implements MerchantsRoleService {
 	}
 
 	@Override
+	public List<MerchantsRole> findPageByLicense(String license, Integer first, Integer size) {
+		return merchantsRoleMapper.findPageByLicense(license, first, size);
+	}
+
+	@Override
 	public int batchDelete(List<Integer> list) {
 		return merchantsRoleMapper.batchDelete(list);
 	}

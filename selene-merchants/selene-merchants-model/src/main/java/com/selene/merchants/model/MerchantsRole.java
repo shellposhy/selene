@@ -27,6 +27,8 @@ public class MerchantsRole extends BaseModel {
 	private String defaultPageUrl;
 	private Integer secretLevel;
 	private String memo;
+	// Expand field for org role list string
+	private String treeSelId;
 
 	public MerchantsRole() {
 	}
@@ -43,6 +45,7 @@ public class MerchantsRole extends BaseModel {
 		this.defaultPageType = defaultPageType;
 		this.defaultPageId = defaultPageId;
 		this.defaultPageUrl = defaultPageUrl;
+		this.secretLevel = secretLevel;
 		this.memo = memo;
 		this.creatorId = creatorId;
 		this.createTime = createTime;
@@ -136,6 +139,14 @@ public class MerchantsRole extends BaseModel {
 
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+
+	public String getTreeSelId() {
+		return treeSelId;
+	}
+
+	public void setTreeSelId(String treeSelId) {
+		this.treeSelId = treeSelId;
 	}
 
 }

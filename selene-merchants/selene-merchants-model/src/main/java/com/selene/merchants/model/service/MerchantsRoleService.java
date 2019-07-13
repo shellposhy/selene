@@ -27,6 +27,8 @@ public interface MerchantsRoleService {
 
 	public List<MerchantsRole> findByLicense(String license);
 
+	public List<MerchantsRole> findPageByLicense(String license, Integer first, Integer size);
+
 	public int batchDelete(List<Integer> list);
 
 	public int delete(Integer id);

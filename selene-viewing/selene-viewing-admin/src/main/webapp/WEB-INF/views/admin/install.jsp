@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<div class="row-fluid">
-					<div class="well span5 center login-box mt60">
+					<div class="well span5 center login-box mt20">
 						<div class="mt30">
 							<form:form modelAttribute="merchants" id="install_form" action="${appPath}/admin/install/save" method="post" class="mt10">
 								<fieldset>
@@ -61,17 +61,25 @@
 									<div class="clearfix"></div>
 									<div class="input-prepend" title="sex" style="margin-bottom: 20px;">
 										<span class="add-on floatl">真实性别</span>
-										<form:input path="sex" class="input-large floatl" name="sex" id="sex"  placeholder="真实性别" />
+										<form:select path="sex" class="floatl" name="sex" id="sex" >
+											<form:option value="0">男</form:option>
+											<form:option value="1">女</form:option>
+										</form:select>
 									</div>
 									<div class="clearfix"></div>
-									<div class="input-prepend" title="phoneNumber" style="margin-bottom: 20px;">
+									<div class="input-prepend" title="phone" style="margin-bottom: 20px;">
 										<span class="add-on floatl">手机号码</span>
-										<form:input path="phoneNumber" class="input-large floatl" name="phoneNumber" id="phoneNumber"  placeholder="手机号码" />
+										<form:input path="phone" class="input-large floatl" name="phone" id="phone"  placeholder="手机号码" />
 									</div>
 									<div class="clearfix"></div>
-									<div class="input-prepend" title="accountPassword" style="margin-bottom: 20px;">
+									<div class="input-prepend" title="email" style="margin-bottom: 20px;">
+										<span class="add-on floatl">电子邮箱</span>
+										<form:input path="email" class="input-large floatl" name="email" id="email"  placeholder="电子邮箱" />
+									</div>
+									<div class="clearfix"></div>
+									<div class="input-prepend" title="password" style="margin-bottom: 20px;">
 										<span class="add-on floatl">账户密码</span>
-										<form:password path="accountPassword" class="input-large floatl" name="accountPassword" id="accountPassword" placeholder="账户密码" />
+										<form:password path="password" class="input-large floatl" name="password" id="password" placeholder="账户密码" />
 									</div>
 									<div class="clearfix"></div>
 									<div class="input-prepend" title="repeatPassword" style="margin-bottom: 20px;">
@@ -102,6 +110,11 @@
 						var reg = /^[A-Za-z0-9]+$/;
 						return this.optional(element) || reg.test(value);
 					}, "账户只能由数字和26个英文字母组成");
+			jQuery.validator.addMethod("phonecheck",
+					function(value, element) {
+						var reg = /^1(3|4|5|7|8)\d{9}$/;
+						return this.optional(element) || reg.test(value);
+					}, "手机号码格式错误！");
 			$("#install_form").validate({
 				rules : {
 					orgName : {
@@ -111,20 +124,35 @@
 						required : true
 					},
 					license : {
-						required : true
+						required : true,
+						namecheck:true
 					},
 					account : {
 						required : true,
-						minlength:8,
+						minlength:5,
 						namecheck:true
 					},
-					accountPassword : {
+					realname:{
+						required : true
+					},
+					sex:{
+						required : true
+					},
+					phone:{
+						required : true,
+						phonecheck:true
+					},
+					email:{
+						required : true,
+						email:true
+					},
+					password : {
 						required : true,
 						minlength:8
 					},
 					repeatPassword : {
 						required : true,
-						equalTo : "#accountPassword"
+						equalTo : "#password"
 					}
 				},
 				messages : {
@@ -135,14 +163,29 @@
 						required : "机构类型不能为空！"
 					},
 					license : {
-						required : "机构申请的许可证号不能为空！"
+						required : "机构申请的许可证号不能为空！",
+						namecheck:"许可证只能由数字和26个英文字母组成！"
 					},
 					account : {
 						required : "机构管理员账户不能为空！",
-						minlength:"账户长度不小于8位！",
+						minlength:"账户长度不小于5位！",
 						namecheck:"账户只能由数字和26个英文字母组成！"
 					},
-					accountPassword : {
+					realname:{
+						required : "真实姓名不能为空！"
+					},
+					sex:{
+						required : "性别不能为空！"
+					},
+					phone:{
+						required : "手机号码不能为空！",
+						phonecheck:"手机号码格式错误！"
+					},
+					email:{
+						required : "电子邮箱不能为空！",
+						email:"输入的电子邮箱格式不匹配！"
+					},
+					password : {
 						required : "账户密码不能为空！",
 						minlength:"密码长度不小于8位！",
 					},

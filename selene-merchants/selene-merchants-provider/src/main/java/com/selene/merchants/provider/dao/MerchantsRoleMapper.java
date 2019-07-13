@@ -31,6 +31,9 @@ public interface MerchantsRoleMapper {
 
 	public List<MerchantsRole> findByLicense(@Param("license") String license);
 
+	public List<MerchantsRole> findPageByLicense(@Param("license") String license, @Param("first") Integer first,
+			@Param("size") Integer size);
+
 	public int batchDelete(List<Integer> list);
 
 	public int delete(@Param("id") Integer id);
