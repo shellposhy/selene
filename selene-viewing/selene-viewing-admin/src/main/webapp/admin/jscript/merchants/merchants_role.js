@@ -9,7 +9,7 @@ $(document).ready(function() {
 	loadMerchantsActionTree();
 	//role edit
 	bindAdminProcess();
-	userGroup_add();
+	checkMerchantsRoleForm();
 });
 
 //bind merchants role
@@ -126,21 +126,8 @@ function bindAdminProcess() {
 	});
 }
 
-
-
-//新增角色
-function userGroup_add(){
-	if ($("#group_new_form").length > 0) {
-		userGroup_validate();
-		//userGroup_admin_authority();
-		userGroup_data_authority();
-		//usergroup_tree_menu();
-		userGroup_page_deault();
-	}
-}
-
-/* 提交用户组 表单验证 */
-function userGroup_validate() {
+//check role form
+function checkMerchantsRoleForm() {
 	$("#group_new_form").validate({
 		rules : {
 			name : "required",
@@ -157,66 +144,5 @@ function userGroup_validate() {
 			form.submit();
 		},
 		onkeyup : false
-	});
-}
-
-//后台管理权限切换
-
-
-//数据库权限切换
-function userGroup_data_authority() {
-	if ($("input[name='allDataAuthority']").val() == "false") {
-		$(".notAllAuthorDb").addClass("disabled").siblings(".allAuthorDb").removeClass("disabled");
-		$("#user_group_readOnly_tree").show();
-	} else {
-		$(".allAuthorDb").addClass("disabled").siblings(".notAllAuthorDb").removeClass("disabled");
-		$("#user_group_readOnly_tree").hide();
-	}
-	$(".allAuthorDb").click(function() {
-		if (!$(this).hasClass("disabled")) {
-			$(this).addClass("disabled").siblings(".notAllAuthorDb").removeClass("disabled");
-			$("#user_group_readOnly_tree").hide();
-			$("input[name='allDataAuthority']").attr("value", true);
-		}
-		return false;
-	});
-	$(".notAllAuthorDb").click(function() {
-		if (!$(this).hasClass("disabled")) {
-			$(this).addClass("disabled").siblings(".allAuthorDb").removeClass("disabled");
-			$("#user_group_readOnly_tree").show();
-			$("input[name='allDataAuthority']").attr("value", false);
-		}
-		return false;
-	});
-}
-
-//系统默认首页处理
-function userGroup_page_deault() {
-	var initTypeVal = $("#defaultPageType").val();
-	if (initTypeVal == null || initTypeVal == "" || initTypeVal == "SysPage") {
-		$("#defaultPageUrl").val("");
-		$('#para').val("SysPage");
-		$("#defaultPageType").val("SysPage");
-		$("#defaultPageSel_Area").show();
-		$("#defaultPageUrl_area").hide();
-	} else if (initTypeVal == "UserPage") {
-		$('#para').val("UserPage");
-		$("#defaultPageID").val("");
-		$("#pageSel").val("");
-		$("#defaultPageSel_Area").hide();
-		$("#defaultPageUrl_area").show();
-	}
-	$("#para").change(function() {
-		var defaultPageTypeVal = $('#para').val();
-		$("#defaultPageType").val(defaultPageTypeVal);
-		if (defaultPageTypeVal == "UserPage") {
-			$("#defaultPageSel_Area").hide();
-			$("#defaultPageUrl_area").show();
-			$("#defaultPageID").val("");
-		} else if (defaultPageTypeVal == "SysPage") {
-			$("#defaultPageUrl").val("");
-			$("#defaultPageUrl_area").hide();
-			$("#defaultPageSel_Area").show();
-		}
 	});
 }

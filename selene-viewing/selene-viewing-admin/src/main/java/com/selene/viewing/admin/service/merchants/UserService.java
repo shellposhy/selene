@@ -31,6 +31,7 @@ import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsOrg;
 import com.selene.merchants.model.MerchantsOrgRole;
 import com.selene.merchants.model.MerchantsRole;
+import com.selene.merchants.model.MerchantsRoleAction;
 import com.selene.merchants.model.MerchantsUser;
 import com.selene.merchants.model.MerchantsUserRole;
 import com.selene.merchants.model.enums.EActionUserType;
@@ -41,6 +42,7 @@ import com.selene.merchants.model.service.MerchantsActionService;
 import com.selene.merchants.model.service.MerchantsLoginTokenService;
 import com.selene.merchants.model.service.MerchantsOrgRoleService;
 import com.selene.merchants.model.service.MerchantsOrgService;
+import com.selene.merchants.model.service.MerchantsRoleActionService;
 import com.selene.merchants.model.service.MerchantsRoleService;
 import com.selene.merchants.model.service.MerchantsUserRoleService;
 import com.selene.merchants.model.service.MerchantsUserService;
@@ -82,6 +84,56 @@ public class UserService {
 				client.create(MerchantsLoginTokenService.class, merchantsService));
 		services.put(MerchantsOrgRoleService.class.getName(),
 				client.create(MerchantsOrgRoleService.class, merchantsService));
+		services.put(MerchantsRoleActionService.class.getName(),
+				client.create(MerchantsRoleActionService.class, merchantsService));
+	}
+
+	/**
+	 * Save merchants role
+	 * 
+	 * @param merchantsRole
+	 *            {@code MerchantsRole}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveMerchantsRole(MerchantsRole merchantsRole) {
+		// Initialize the required services
+		MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
+				.get(MerchantsOrgRole.class.getName());
+		MerchantsRoleActionService/* Role action services */ roleActionService = (MerchantsRoleActionService) services
+				.get(MerchantsRoleActionService.class.getName());
+		// Business process
+		List<Integer> newRoleActionIdList = new ArrayList<Integer>();
+		String[] newRoleActionIdArray = split(CommonConstants.COMMA_SEPARATOR, merchantsRole.getTreeSelId());
+		if (newRoleActionIdArray != null && newRoleActionIdArray.length > 0) {
+			for (String /* The current role all action id */ id : newRoleActionIdArray) {
+				newRoleActionIdList.add(Integer.valueOf(id));
+			}
+		}
+		int roleId = merchantsRole.getId();
+		if (/* Update role */merchantsRole.getId() != null) {
+			List<Integer> /* Old role action */ oldRoleActionList = roleActionService
+					.findActionIdsByGroupIdAndType(merchantsRole.getId(), EActionUserType.Admin.ordinal());
+			if (/* Delete old role action */oldRoleActionList != null && oldRoleActionList.size() > 0) {
+				if (roleActionService.deleteByGroupId(merchantsRole.getId()) > 0) {
+					roleService.update(merchantsRole);
+				}
+			}
+		} else {
+			int newRoleId = roleService.insert(merchantsRole);
+			roleId = newRoleId;
+		}
+		if (/* Write new role all action id */newRoleActionIdList.size() > 0) {
+			List<MerchantsRoleAction> newRoleAction = new ArrayList<MerchantsRoleAction>();
+			for (Integer actionId : newRoleActionIdList) {
+				MerchantsRoleAction roleAction = new MerchantsRoleAction();
+				roleAction.setActionId(actionId);
+				roleAction.setGroupId(roleId);
+				roleAction.setType(EActionUserType.Admin.ordinal());
+				newRoleAction.add(roleAction);
+			}
+			return roleActionService.batchInsert(newRoleAction);
+		}
+		return 0;
 	}
 
 	/**

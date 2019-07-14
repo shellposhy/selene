@@ -15,7 +15,7 @@ import com.selene.merchants.model.MerchantsRoleAction;
  * @version 1.0
  */
 public interface MerchantsRoleActionMapper {
-	public List<MerchantsRoleAction> batchInsert(List<MerchantsRoleAction> list);
+	public int batchInsert(List<MerchantsRoleAction> list);
 
 	public List<Integer> findActionIdsByGroupIdAndType(@Param("groupId") Integer groupId, @Param("type") Integer type);
 

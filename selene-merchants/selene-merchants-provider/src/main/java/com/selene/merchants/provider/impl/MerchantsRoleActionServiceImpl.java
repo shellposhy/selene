@@ -24,7 +24,7 @@ public class MerchantsRoleActionServiceImpl implements MerchantsRoleActionServic
 	private MerchantsRoleActionMapper merchantsRoleActionMapper;
 
 	@Override
-	public List<MerchantsRoleAction> batchInsert(List<MerchantsRoleAction> list) {
+	public int batchInsert(List<MerchantsRoleAction> list) {
 		return merchantsRoleActionMapper.batchInsert(list);
 	}
 
