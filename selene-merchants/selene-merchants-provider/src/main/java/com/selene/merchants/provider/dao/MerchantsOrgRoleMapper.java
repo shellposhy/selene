@@ -20,7 +20,9 @@ public interface MerchantsOrgRoleMapper {
 
 	public List<Integer> findGroupIdsByOrgId(@Param("orgId") Integer orgId);
 
+	public List<MerchantsOrgRole> findByGroupId(@Param("groupId") Integer groupId);
+
 	public int deleteByOrgId(@Param("orgId") Integer orgId);
-	
+
 	public int deleteByGroupId(@Param("groupId") Integer groupId);
 }

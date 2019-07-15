@@ -89,6 +89,78 @@ public class UserService {
 	}
 
 	/**
+	 * Delete the role by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public int deleteRole(Integer id) {
+		// Initialize the required services
+		MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
+				.get(MerchantsRoleService.class.getName());
+		MerchantsRoleActionService/* Role action services */ roleActionService = (MerchantsRoleActionService) services
+				.get(MerchantsRoleActionService.class.getName());
+		// Business process
+		if (roleActionService.deleteByGroupId(id) > 0) {
+			return roleService.delete(id);
+		}
+		return 0;
+	}
+
+	/**
+	 * Make sure the role is in use before deleting it.
+	 * 
+	 * @param roleId
+	 * @return
+	 */
+	public boolean checkPreDeleteRole(Integer roleId) {
+		// Initialize the required services
+		MerchantsOrgRoleService /* Role for organization */ orgRoleService = (MerchantsOrgRoleService) services
+				.get(MerchantsOrgRoleService.class.getName());
+		MerchantsUserRoleService/* Role for user */ userRoleService = (MerchantsUserRoleService) services
+				.get(MerchantsUserRoleService.class.getName());
+		// Business process
+		List<MerchantsOrgRole> roleList = orgRoleService.findByGroupId(roleId);
+		if (roleList != null && roleList.size() > 0) {
+			return true;
+		} else {
+			List<Integer> userIdList = userRoleService.findUserIdsByGroupId(roleId);
+			if (userIdList != null && userIdList.size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Query {@code MerchantsRole} by id
+	 * 
+	 * @param id
+	 * @return {@code MerchantsRole}
+	 */
+	public MerchantsRole findRoleById(Integer id) {
+		// Initialize the required services
+		MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
+				.get(MerchantsRoleService.class.getName());
+		// Business process
+		return roleService.find(id);
+	}
+
+	/**
+	 * Query {@code MerchantsRoleAction} action id list by id
+	 * 
+	 * @param roleId
+	 * @return {@code MerchantsRoleAction}
+	 */
+	public List<Integer> findRoleActionIdByRoleId(Integer roleId) {
+		// Initialize the required services
+		MerchantsRoleActionService /* Role services */ roleActionService = (MerchantsRoleActionService) services
+				.get(MerchantsRoleActionService.class.getName());
+		// Business process
+		return roleActionService.findActionIdsByGroupIdAndType(roleId, EActionUserType.Admin.ordinal());
+	}
+
+	/**
 	 * Save merchants role
 	 * 
 	 * @param merchantsRole
@@ -98,7 +170,7 @@ public class UserService {
 	public int saveMerchantsRole(MerchantsRole merchantsRole) {
 		// Initialize the required services
 		MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
-				.get(MerchantsOrgRole.class.getName());
+				.get(MerchantsRoleService.class.getName());
 		MerchantsRoleActionService/* Role action services */ roleActionService = (MerchantsRoleActionService) services
 				.get(MerchantsRoleActionService.class.getName());
 		// Business process
@@ -109,7 +181,7 @@ public class UserService {
 				newRoleActionIdList.add(Integer.valueOf(id));
 			}
 		}
-		int roleId = merchantsRole.getId();
+		int roleId = (null != merchantsRole.getId() ? merchantsRole.getId().intValue() : 0);
 		if (/* Update role */merchantsRole.getId() != null) {
 			List<Integer> /* Old role action */ oldRoleActionList = roleActionService
 					.findActionIdsByGroupIdAndType(merchantsRole.getId(), EActionUserType.Admin.ordinal());

@@ -34,7 +34,15 @@
 			merchants_org_role 
 		WHERE Org_ID=#{orgId}
 	</select>
-
+	
+	<select id="findByGroupId" resultMap="resultMap" resultType="java.lang.Integer">
+		SELECT 
+			ID,Group_ID,Org_ID
+		FROM
+			merchants_org_role 
+		WHERE Group_ID=#{groupId}
+	</select>
+	
 	<delete id="deleteByOrgId">
 		DELETE FROM 
 			merchants_org_role 

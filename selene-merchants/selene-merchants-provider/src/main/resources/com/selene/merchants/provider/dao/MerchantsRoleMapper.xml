@@ -141,7 +141,7 @@
 			merchants_role 
 		<set>
 			<if test="name != null">Name=#{name},</if>
-			<if test="Code != null">CODE=#{code},</if>
+			<if test="code != null">Code=#{code},</if>
 			<if test="allDataAuthority != null">All_Data_Authority=#{allDataAuthority},</if>
 			<if test="allAdminAuthority != null">All_Admin_Authority=#{allAdminAuthority},</if>
 			<if test="allFrontAuthority != null">All_Front_Authority=#{allFrontAuthority},</if>

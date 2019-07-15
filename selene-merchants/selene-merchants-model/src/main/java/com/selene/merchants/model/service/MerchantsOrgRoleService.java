@@ -17,6 +17,8 @@ public interface MerchantsOrgRoleService {
 
 	public List<Integer> findGroupIdsByOrgId(Integer orgId);
 
+	public List<MerchantsOrgRole> findByGroupId(Integer groupId);
+
 	public int deleteByOrgId(Integer orgId);
 
 	public int deleteByGroupId(Integer groupId);

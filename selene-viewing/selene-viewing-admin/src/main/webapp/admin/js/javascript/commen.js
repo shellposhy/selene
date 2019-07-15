@@ -67,6 +67,10 @@ function retrieveData(sSource, aoData, fnCallback) {
 		"url" : sSource,
 		"dataType" : "json",
 		"data" : JSON.stringify(aoData),
+		beforeSend: function(request) {//beforeSend
+            request.setRequestHeader("token", token);
+            request.setRequestHeader("refreshToken",refreshToken);
+         },
 		"success" : function(resp) {
 			if (resp.aaData) {
 				fnCallback(resp);
@@ -162,6 +166,10 @@ function listSend(sUrl, oTable) {
 										contentType : "application/json",
 										url : sUrl,
 										data : JSON.stringify(spData),
+										beforeSend: function(request) {//beforeSend
+							                request.setRequestHeader("token", token);
+							                request.setRequestHeader("refreshToken",refreshToken);
+							             },
 										success : function(resp) {
 											oTable.fnDraw();
 											var delayRd = setTimeout("isCheckboxStyle();", 300);
@@ -185,7 +193,7 @@ function listSend(sUrl, oTable) {
 
 /* 列表通用删除按钮 */
 function listDelete(sUrl, oTable) {
-	$(".delete_list").unbind();
+	$(".delete_list").unbind('click');
 	$(".delete_list").click(function() {
 		var dt = $(this).parent().nextAll(".dataTables_wrapper");
 		if (dt.length < 1) {
@@ -207,18 +215,26 @@ function listDelete(sUrl, oTable) {
 			};
 			if (count > 0) {
 				$('#delModal').modal('show');
-				$("#delModal").find('.btn-primary').click(function() {
+				$("#delModal").find('.btn-primary').unbind('click').click(function() {
 					$.ajax({
 						type : 'post',
 						contentType : "application/json",
 						url : sUrl,
 						data : JSON.stringify(spData),
+						beforeSend: function(request) {//beforeSend
+			                request.setRequestHeader("token", token);
+			                request.setRequestHeader("refreshToken",refreshToken);
+			             },
 						success : function(resp) {
-							oTable.fnDraw();
+							if(resp.code==100){
+								noty({"text" :resp.msg ,"layout" : "center","type" : "error"});
+								oTable.fnDraw();
+							}else if(resp.code==200){
+								noty({"text" : "删除成功！","layout" : "center","type" : "success"});
+								oTable.fnDraw();
+							}
 							var delayRd = setTimeout("isCheckboxStyle();",300);
 							$('#delModal').modal('hide');
-							if ($(".nav_tabs_for_datatables").length > 0) {
-							}
 						},
 						error : function(data) {
 							noty({"text" : "删除出错","layout" : "top","type" : "information"});
@@ -281,6 +297,10 @@ function ProgressBarCom(oBar, sUrl, sTip) {
 			url : sUrl,
 			cache : false,
 			dataType : "json",
+			beforeSend: function(request) {//beforeSend
+                request.setRequestHeader("token", token);
+                request.setRequestHeader("refreshToken",refreshToken);
+             },
 			success : function(data) {
 				var barpres = data + "%";
 				if (data < 100) {
@@ -530,6 +550,10 @@ $("#delModal").find('.btn-primary').click(function() {
 		contentType : "application/json",
 		url : sUrl,
 		data : JSON.stringify(spData),
+		beforeSend: function(request) {//beforeSend
+            request.setRequestHeader("token", token);
+            request.setRequestHeader("refreshToken",refreshToken);
+         },
 		success : function(resp) {
 			oTable.fnDraw();
 			var delayRd = setTimeout("isCheckboxStyle();", 300);

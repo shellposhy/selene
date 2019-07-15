@@ -1,6 +1,12 @@
 package com.selene.viewing.admin.controller.merchants;
 
+import static cn.com.lemon.base.Strings.join;
+import static cn.com.lemon.base.Strings.split;
+import static cn.com.lemon.base.Strings.toArray;
+import static com.selene.common.util.Containers.toList;
+
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.selene.common.HttpStatus;
 import com.selene.common.Operator;
+import com.selene.common.constants.CommonConstants;
 import com.selene.common.datatable.DataTable;
 import com.selene.common.datatable.DataTableArray;
 import com.selene.common.datatable.DataTableResult;
@@ -81,6 +89,45 @@ public class MerchantsRoleController extends BaseController {
 		return "/admin/merchants/role/edit";
 	}
 
+	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
+	public String edit(@PathVariable(value = "id") Integer id, Model model) {
+		MerchantsRole merchantsRole = userService.findRoleById(id);
+		List<Integer> actionIds = userService.findRoleActionIdByRoleId(id);
+		if (actionIds != null && actionIds.size() > 0) {
+			merchantsRole
+					.setTreeSelId(/* list to join */join(CommonConstants.COMMA_SEPARATOR, toArray(toList(actionIds))));
+		}
+		model.addAttribute("merchantsRole", merchantsRole);
+		return "/admin/merchants/role/edit";
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public MappingJacksonValue delete(@RequestBody DataTableArray value, String callback, HttpServletRequest request) {
+		ObjectResult<String> result = new ObjectResult<String>();
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		String[] /* Roles need to deleted. */ roleIds = split(CommonConstants.COMMA_SEPARATOR, value.value);
+		boolean isHasUser = false;
+		for (String roleId : roleIds) {
+			if (/* Make sure the role is not in use before deleting it. */userService
+					.checkPreDeleteRole(Integer.valueOf(roleId))) {
+				isHasUser = true;
+				break;
+			}
+		}
+		if (isHasUser) {
+			result.setCode(HttpStatus.ERROR.code());
+			result.setMsg("角色删除前，请确保该角色没有被机构或用户使用！");
+		} else {
+			for (String roleId : roleIds) {
+				userService.deleteRole(Integer.valueOf(roleId));
+			}
+			result.setCode(HttpStatus.OK.code());
+		}
+		mv.setJsonpFunction(callback);
+		return mv;
+	}
+
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(@Validated final MerchantsRole merchantsRole, BindingResult result, final Model model,
 			final HttpServletRequest request) {
@@ -105,12 +152,14 @@ public class MerchantsRoleController extends BaseController {
 
 			@Override
 			public String success() {
-				return null;
+				return "redirect:/admin/merchants/role";
 			}
 
 			@Override
 			public String fail() {
-				return null;
+				model.addAttribute("code", "100");
+				model.addAttribute("msg", "角色名称为：" + merchantsRole.getName() + "，创建失败！");
+				return "redirect:/admin/error";
 			}
 
 			@Override
