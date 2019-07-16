@@ -42,6 +42,11 @@ public class MerchantsOrgController extends BaseController {
 	@Resource
 	private CommonService commonService;
 
+	@RequestMapping(method = RequestMethod.GET)
+	public String list(Model model) {
+		return "/admin/merchants/org/list";
+	}
+
 	@RequestMapping(value = "/s", method = RequestMethod.POST)
 	@ResponseBody
 	public MappingJacksonValue loadMerchantsOrgTree(String callback, HttpServletRequest request) {
@@ -136,7 +141,7 @@ public class MerchantsOrgController extends BaseController {
 
 			@Override
 			public String success() {
-				return "redirect:/admin/merchants";
+				return "redirect:/admin/merchants/org";
 			}
 
 			@Override

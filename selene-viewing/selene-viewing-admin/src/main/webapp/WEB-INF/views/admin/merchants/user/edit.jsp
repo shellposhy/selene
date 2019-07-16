@@ -11,7 +11,7 @@
 					<li><a href="#">用户编辑</a></li>
 				</ul>
 			</div>
-			<form:form modelAttribute="user" class="form-horizontal u_form" id="user_new_form" action="${appPath}/admin/merchants/save" method="post" target="_self">
+			<form:form modelAttribute="user" class="form-horizontal u_form" id="user_new_form" action="${appPath}/admin/merchants/user/save" method="post" target="_self">
 				<fieldset>
 					<legend>
 						<span class="icon32 icon-user floatl"></span>用户编辑

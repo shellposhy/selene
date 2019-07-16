@@ -307,6 +307,27 @@ public class UserService {
 	}
 
 	/**
+	 * Delete user by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public int deleteUser(MerchantsUser user) {
+		// Initialize the required services
+		MerchantsUserService merchantsUserService = (MerchantsUserService) services
+				.get(MerchantsUserService.class.getName());
+		MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
+				.get(MerchantsUserRoleService.class.getName());
+		// business process
+		List<Integer> needDeleteUserRoleList = userRoleService.findGroupIdsByUserId(user.getId());
+		if (/* If user not super and delete roles */needDeleteUserRoleList != null
+				&& needDeleteUserRoleList.size() > 0) {
+			userRoleService.deleteByUserId(user.getId());
+		}
+		return merchantsUserService.petrify(user);
+	}
+
+	/**
 	 * Save merchants user
 	 * 
 	 * @param merchantsUser

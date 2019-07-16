@@ -70,16 +70,19 @@ INSERT INTO
 VALUES('63','数据分类','Data_Sort','60','0','/admin/data/sort/g,/admin/data/sort,/admin/data/sort/(\\d+)/s,/admin/data/sort/(\\d+)/tree,/admin/data/sort/tree/(\\d+),/admin/data/sort/tree,/admin/data/sort/(\\d+)/new,/admin/data/sort/(\\d+)/edit,/admin/data/sort/(\\d+)/delete',NULL,'503');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('70','商户管理','Merchants_Manage','0','0','#','menu_user','600');
+VALUES('70','商户管理','Merchants_Manage','0','0','#','menu_user','700');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('71','商户查询','All_User','70','0','/admin/merchants,/admin/merchants/(\\d+)/s,/admin/merchants/org/s,/admin/merchants/org/(\\d+)/new,/admin/merchants/org/(\\d+)/edit,/admin/merchants/org/(\\d+)/delete,/admin/merchants/org/save',NULL,'601');
+VALUES('71','商户查询','All_User','70','0','/admin/merchants,/admin/merchants/org/s,/admin/merchants/user/(\\d+)/s',NULL,'701');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('72','用户管理','User_Manage','70','0','/admin/merchants,/admin/merchants/(\\d+)/s,/admin/merchants/org/s,/admin/merchants/(\\d+)/new,/admin/merchants/(\\d+)/edit,/admin/merchants/delete,/admin/merchants/save',NULL,'602');
+VALUES('72','机构管理','Org_Manage','70','0','/admin/merchants/org,/admin/merchants/org/s,/admin/merchants/user/(\\d+)/s,/admin/merchants/org/(\\d+)/new,/admin/merchants/org/(\\d+)/edit,/admin/merchants/org/(\\d+)/delete,/admin/merchants/org/save',NULL,'702');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('73','角色管理','Role_Manage','70','0','/admin/merchants/role,/admin/merchants/role/s,/admin/merchants/role/new,/admin/merchants/role/(\\d+)/edit,/admin/merchants/role/save',NULL,'603');
+VALUES('73','用户管理','User_Manage','70','0','/admin/merchants/user,/admin/merchants/org/s,/admin/merchants/user/(\\d+)/s,/admin/merchants/user/(\\d+)/new,/admin/merchants/user/(\\d+)/edit,/admin/merchants/user/delete,/admin/merchants/user/save',NULL,'703');
+INSERT INTO 
+	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
+VALUES('74','角色管理','Role_Manage','70','0','/admin/merchants/role,/admin/merchants/role/s,/admin/merchants/role/new,/admin/merchants/role/(\\d+)/edit,/admin/merchants/role/save,/admin/merchants/role/action/s,/admin/merchants/role/delete',NULL,'704');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
 VALUES('80','用户组管理','Group_Manage','0','0','#','menu_users','700');

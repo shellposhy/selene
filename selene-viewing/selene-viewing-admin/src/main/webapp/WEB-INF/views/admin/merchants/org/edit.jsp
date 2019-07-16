@@ -80,6 +80,6 @@
 		</fieldset>
 	</form:form>
 </div>
-<script src="${appPath}/admin/jscript/merchants/merchants.js"></script>
+<script src="${appPath}/admin/jscript/merchants/merchants_org.js"></script>
 </body>
 </html>

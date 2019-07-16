@@ -178,11 +178,14 @@
 	<update id="petrify">
 		UPDATE 
 			merchants_user 
-		SET 
-			Status=0,
-			Name=#{user.name},
-			Die_Name=#{user.nickName} 
+		<set> 
+			<if test="status != null">Status =#{status},</if>
+			<if test="name != null">Name = #{name},</if>
+			<if test="nickName != null">Nick_Name =#{nickName},</if>
+			<if test="updaterId != null">Updater_ID =#{updaterId},</if>
+			<if test="updateTime != null">Update_Time =#{updateTime}</if>
+		</set>
 		WHERE 
-			ID=#{user.id}
+			ID=#{id}
 	</update>
 </mapper>

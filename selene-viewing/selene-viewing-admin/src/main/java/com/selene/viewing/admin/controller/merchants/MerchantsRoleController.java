@@ -105,7 +105,6 @@ public class MerchantsRoleController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue delete(@RequestBody DataTableArray value, String callback, HttpServletRequest request) {
 		ObjectResult<String> result = new ObjectResult<String>();
-		MappingJacksonValue mv = new MappingJacksonValue(result);
 		String[] /* Roles need to deleted. */ roleIds = split(CommonConstants.COMMA_SEPARATOR, value.value);
 		boolean isHasUser = false;
 		for (String roleId : roleIds) {
@@ -124,6 +123,7 @@ public class MerchantsRoleController extends BaseController {
 			}
 			result.setCode(HttpStatus.OK.code());
 		}
+		MappingJacksonValue mv = new MappingJacksonValue(result);
 		mv.setJsonpFunction(callback);
 		return mv;
 	}
