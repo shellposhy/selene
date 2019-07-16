@@ -136,6 +136,6 @@
 				</div>
 			</form:form>
 		</div>
-	<script src="${appPath}/admin/jscript/merchants/merchants_user.js"></script>
+	<script src="${appPath}/admin/jscript/merchants/min/user.js"></script>
 	</body>
 </html>

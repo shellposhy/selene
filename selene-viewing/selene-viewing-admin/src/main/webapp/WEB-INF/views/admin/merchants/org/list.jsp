@@ -51,6 +51,6 @@
 				</div>
 			</div>
 		</div>
-	    <script src="${appPath}/admin/jscript/merchants/merchants_org.js"></script>
+	    <script src="${appPath}/admin/jscript/merchants/min/org.js"></script>
 	</body>
 </html>

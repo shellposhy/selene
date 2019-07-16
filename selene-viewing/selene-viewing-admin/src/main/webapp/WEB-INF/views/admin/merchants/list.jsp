@@ -46,6 +46,6 @@
 				</div>
 			</div>
 		</div>
-	    <script src="${appPath}/admin/jscript/merchants/merchants.js"></script>
+	    <script src="${appPath}/admin/jscript/merchants/min/base.js"></script>
 	</body>
 </html>
