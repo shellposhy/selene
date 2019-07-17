@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.dataing.provider.dao.DataingDataModelMapper">
+	<resultMap id="resultMap" type="com.selene.dataing.model.DataingDataModel">
+		<result property="id" column="ID" />
+		<result property="modelName" column="Model_Name" />
+		<result property="modelCode" column="Model_Code" />
+		<result property="modelType" column="Model_Type" />
+		<result property="fieldsName" column="Fields_Name" />
+		<result property="forSystem" column="For_System" />
+		<result property="memo" column="Memo" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="createTime" column="Create_Time" />
+		<result property="updaterId" column="Updater_ID" />
+		<result property="updateTime" column="Update_Time" />
+	</resultMap>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO 
+			data_model(Model_Name,Model_Code,Model_Type,Fields_Name,For_System,Memo,Creator_ID,Update_Time,Updater_ID,Update_Time)
+		VALUES
+			(#{modelName},#{modelCode},#{modelType},#{fieldsName},#{forSystem},#{memo},#{creatorId},#{createTime},#{updaterId},#{updateTime})
+	</insert>
+	
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT
+			ID,Model_Name,Model_Code,Model_Type,Fields_Name,For_System,Memo,Creator_ID,Update_Time,Updater_ID,Update_Time
+		FROM
+			data_model
+		WHERE 
+			ID=#{id}
+	</select>
+	
+	<select id="findByType" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT
+			ID,Model_Name,Model_Code,Model_Type,Fields_Name,For_System,Memo,Creator_ID,Update_Time,Updater_ID,Update_Time
+		FROM
+			data_model
+		WHERE 
+			Model_Type=#{modelType}
+	</select>
+	
+	<select id="findByPage" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,Model_Name,Model_Code,Model_Type,Fields_Name,For_System,Memo,Creator_ID,Update_Time,Updater_ID,Update_Time
+		FROM
+			data_model
+		LIMIT 
+			#{first},#{size}
+	</select>
+	
+	<select id="count" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			data_model
+	</select>
+	
+	<select id="findNameByPage" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,Model_Name,Model_Code,Model_Type,Fields_Name,For_System,Memo,Creator_ID,Update_Time,Updater_ID,Update_Time
+		FROM
+			data_model
+		WHERE
+			Model_Name like "%"#{name}"%"
+		LIMIT 
+			#{first},#{size}
+	</select>
+	
+		<select id="countByName" resultType="int" parameterType="java.lang.String">
+			SELECT
+				COUNT(*)
+			FROM
+				data_model
+			WHERE
+				Model_Name like "%"#{name}"%"
+	</select>
+	
+	<update id="update">
+		UPDATE 
+			data_model
+		<set>
+			<if test="modelName != null">Model_Name = #{modelName},</if>
+			<if test="modelCode != null">Model_Code = #{modelCode},</if>
+			<if test="modelType != null">Model_Type = #{modelType},</if>
+			<if test="fieldsName != null">Fields_Name = #{fieldsName},</if>
+			<if test="forSystem != null">For_System = #{forSystem},</if>
+			<if test="memo != null">Memo = #{memo},</if>
+			<if test="updaterId != null">Updater_ID = #{updaterId},</if>
+			<if test="updateTime != null">Update_Time = #{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM 
+			data_model 
+		WHERE 
+			ID= #{id}
+	</delete>
+</mapper>

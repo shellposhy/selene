@@ -29,7 +29,7 @@ function loadMerchantsOrgTree() {
 			contentType : 'application/json',
 			success : function(data) {
 				if (data.data.children != null) {
-					menuTreeCom($("#merchantsOrg"), data.data, true, bindTreeClickEvent, "merchants/org/",null, null, null, null);
+					menuTreeCom($("#merchantsOrg"), data.data, true, bindTreeClickEvent, "org/",null, null, null, null);
 					$('#add_g_db_btn').attr('disabled',"true");
 					$('#add_g_db_btn').removeAttr('href');
 				} else {

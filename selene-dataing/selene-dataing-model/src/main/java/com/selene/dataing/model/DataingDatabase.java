@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.selene.common.BaseModel;
-import com.selene.dataing.model.base.BaseDatabase;
+import com.selene.common.Database;
 
 /**
  * <b>Selene dataing module<b>
@@ -15,7 +15,7 @@ import com.selene.dataing.model.base.BaseDatabase;
  * @author shaobo shih
  * @version 1.0
  */
-public class DataingDatabase extends BaseDatabase<DataingDatabase> {
+public class DataingDatabase extends Database<DataingDatabase> {
 	private static final long serialVersionUID = 2388455131378854343L;
 	private List<DataingDataField> fieldList;
 	private String fieldValue;
