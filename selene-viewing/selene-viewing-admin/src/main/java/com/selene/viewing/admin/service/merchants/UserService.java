@@ -58,7 +58,7 @@ import static cn.com.lemon.base.Strings.split;
 @Service
 public class UserService {
 	private final static Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
-	private ServiceConfiger configer;
+	private ServiceConfiger merchantsConfiger;
 	private Map<String, Object> services = new HashMap<String, Object>();
 	@Resource
 	private Client client;
@@ -70,8 +70,9 @@ public class UserService {
 	public void init() {
 		LOG.info("[selene-viewing-admin] init " + ServiceConfiger.class.getName() + " service!");
 		// Initialization merchants service registry address
-		configer = new ServiceConfiger(UserService.class.getResource("/").getPath() + "selene.sevice.properties");
-		String merchantsService = configer.value(ServiceConstants.MERCHANTS_KEY);
+		merchantsConfiger = new ServiceConfiger(
+				UserService.class.getResource("/").getPath() + "selene.sevice.properties");
+		String merchantsService = merchantsConfiger.value(ServiceConstants.MERCHANTS_KEY);
 		// Initialization merchants service
 		services.put(MerchantsOrgService.class.getName(), client.create(MerchantsOrgService.class, merchantsService));
 		services.put(MerchantsRoleService.class.getName(), client.create(MerchantsRoleService.class, merchantsService));

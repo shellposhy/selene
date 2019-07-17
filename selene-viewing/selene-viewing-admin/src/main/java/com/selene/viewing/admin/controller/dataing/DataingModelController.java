@@ -1,5 +1,6 @@
 package com.selene.viewing.admin.controller.dataing;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -11,12 +12,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.selene.common.datatable.DataTable;
 import com.selene.common.datatable.DataTableArray;
+import com.selene.common.datatable.DataTableResult;
+import com.selene.common.result.ListResult;
 import com.selene.common.util.Containers;
+import com.selene.dataing.model.DataingDataModel;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.service.dataing.DataService;
 
 @Controller
 @RequestMapping("/admin/dataing/model")
 public class DataingModelController extends BaseController {
+
+	@Resource
+	private DataService dataService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String list() {
@@ -27,9 +35,14 @@ public class DataingModelController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue search(@RequestBody DataTableArray[] dataArray, String callback,
 			HttpServletRequest request) {
-		DataTable dataTable = Containers.table(dataArray);
+		DataTable /* Packaging request parameters */ dataTable = Containers.table(dataArray);
 		Integer pageSize = dataTable.getiDisplayLength();
 		Integer pageStart = dataTable.getiDisplayStart();
-		return null;
+		ListResult<DataingDataModel> list = dataService.findModelByPage(dataTable.getsSearch(), pageStart, pageSize);
+		DataTableResult<DataingDataModel> result = new DataTableResult<DataingDataModel>(dataTable.getsEcho(),
+				list.getTotal(), list.getTotal(), list.getData());
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		mv.setJsonpFunction(callback);
+		return mv;
 	}
 }

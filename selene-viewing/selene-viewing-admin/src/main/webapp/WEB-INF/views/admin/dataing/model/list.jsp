@@ -10,15 +10,17 @@
 				</ul>
 			</div>
 			<div class="padlrn span6 action_buttons">
-				<a class="btn" href="${appPath}/admin/library/model/new" target="_self"><i class="icon-plus"></i> 添加</a>
+				<a class="btn" href="${appPath}/admin/dataing/model/new" target="_self"><i class="icon-plus"></i> 添加</a>
 				<a class="btn delete_list" href="#"><i class="icon-trash"></i> 删除</a>
 			</div>
-			<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered bootstrap-datatable trHoverEdit trHoverModi" id="column_tab">
+			<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered bootstrap-datatable trHoverEdit trHoverModi" id="dataTableModel">
 				<thead>
 					<tr>
 						<th><label class="checkbox inline"><input type="checkbox" class="selAll" />名称</label></th>
-						<th width="180px">类型</th>
-						<th width="400px">字段详情</th>
+						<th>类型</th>
+						<th>编码</th>
+						<th>字段详情</th>
+						<th>备注</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -26,12 +28,14 @@
 				<tfoot>
 					<tr>
 						<th>名称</th>
-						<th width="180px">类型</th>
-						<th width="400px">字段详情</th>
+						<th>类型</th>
+						<th>编码</th>
+						<th>字段详情</th>
+						<th>备注</th>
 					</tr>
 				</tfoot>
 			</table>
 		</div>
-	<script src="${appPath}/admin/jscript/library/model.js"></script>
+		<script src="${appPath}/admin/jscript/dataing/model.js"></script>
 	</body>
 </html>

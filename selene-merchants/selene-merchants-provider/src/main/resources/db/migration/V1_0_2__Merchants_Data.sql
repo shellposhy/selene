@@ -58,16 +58,16 @@ INSERT INTO
 VALUES('52','高级查询','Advanced_Search','50','0','/admin/data/as,/admin/data,/admin/data/s,/admin/data/(\\d+)/as,/admin/data/field',NULL,'402');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('60','数据库管理','Data_Manage','0','0','#','menu_db','500');
+VALUES('60','数据管理','Data_Manage','0','0','#','menu_db','600');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('61','系统数据库','Center_Data','60','0','/admin/system/library,/admin/system/library/tree,/admin/system/library/search,/admin/system/library/find/(\\d+),/admin/system/library/displayFields/(\\d+),/admin/system/library/new/(\\d+),/admin/system/library/edit/(\\d+),/admin/system/library/save,/admin/system/library/delete/(\\d+),/admin/system/library/directory/tree,/admin/system/library/directory/emptyTree,/admin/system/library/directory/new/(\\d+),/admin/system/library/directory/(\\d+)/edit,/admin/system/library/directory/save,/admin/system/library/directory/(\\d+)/delete,/admin/system/library/data/(\\d+),/admin/system/library/data/search/(\\d+),/admin/system/library/data/new/(\\d+),/admin/system/library/data/tablehead/(\\d+),/admin/system/library/data/save/(\\d+),/admin/system/library/data/delete,/admin/system/library/data/edit/(\\d+)/(\\d+),/admin/system/library/data/info/(\\d+)/(\\d+),/admin/library/find/(\\d+),/admin/library/tree,/admin/library/userTree,/admin/library/(\\d+)/tree,/admin/library/(\\d+)/alltree,/admin/library,/admin/library/partTree',NULL,'501');
+VALUES('61','数据模板管理','Model_Manage','60','0','/admin/dataing/model,/admin/dataing/model/s,/admin/dataing/model/new,/admin/dataing/model/(\\d+)/edit,/admin/dataing/model/save,/admin/dataing/model/delete',NULL,'601');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('62','数据库模板','Data_Model','60','0','/admin/library/model,/admin/library/model/s,/admin/library/model/new,/admin/library/model/(\\d+)/edit,/admin/library/model/save,/admin/library/model/delete',NULL,'502');
+VALUES('62','数据库管理','Database_Manage','60','0','/admin/system/library,/admin/system/library/tree,/admin/system/library/search,/admin/system/library/find/(\\d+),/admin/system/library/displayFields/(\\d+),/admin/system/library/new/(\\d+),/admin/system/library/edit/(\\d+),/admin/system/library/save,/admin/system/library/delete/(\\d+),/admin/system/library/directory/tree,/admin/system/library/directory/emptyTree,/admin/system/library/directory/new/(\\d+),/admin/system/library/directory/(\\d+)/edit,/admin/system/library/directory/save,/admin/system/library/directory/(\\d+)/delete,/admin/system/library/data/(\\d+),/admin/system/library/data/search/(\\d+),/admin/system/library/data/new/(\\d+),/admin/system/library/data/tablehead/(\\d+),/admin/system/library/data/save/(\\d+),/admin/system/library/data/delete,/admin/system/library/data/edit/(\\d+)/(\\d+),/admin/system/library/data/info/(\\d+)/(\\d+),/admin/library/find/(\\d+),/admin/library/tree,/admin/library/userTree,/admin/library/(\\d+)/tree,/admin/library/(\\d+)/alltree,/admin/library,/admin/library/partTree',NULL,'602');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('63','数据分类','Data_Sort','60','0','/admin/data/sort/g,/admin/data/sort,/admin/data/sort/(\\d+)/s,/admin/data/sort/(\\d+)/tree,/admin/data/sort/tree/(\\d+),/admin/data/sort/tree,/admin/data/sort/(\\d+)/new,/admin/data/sort/(\\d+)/edit,/admin/data/sort/(\\d+)/delete',NULL,'503');
+VALUES('63','数据标签管理','Tag_Manage','60','0','/admin/data/sort/g,/admin/data/sort,/admin/data/sort/(\\d+)/s,/admin/data/sort/(\\d+)/tree,/admin/data/sort/tree/(\\d+),/admin/data/sort/tree,/admin/data/sort/(\\d+)/new,/admin/data/sort/(\\d+)/edit,/admin/data/sort/(\\d+)/delete',NULL,'603');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
 VALUES('70','商户管理','Merchants_Manage','0','0','#','menu_user','700');

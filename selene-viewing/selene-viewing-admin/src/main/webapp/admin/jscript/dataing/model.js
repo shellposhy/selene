@@ -4,15 +4,16 @@
  * @version 1.0
  */
 $(document).ready(function() {
-	column_dt();
+	//Init dataTable
+	loadModelDataTable();
 	init_load_field();
 	model_form_validate();
 });
 
-//通用表格数据
-var oTableDataPage;
-function column_dt() {
-	oTableDataPage = $("#column_tab").dataTable({
+//Load the database model data
+var dataModelDataTable;
+function loadModelDataTable() {
+	dataModelDataTable = $("#dataTableModel").dataTable({
 		"sDom" : "<'row-fluid'<'span6 alignr'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
 		"sPaginationType" : "full_numbers",
 		"bProcessing" : true,
@@ -20,41 +21,57 @@ function column_dt() {
 		"bDestroy" : true,
 		"bRetrieve" : true,
 		"bSort" : false,
-		"sAjaxSource" :"model/s",
+		"sAjaxSource" :appPath+"/admin/dataing/model/s",
 		"fnServerData" : retrieveData,
 		"iDisplayLength" : 20,
 		"oLanguage" : {"sUrl" : appPath + "/admin/js/javascript/de_CN.js"},
 		"aoColumns" : [{
-			"mData" : "name",
+			"mData" : "modelName",
 			"fnRender" : function(obj) {
-				var title = obj.aData.title;
-				name = '<span>'+ obj.aData.name + '</span>';
-				var editBtn = "";
-				if(obj.aData.forSys!=true){
-					editBtn = '<button title="编辑" data-rel="tooltip" class="btn btn-mini editbtn padmbt floatr none"><i class="icon-edit"></i></button>'
+				var content='';
+				if(!obj.aData.forSystem){
+						content+='<label class="checkbox inline">';
+						content+='		<input type="checkbox" id="inlineCheckbox'+ obj.aData.id+ '" name="idStr'+ obj.aData.id+ '" value="'+ obj.aData.id+ '" style="opacity: 0;" >';
+						content+='</label>';
+						content+='<span>'+ obj.aData.modelName + '</span>';
+						content+='<button title="编辑" data-rel="tooltip" class="btn btn-mini editbtn padmbt floatr none"><i class="icon-edit"></i></button>';
+				}else{
+					content+=obj.aData.modelName ;
 				}
-				return '<label class="checkbox inline"><input type="checkbox" id="inlineCheckbox'+ obj.aData.id+ '" name="idStr'+ obj.aData.id
-						+ '" value="'+ obj.aData.id+ '" style="opacity: 0;" ></label>'+ name+ editBtn;
+				return content;
 			}
-			}, {
-				"mData" : "type"
-			}, {
-				"mData" : "describe"
-			} ],
+		}, {
+			"mData" : "modelType",
+			"fnRender":function(obj){
+				if(obj.aData.modelType==0){
+					return "普通库";
+				}else if(obj.aData.modelType==1){
+					return "图片库";
+				}else if(obj.aData.modelType==2){
+					return "文件库";
+				}else if(obj.aData.modelType==3){
+					return "视频库";
+				}
+			}
+		},{
+			"mData" : "modelCode"
+		},{
+			"mData" : "fieldsName"
+		},{
+			"mData" : "memo"
+		}],
 		"fnDrawCallback" : callback_model
 	});
 }
 
-//回调函数
 function callback_model() {
 	docReady();
-	trHoverEdit(showItemEdit);
+	trHoverEdit(bindModelEdit);
 	trHoverModi();
-	listDelete("model/delete", oTableDataPage); 
+	listDelete("model/delete", dataModelDataTable); 
 };
 
-// 编辑
-function showItemEdit() {
+function bindModelEdit() {
 	$(".trHoverEdit tr .editbtn").live("click", function() {
 		var id = $(this).parent().find("input[type='checkbox']").val();
 		window.location.href = "model/" + id + "/edit";
