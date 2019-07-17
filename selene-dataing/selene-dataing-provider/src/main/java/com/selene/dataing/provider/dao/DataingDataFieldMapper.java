@@ -15,10 +15,15 @@ import com.selene.dataing.model.DataingDataField;
  */
 public interface DataingDataFieldMapper {
 
-	public List<DataingDataField> findByPage(@Param("name") String name, @Param("first") Integer first,
+	public int insert(DataingDataField dataField);
+
+	public List<DataingDataField> findPageByName(@Param("name") String name, @Param("first") Integer first,
 			@Param("size") Integer size);
 
-	public int count(@Param("name") String name);
+	public int countByName(@Param("name") String name);
 
-	public int insert(DataingDataField dataField);
+	public List<DataingDataField> findPage(@Param("first") Integer first, @Param("size") Integer size);
+
+	public int count(@Param("flag") Boolean flag);
+
 }

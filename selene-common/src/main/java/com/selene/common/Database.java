@@ -21,6 +21,8 @@ public class Database<T extends Database<T>> extends TreeNodeModel<T> {
 	private ELibraryType type;
 	private ELibraryNodeType nodeType;
 	private Integer modelId;
+	private Integer subjectType;
+	private Integer subjectId;
 	private EDataStatus status;
 	private int orderId;
 	private Integer taskId;
@@ -65,6 +67,22 @@ public class Database<T extends Database<T>> extends TreeNodeModel<T> {
 
 	public void setModelId(Integer modelId) {
 		this.modelId = modelId;
+	}
+
+	public Integer getSubjectType() {
+		return subjectType;
+	}
+
+	public void setSubjectType(Integer subjectType) {
+		this.subjectType = subjectType;
+	}
+
+	public Integer getSubjectId() {
+		return subjectId;
+	}
+
+	public void setSubjectId(Integer subjectId) {
+		this.subjectId = subjectId;
 	}
 
 	public EDataStatus getStatus() {

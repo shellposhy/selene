@@ -17,10 +17,10 @@ import com.selene.dataing.model.enums.ELuceneIndexType;
  */
 public class DataingDataField extends BaseModel {
 	private static final long serialVersionUID = 5343183210152494952L;
+	private Integer componentId;
 	private String name;
 	private String code;
 	private String codeName;
-	private String oldCode;
 	private EDataType dataType;
 	private boolean nosg;
 	private Integer leng;
@@ -33,12 +33,21 @@ public class DataingDataField extends BaseModel {
 	private boolean indexStore;
 	private boolean required;
 	private EDataFieldType type;
-	private boolean forDisplay;
-	private Integer componentID;
-	private boolean forOrder;
 	private Integer orderId;
 	private EAccessType accessType;
+	private boolean forDisplay;
+	private boolean forOrder;
 	private String memo;
+	// extension data field
+	private String oldCode;
+
+	public Integer getComponentId() {
+		return componentId;
+	}
+
+	public void setComponentId(Integer componentId) {
+		this.componentId = componentId;
+	}
 
 	public String getName() {
 		return name;
@@ -62,14 +71,6 @@ public class DataingDataField extends BaseModel {
 
 	public void setCodeName(String codeName) {
 		this.codeName = codeName;
-	}
-
-	public String getOldCode() {
-		return oldCode;
-	}
-
-	public void setOldCode(String oldCode) {
-		this.oldCode = oldCode;
 	}
 
 	public EDataType getDataType() {
@@ -168,30 +169,6 @@ public class DataingDataField extends BaseModel {
 		this.type = type;
 	}
 
-	public boolean isForDisplay() {
-		return forDisplay;
-	}
-
-	public void setForDisplay(boolean forDisplay) {
-		this.forDisplay = forDisplay;
-	}
-
-	public Integer getComponentID() {
-		return componentID;
-	}
-
-	public void setComponentID(Integer componentID) {
-		this.componentID = componentID;
-	}
-
-	public boolean isForOrder() {
-		return forOrder;
-	}
-
-	public void setForOrder(boolean forOrder) {
-		this.forOrder = forOrder;
-	}
-
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -208,12 +185,36 @@ public class DataingDataField extends BaseModel {
 		this.accessType = accessType;
 	}
 
+	public boolean isForDisplay() {
+		return forDisplay;
+	}
+
+	public void setForDisplay(boolean forDisplay) {
+		this.forDisplay = forDisplay;
+	}
+
+	public boolean isForOrder() {
+		return forOrder;
+	}
+
+	public void setForOrder(boolean forOrder) {
+		this.forOrder = forOrder;
+	}
+
 	public String getMemo() {
 		return memo;
 	}
 
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+
+	public String getOldCode() {
+		return oldCode;
+	}
+
+	public void setOldCode(String oldCode) {
+		this.oldCode = oldCode;
 	}
 
 }
