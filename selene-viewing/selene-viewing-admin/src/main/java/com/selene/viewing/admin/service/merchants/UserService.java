@@ -73,6 +73,7 @@ public class UserService {
 		merchantsConfiger = new ServiceConfiger(
 				UserService.class.getResource("/").getPath() + "selene.sevice.properties");
 		String merchantsService = merchantsConfiger.value(ServiceConstants.MERCHANTS_KEY);
+		LOG.info("merchants service address=" + merchantsService);
 		// Initialization merchants service
 		services.put(MerchantsOrgService.class.getName(), client.create(MerchantsOrgService.class, merchantsService));
 		services.put(MerchantsRoleService.class.getName(), client.create(MerchantsRoleService.class, merchantsService));

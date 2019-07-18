@@ -15,15 +15,15 @@ public interface DataingDataModelService {
 
 	public DataingDataModel find(Integer id);
 
-	public List<DataingDataModel> findByType(Integer modelType);
+	public List<DataingDataModel> findByType(Integer modelType, String license);
 
-	public List<DataingDataModel> findByPage(Integer first, Integer size);
+	public List<DataingDataModel> findByPage(String license, Integer first, Integer size);
 
-	public int count(Boolean flag);
+	public int count(String license);
 
-	public List<DataingDataModel> findNameByPage(String name, Integer first, Integer size);
+	public List<DataingDataModel> findNameByPage(String license, String name, Integer first, Integer size);
 
-	public int countByName(String name);
+	public int countByName(String license, String name);
 
 	public int update(DataingDataModel dataModel);
 

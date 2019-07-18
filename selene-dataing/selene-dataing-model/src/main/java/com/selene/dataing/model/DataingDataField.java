@@ -53,6 +53,22 @@ public class DataingDataField extends BaseModel {
 		return name;
 	}
 
+	public String getFullName() {
+		StringBuilder fullName = new StringBuilder();
+		fullName.append(name).append(" | ").append(dataType.title);
+		switch (this.dataType) {
+		case Date:
+		case Time:
+		case DateTime:
+			break;
+		default:
+			if (!leng.equals(0))
+				fullName.append("(" + leng + ")");
+			break;
+		}
+		return fullName.toString();
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}

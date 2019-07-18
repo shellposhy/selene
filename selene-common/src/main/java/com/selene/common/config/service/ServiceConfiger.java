@@ -50,7 +50,7 @@ public class ServiceConfiger extends AbstractConfiger {
 
 	public String value(String serviceName) {
 		String key = key(serviceName);
-		if (Strings.isNullOrEmpty(key)) {
+		if (!Strings.isNullOrEmpty(key)) {
 			return super.value(key);
 		}
 		return null;

@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class Bootstrap {
-	private static final Logger LOG = LoggerFactory.getLogger(Bootstrap.class.getName());
+public class MerchantsBootstrap {
+	private static final Logger LOG = LoggerFactory.getLogger(MerchantsBootstrap.class.getName());
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {

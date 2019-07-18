@@ -6,7 +6,8 @@
 $(document).ready(function() {
 	//Init dataTable
 	loadModelDataTable();
-	init_load_field();
+	//Edit data model
+	init_model_field();
 	model_form_validate();
 });
 
@@ -78,16 +79,14 @@ function bindModelEdit() {
 	});
 }
 
-// 绑定到选择字段组合 -高级配置
-function init_load_field() {
-	if ($("#moreFields").length > 0) {
-		// 设置值
-		$("#moreFieldsSelect").change(function() {
-			$("#moreFields").val($(this).val());
+
+function init_model_field() {
+	if ($("#modelFields").length > 0) {
+		$("#modelFieldSelect").change(function() {
+			$("#modelFields").val($(this).val());
 		});
-		// 显示默认值
-		var trSIdArry = ($("#moreFields").val()).split(",");
-		var options = $("#moreFieldsSelect option");
+		var trSIdArry = ($("#modelFields").val()).split(",");
+		var options = $("#modelFieldSelect option");
 		options.each(function() {
 			for ( var j = 0; j < trSIdArry.length; j++) {
 				if ($(this).val() == trSIdArry[j]) {
@@ -101,44 +100,30 @@ function init_load_field() {
 // 表单验证
 function model_form_validate() {
 	if($("#cl_new_form")){
-		$("#cl_new_form").validate(
-				{
-					rules : {
-						name : {
-							required : true
-						},
-						code : {
-							required : true
-						},
-						moreFieldsSelect : {
-							required : function() {
-								if ($("#moreFields").val() == null
-										|| $("#moreFields").val() == "") {
-									return false;
-								} else {
-									return true;
-								}
-							}
-						}
-					},
-					messages : {
-						name : {
-							required : "栏目名称不能为空！"
-						},
-						code : {
-							required : "栏目编码不能为空！"
-						},
-						moreFieldsSelect : {
-							required : "字段组号不能为空！"
-						}
-					},
-					errorPlacement : function(error, element) {
-						error.insertAfter(element);
-					},
-					submitHandler : function() {
-						form.submit();
-					},
-					onkeyup : false
-				});
+		$("#cl_new_form").validate({
+			rules : {
+				modelName : {
+					required : true
+				},
+				modelCode : {
+					required : true
+				}
+			},
+			messages : {
+				modelName : {
+					required : "栏目名称不能为空！"
+				},
+				modelCode : {
+					required : "栏目编码不能为空！"
+				}
+			},
+			errorPlacement : function(error, element) {
+				error.insertAfter(element);
+			},
+			submitHandler : function() {
+				form.submit();
+			},
+			onkeyup : false
+		});
 	}
 }

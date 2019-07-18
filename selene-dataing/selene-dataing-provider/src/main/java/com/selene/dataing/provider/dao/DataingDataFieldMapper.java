@@ -26,4 +26,13 @@ public interface DataingDataFieldMapper {
 
 	public int count(@Param("flag") Boolean flag);
 
+	public List<DataingDataField> findByName(@Param("name") String name);
+
+	public List<DataingDataField> findByCode(@Param("code") String code);
+
+	public List<DataingDataField> findFieldsByBaseId(@Param("baseId") Integer baseId);
+
+	public List<DataingDataField> findByRequired(@Param("required") Boolean required);
+
+	public List<DataingDataField> findByType(@Param("type") Integer type);
 }

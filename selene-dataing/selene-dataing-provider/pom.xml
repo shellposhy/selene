@@ -102,7 +102,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.selene.dataing.provider.Bootstrap</mainClass>
+							<mainClass>com.selene.dataing.provider.DataingBootstrap</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

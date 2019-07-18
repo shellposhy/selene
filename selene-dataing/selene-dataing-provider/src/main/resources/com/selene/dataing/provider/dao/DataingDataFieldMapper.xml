@@ -79,4 +79,57 @@
 		FROM 
 			data_field
 	</select>
+	
+	<select id="findByName" resultMap="resultMap" parameterType="java.lang.String" >
+		SELECT 
+			ID,Component_ID,Name,Code,Code_Name,Data_Type,Nosg,Leng,Prec,Mand,Uniq,Multi_Value,Use_Enum,
+			Index_Type,Index_Store,Required,Type,Order_ID,Access_Type,For_Display,For_Order,Memo
+		FROM 
+			data_field
+		WHERE
+			Name =#{name} 
+	</select>
+	
+	<select id="findByCode" resultMap="resultMap" parameterType="java.lang.String" >
+		SELECT 
+			ID,Component_ID,Name,Code,Code_Name,Data_Type,Nosg,Leng,Prec,Mand,Uniq,Multi_Value,Use_Enum,
+			Index_Type,Index_Store,Required,Type,Order_ID,Access_Type,For_Display,For_Order,Memo
+		FROM 
+			data_field
+		WHERE
+			Code =#{code} 
+	</select>
+	
+	<select id="findFieldsByBaseId" resultMap="resultMap" parameterType="java.lang.Integer" >
+		SELECT
+		  	DISTINCT
+		  	m.ID,m.Component_ID,m.Name,m.Code,m.Code_Name,m.Data_Type,m.Nosg,m.Leng,m.Prec,m.Mand,Uniq,m.Multi_Value,m.Use_Enum,
+			m.Index_Type,m.Index_Store,m.Required,m.Type,m.Order_ID,m.Access_Type,m.For_Display,m.For_Order,m.Memo
+		FROM
+		  data_field m,
+		  data_base n,
+		  data_base_field_map t
+		WHERE 
+			m.ID=t.Field_ID AND n.ID=t.Base_ID AND n.ID=#{baseId}
+	</select>
+	
+	<select id="findByRequired" resultMap="resultMap" parameterType="boolean">
+		SELECT 
+			ID,Component_ID,Name,Code,Code_Name,Data_Type,Nosg,Leng,Prec,Mand,Uniq,Multi_Value,Use_Enum,
+			Index_Type,Index_Store,Required,Type,Order_ID,Access_Type,For_Display,For_Order,Memo
+		FROM 
+			data_field
+		WHERE 
+			Required = #{required}
+	</select>
+	
+	<select id="findByType" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,Component_ID,Name,Code,Code_Name,Data_Type,Nosg,Leng,Prec,Mand,Uniq,Multi_Value,Use_Enum,
+			Index_Type,Index_Store,Required,Type,Order_ID,Access_Type,For_Display,For_Order,Memo
+		FROM 
+			data_field
+		WHERE 
+			Type = #{type}
+	</select>
 </mapper>

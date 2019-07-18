@@ -35,28 +35,28 @@ public class DataingDataModelServiceImpl implements DataingDataModelService {
 	}
 
 	@Override
-	public List<DataingDataModel> findByType(Integer modelType) {
-		return dataModelMapper.findByType(modelType);
+	public List<DataingDataModel> findByType(Integer modelType, String license) {
+		return dataModelMapper.findByType(modelType, license);
 	}
 
 	@Override
-	public List<DataingDataModel> findByPage(Integer first, Integer size) {
-		return dataModelMapper.findByPage(first, size);
+	public List<DataingDataModel> findByPage(String license, Integer first, Integer size) {
+		return dataModelMapper.findByPage(license, first, size);
 	}
 
 	@Override
-	public int count(Boolean flag) {
-		return dataModelMapper.count(Boolean.TRUE);
+	public int count(String license) {
+		return dataModelMapper.count(license);
 	}
 
 	@Override
-	public List<DataingDataModel> findNameByPage(String name, Integer first, Integer size) {
-		return dataModelMapper.findNameByPage(name, first, size);
+	public List<DataingDataModel> findNameByPage(String license, String name, Integer first, Integer size) {
+		return dataModelMapper.findNameByPage(license, name, first, size);
 	}
 
 	@Override
-	public int countByName(String name) {
-		return dataModelMapper.countByName(name);
+	public int countByName(String license, String name) {
+		return dataModelMapper.countByName(license, name);
 	}
 
 	@Override

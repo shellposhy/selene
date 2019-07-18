@@ -4,57 +4,53 @@
 	<body>
 		<div id="content" class="span12">
 			<div class="mt10">
-				<ul class="breadcrumb ind_f_tree" value="62">
+				<ul class="breadcrumb ind_f_tree" value="61">
 					<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
-					<li><a href="${appPath}/admin/library/model" target="_self">数据模型</a><span class="divider">/</span></li>
+					<li><a href="${appPath}/admin/library/model" target="_self">数据模板</a><span class="divider">/</span></li>
 					<li><a href="#">编辑</a>
 					</li>
 				</ul>
 			</div>
 			<div class="box-content">
-				<ul class="nav nav-tabs" id="myTab">
-					<li class="active"><a href="#setting">配置</a></li>
-				</ul>
 				<div id="myTabContent" class="tab-content">
-					<!-- 配置 -->
 					<div class="tab-pane active" id="setting">
-						<form:form modelAttribute="columnModel" class="form-horizontal u_group_form" id="cl_new_form" action="${appPath}/admin/library/model/save" method="post" target="_self">
+						<form:form modelAttribute="dataModel" class="form-horizontal u_group_form" id="cl_new_form" action="${appPath}/admin/dataing/model/save" method="post" target="_self">
 							<fieldset>
 								<legend>
-									<span title="" class="icon32 icon-inbox floatl"></span>数据模型编辑
+									<span class="icon32 icon-inbox floatl"></span>数据模板编辑
 								</legend>
 								<div class="control-group">
-									<label class="control-label" for="cloumn_name">名称</label>
+									<label class="control-label" for="cloumn_name">模板名称</label>
 									<div class="controls">
 										<form:hidden path="id" />
-										<form:input path="name" name="name" class="typeahead" id="cl_name" />
-										<label class="error"><form:errors path="name" cssClass="error" /> </label>
+										<form:input path="modelName" name="modelName" class="typeahead" id="cl_name" />
+										<label class="error"><form:errors path="modelName" cssClass="error" /> </label>
 									</div>
 								</div>
 								<div class="control-group backhide">
 									<label class="control-label" for="cloumn_code">编号</label>
 									<div class="controls">
-										<form:input path="code" name="code" class="typeahead" id="cl_code" />
-										<label class="error"><form:errors path="code" cssClass="error" /> </label>
+										<form:input path="modelCode" name="modelCode" class="typeahead" id="cl_code" />
+										<label class="error"><form:errors path="modelCode" cssClass="error" /> </label>
 									</div>
 								</div>
 								<div class="control-group" >
 									<label class="control-label" for="cloumn_type">类型</label>
 									<div class="controls">
-										<form:select path="type" class="autogrow" name="type" id="cl_type">
+										<form:select path="modelType" class="autogrow" name="modelType" id="cl_type">
 											<form:options items="${typeOptions}" itemLabel="title" />
 										</form:select>
-										<label class="error"><form:errors path="type" cssClass="error" /> </label>
+										<label class="error"><form:errors path="modelType" cssClass="error" /> </label>
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="cloumn_fields">字段组合</label>
 									<div class="controls">
 										<div class="feilds_form_box">
-											<form:select id="moreFieldsSelect" path="" multiple="true" class="typeahead span2 multiSelect">
+											<form:select id="modelFieldSelect" path="" multiple="true" class="typeahead span2 multiSelect">
 												<form:options items="${allFields}" itemValue="id" itemLabel="fullName" />
 											</form:select>
-											<form:hidden id="moreFields" path="moreDataFieldsStr" name="moreDataFieldsStr" />
+											<form:hidden id="modelFields" path="modelFieldIds" name="modelFieldIds" />
 										</div>
 									</div>
 								</div>
@@ -75,6 +71,6 @@
 				</div>
 			</div>
 		</div>
-	<script src="${appPath}/admin/jscript/library/model.js"></script>
+	<script src="${appPath}/admin/jscript/dataing/model.js"></script>
 	</body>
 </html>

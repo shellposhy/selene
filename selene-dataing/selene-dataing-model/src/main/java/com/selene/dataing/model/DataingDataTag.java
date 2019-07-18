@@ -16,6 +16,7 @@ import com.selene.common.tree.TreeNodeModel;
  */
 public class DataingDataTag extends TreeNodeModel<DataingDataTag> {
 	private static final long serialVersionUID = -2644133283991829293L;
+	private String license;
 	private Integer type;
 	private String code;
 	private String pathCode;
@@ -26,6 +27,14 @@ public class DataingDataTag extends TreeNodeModel<DataingDataTag> {
 	private Date updateTime;
 	private Integer updaterId;
 	private boolean forDataNode;
+
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
+	}
 
 	public Integer getType() {
 		return type;

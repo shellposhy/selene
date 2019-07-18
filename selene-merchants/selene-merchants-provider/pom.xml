@@ -103,7 +103,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.pandora.hts.provider.Bootstrap</mainClass>
+							<mainClass>com.selene.merchants.provider.MerchantsBootstrap</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -18,6 +18,7 @@ drop table if exists data_tag;
 create table data_base
 (
    ID                   int(11) unsigned not null auto_increment comment '主键',
+   License              char(50) not null comment '许可证',
    Name                 char(100) not null comment '名称',
    Code                 char(200) not null comment '编码',
    Path_Code            varchar(200) comment '路径',
@@ -94,6 +95,7 @@ alter table data_field comment '数据库字段表';
 create table data_model
 (
    ID                   int(11) unsigned not null auto_increment comment '主键',
+   License              char(50) comment '许可证',
    Model_Name           char(200) not null comment '名称',
    Model_Code           char(50) not null comment '编码',
    Model_Type           tinyint(1) not null comment '类型',
@@ -142,6 +144,7 @@ alter table data_table comment '数据表格表';
 create table data_tag
 (
    ID                   int(11) unsigned not null auto_increment comment '主键',
+   License              char(50) not null comment '许可证',
    Name                 char(50) not null comment '名称',
    Type                 tinyint(2) not null comment '类型',
    Code                 char(50) not null comment '编码',
