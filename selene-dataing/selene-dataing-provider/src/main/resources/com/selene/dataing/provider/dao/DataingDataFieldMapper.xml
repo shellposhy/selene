@@ -41,6 +41,16 @@
 				#{indexType},#{indexStore},#{required},#{type},#{orderId},#{accessType},#{forDisplay},,#{forOrder},#{memo}
 			)
 	</insert>
+	
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer" >
+		SELECT 
+			ID,Component_ID,Name,Code,Code_Name,Data_Type,Nosg,Leng,Prec,Mand,Uniq,Multi_Value,Use_Enum,
+			Index_Type,Index_Store,Required,Type,Order_ID,Access_Type,For_Display,For_Order,Memo
+		FROM 
+			data_field
+		WHERE
+			ID =#{id} 
+	</select>
 
 	<select id="findPageByName" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 

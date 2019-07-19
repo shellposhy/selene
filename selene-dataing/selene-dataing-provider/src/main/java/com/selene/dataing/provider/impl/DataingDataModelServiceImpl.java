@@ -26,7 +26,8 @@ public class DataingDataModelServiceImpl implements DataingDataModelService {
 
 	@Override
 	public int insert(DataingDataModel dataModel) {
-		return dataModelMapper.insert(dataModel);
+		int result = dataModelMapper.insert(dataModel);
+		return result > 0 ? dataModel.getId() : result;
 	}
 
 	@Override

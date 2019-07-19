@@ -1,7 +1,9 @@
 package com.selene.viewing.admin.service.dataing;
 
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
+import static cn.com.lemon.base.Strings.split;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +17,13 @@ import org.springframework.stereotype.Service;
 
 import com.nanshan.papaya.rpc.client.Client;
 import com.selene.common.config.service.ServiceConfiger;
+import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.ServiceConstants;
 import com.selene.common.result.ListResult;
 import com.selene.common.util.RedisClient;
 import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataModel;
+import com.selene.dataing.model.DataingDataModelFieldMap;
 import com.selene.dataing.model.enums.EDataFieldType;
 import com.selene.dataing.model.service.DataingDataFieldService;
 import com.selene.dataing.model.service.DataingDataModelFieldMapService;
@@ -53,6 +57,58 @@ public class DataService {
 				client.create(DataingDataFieldService.class, dataingService));
 	}
 
+	/**
+	 * Save data model
+	 * 
+	 * @param dataModel
+	 *            {@code DataingDataModel}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveDataModel(DataingDataModel dataModel) {
+		// Initialize the required services
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		DataingDataModelService dataModelService = (DataingDataModelService) services
+				.get(DataingDataModelService.class.getName());
+		DataingDataModelFieldMapService dataModelFieldMapService = (DataingDataModelFieldMapService) services
+				.get(DataingDataModelFieldMapService.class.getName());
+		// Business process
+		String[] /* New model fields */ newFieldIdArray = split(CommonConstants.COMMA_SEPARATOR,
+				dataModel.getModelFieldIds());
+		StringBuffer /* New field name */ newFieldNames = new StringBuffer(500);
+		if (newFieldIdArray != null && newFieldIdArray.length > 0) {
+			for (String fieldId : newFieldIdArray) {
+				newFieldNames.append(dataFieldService.find(Integer.valueOf(fieldId)).getName())
+						.append(CommonConstants.COMMA_SEPARATOR);
+			}
+			newFieldNames/* Delete the last char */.deleteCharAt(newFieldNames.length() - 1);
+		}
+		dataModel.setFieldsName(newFieldNames.toString());
+		if (/* New data model */dataModel.getId() == null) {
+			int result = dataModelService.insert(dataModel);
+			if (/* Save data model success and save field map */result > 0) {
+				if (newFieldIdArray != null && newFieldIdArray.length > 0) {
+					List<DataingDataModelFieldMap> newDieldMapList = new ArrayList<DataingDataModelFieldMap>();
+					for (String fieldId : newFieldIdArray) {
+						DataingDataModelFieldMap modelFieldMap = new DataingDataModelFieldMap(result,
+								Integer.valueOf(fieldId));
+						newDieldMapList.add(modelFieldMap);
+					}
+					return dataModelFieldMapService.batchInsert(newDieldMapList);
+				}
+			}
+		} /* Update data model */else {
+			
+		}
+		return 0;
+	}
+
+	/**
+	 * Query can select data fields when a data template is added
+	 * 
+	 * @param type
+	 * @return {@link List}
+	 */
 	public List<DataingDataField> findFieldByType(EDataFieldType type) {
 		// Initialize the required services
 		DataingDataFieldService dataFieldService = (DataingDataFieldService) services

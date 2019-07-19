@@ -16,6 +16,14 @@ public class DataingDataModelFieldMap extends BaseModel {
 	private Integer modelId;
 	private Integer fieldId;
 
+	public DataingDataModelFieldMap() {
+	}
+
+	public DataingDataModelFieldMap(Integer modelId, Integer fieldId) {
+		this.modelId = modelId;
+		this.fieldId = fieldId;
+	}
+
 	public Integer getModelId() {
 		return modelId;
 	}

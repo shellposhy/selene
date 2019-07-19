@@ -12,6 +12,8 @@ import com.selene.dataing.model.DataingDataField;
  */
 public interface DataingDataFieldService {
 	public int insert(DataingDataField dataField);
+	
+	public DataingDataField find(Integer id);
 
 	public List<DataingDataField> findPageByName(String name, Integer first, Integer size);
 

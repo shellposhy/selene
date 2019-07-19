@@ -17,6 +17,8 @@ public interface DataingDataFieldMapper {
 
 	public int insert(DataingDataField dataField);
 
+	public DataingDataField find(@Param("id") Integer id);
+
 	public List<DataingDataField> findPageByName(@Param("name") String name, @Param("first") Integer first,
 			@Param("size") Integer size);
 

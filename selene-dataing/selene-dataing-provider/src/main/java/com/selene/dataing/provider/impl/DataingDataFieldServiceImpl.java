@@ -29,6 +29,11 @@ public class DataingDataFieldServiceImpl implements DataingDataFieldService {
 	}
 
 	@Override
+	public DataingDataField find(Integer id) {
+		return dataFieldMapper.find(id);
+	}
+
+	@Override
 	public List<DataingDataField> findPageByName(String name, Integer first, Integer size) {
 		return dataFieldMapper.findPageByName(name, first, size);
 	}
