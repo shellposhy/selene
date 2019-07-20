@@ -21,6 +21,7 @@ public class DataingDataModel extends BaseModel {
 	private String modelCode;
 	private ELibraryType modelType;
 	private String fieldsName;
+	private Integer taskId;
 	private boolean forSystem;
 	private String memo;
 	// extension data field
@@ -73,6 +74,14 @@ public class DataingDataModel extends BaseModel {
 
 	public void setForSystem(boolean forSystem) {
 		this.forSystem = forSystem;
+	}
+
+	public Integer getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
 	}
 
 	public String getMemo() {

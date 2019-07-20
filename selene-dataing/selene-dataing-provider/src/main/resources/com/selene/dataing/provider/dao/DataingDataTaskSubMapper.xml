@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.selene.dataing.provider.dao.DataingDataModelMapper">
-	<resultMap id="resultMap" type="com.selene.dataing.model.DataingDataModel">
+<mapper namespace="com.selene.dataing.provider.dao.DataingDataTaskSubMapper">
+	<resultMap id="resultMap" type="com.selene.dataing.model.DataingDataTaskSub">
 		<result property="id" column="ID" />
-		<result property="license" column="License" />
-		<result property="modelName" column="Model_Name" />
-		<result property="modelCode" column="Model_Code" />
-		<result property="modelType" column="Model_Type" />
-		<result property="fieldsName" column="Fields_Name" />
-		<result property="forSystem" column="For_System" />
 		<result property="taskId" column="Task_ID" />
-		<result property="memo" column="Memo" />
+		<result property="subtaskName" column="Subtask_Name" />
+		<result property="subtaskType" column="Subtask_Type" />
+		<result property="subtaskTarget" column="Subtask_Target" />
+		<result property="subtaskStatus" column="Subtask_Status" />
+		<result property="subtaskProgress" column="Subtask_Progress" />
+		<result property="subtaskMemo" column="Subtask_Memo" />
 		<result property="creatorId" column="Creator_ID" />
 		<result property="createTime" column="Create_Time" />
 		<result property="updaterId" column="Updater_ID" />
@@ -22,9 +21,9 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO 
-			data_model(License,Model_Name,Model_Code,Model_Type,Fields_Name,For_System,Task_ID,Memo,Creator_ID,Create_Time,Updater_ID,Update_Time)
+			data_task_sub(Task_ID,Subtask_Name,Subtask_Type,Subtask_Target,Subtask_Status,Subtask_Progress,Subtask_Memo,Creator_ID,Update_Time,Updater_ID,Update_Time)
 		VALUES
-			(#{license},#{modelName},#{modelCode},#{modelType},#{fieldsName},#{forSystem},#{taskId},#{memo},#{creatorId},#{createTime},#{updaterId},#{updateTime})
+			(#{taskId},#{subtaskName},#{subtaskType},#{subtaskTarget},#{subtaskStatus},#{subtaskProgress},#{subtaskMemo},#{creatorId},#{createTime},#{updaterId},#{updateTime})
 	</insert>
 	
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">

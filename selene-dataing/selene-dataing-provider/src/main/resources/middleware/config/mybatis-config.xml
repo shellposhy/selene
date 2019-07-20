@@ -14,5 +14,6 @@
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.ELibraryNodeType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.ELibraryType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.EDataStatus" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.ETaskStatus" />
 	</typeHandlers>
 </configuration>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.dataing.provider.dao.DataingDataTaskMapper">
+	<resultMap id="resultMap" type="com.selene.dataing.model.DataingDataTask">
+		<result property="id" column="ID" />
+		<result property="taskName" column="Task_Name" />
+		<result property="taskCode" column="Task_Code" />
+		<result property="taskType" column="Task_Type" />
+		<result property="taskInfo" column="Task_Info" />
+		<result property="taskTarget" column="Task_Target" />
+		<result property="taskStatus" column="Task_Status" />
+		<result property="taskProgress" column="Task_Progress" />
+		<result property="taskMemo" column="Task_Memo" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="createTime" column="Create_Time" />
+		<result property="updaterId" column="Updater_ID" />
+		<result property="updateTime" column="Update_Time" />
+	</resultMap>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO 
+			data_task(Task_Name,Task_Code,Task_Type,Task_Info,Task_Target,Task_Status,Task_Progress,Task_Memo,Creator_ID,Create_Time,Updater_ID,Update_Time)
+		VALUES
+			(#{taskName},#{taskCode},#{taskType},#{taskInfo},#{taskTarget},#{taskStatus},#{taskProgress},#{taskMemo},#{creatorId},#{createTime},#{updaterId},#{updateTime})
+	</insert>
+</mapper>

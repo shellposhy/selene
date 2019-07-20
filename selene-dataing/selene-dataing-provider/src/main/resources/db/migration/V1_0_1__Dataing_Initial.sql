@@ -12,6 +12,10 @@ drop table if exists data_table;
 
 drop table if exists data_tag;
 
+drop table if exists data_task;
+
+drop table if exists data_task_sub;
+
 /*==============================================================*/
 /* Table: data_base                                             */
 /*==============================================================*/
@@ -101,6 +105,7 @@ create table data_model
    Model_Type           tinyint(1) not null comment '类型',
    Fields_Name          varchar(1000) comment '描述',
    For_System           tinyint(1) not null comment '是否可维护',
+   Task_ID              int(11) comment '事务编号',
    Memo                 char(200) comment '备注',
    Creator_ID           int(11) not null comment '创建',
    Create_Time          datetime not null comment '创建时间',
@@ -160,3 +165,48 @@ create table data_tag
 );
 
 alter table data_tag comment '数据标签表';
+
+/*==============================================================*/
+/* Table: data_task                                             */
+/*==============================================================*/
+create table data_task
+(
+   ID                   int(11) unsigned not null auto_increment comment '主键',
+   Task_Name            char(255) not null comment '事务名称',
+   Task_Code            char(50) not null comment '事务编码',
+   Task_Type            tinyint(2) not null comment '事务类型',
+   Task_Info            varchar(500) comment '事务描述',
+   Task_Target          varchar(2000) comment '事务目标',
+   Task_Status          tinyint(1) not null comment '事务状态',
+   Task_Progress        int(3) not null default 0 comment '事务进度',
+   Task_Memo            char(255) comment '备注',
+   Creator_ID           int(11) not null comment '创建',
+   Create_Time          datetime not null comment '创建时间',
+   Updater_ID           int(11) comment '修改',
+   Update_Time          datetime comment '修改时间',
+   primary key (ID)
+);
+
+alter table data_task comment '数据事务表';
+
+/*==============================================================*/
+/* Table: data_task_sub                                         */
+/*==============================================================*/
+create table data_task_sub
+(
+   ID                   int(11) unsigned not null auto_increment comment '主键',
+   Task_ID              int(11) not null comment '事务编号',
+   Subtask_Name         char(255) not null comment '子任务名称',
+   Subtask_Type         tinyint(2) not null comment '子任务类型',
+   Subtask_Target       varchar(2000) comment '子任务目标',
+   Subtask_Status       tinyint(1) not null default 0 comment '子任务状态',
+   Subtask_Progress     int(3) not null default 0 comment '子任务进度',
+   Subtask_Memo         char(255) comment '子任务备注',
+   Creator_ID           int(11) not null comment '创建',
+   Create_Time          datetime not null comment '创建时间',
+   Updater_ID           int(11) not null comment '修改',
+   Update_Time          datetime comment '修改时间',
+   primary key (ID)
+);
+
+alter table data_task_sub comment '数据事务子任务表';
