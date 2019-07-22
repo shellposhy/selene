@@ -2,6 +2,7 @@ package com.selene.dataing.model;
 
 import com.selene.common.BaseModel;
 import com.selene.common.constants.util.ETaskStatus;
+import com.selene.common.constants.util.ETaskSubType;
 
 /**
  * <b>Selene dataing module<b>
@@ -16,7 +17,7 @@ public class DataingDataTaskSub extends BaseModel {
 	private static final long serialVersionUID = 3181400548913761007L;
 	private Integer taskId;
 	private String subtaskName;
-	private Integer subtaskType;
+	private ETaskSubType subtaskType;
 	private String subtaskTarget;
 	private ETaskStatus subtaskStatus;
 	private Integer subtaskProgress;
@@ -38,11 +39,11 @@ public class DataingDataTaskSub extends BaseModel {
 		this.subtaskName = subtaskName;
 	}
 
-	public Integer getSubtaskType() {
+	public ETaskSubType getSubtaskType() {
 		return subtaskType;
 	}
 
-	public void setSubtaskType(Integer subtaskType) {
+	public void setSubtaskType(ETaskSubType subtaskType) {
 		this.subtaskType = subtaskType;
 	}
 

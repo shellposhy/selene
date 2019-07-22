@@ -1,5 +1,9 @@
 package com.selene.dataing.provider.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.selene.dataing.model.DataingDataTask;
 
 /**
@@ -11,4 +15,12 @@ import com.selene.dataing.model.DataingDataTask;
  */
 public interface DataingDataTaskMapper {
 	public int insert(DataingDataTask dataTask);
+
+	public List<DataingDataTask> findByStatus(@Param("status") Integer status);
+
+	public List<DataingDataTask> findByTypeAndStatus(@Param("type") Integer type, @Param("status") Integer status);
+
+	public int update(DataingDataTask dataTask);
+
+	public int delete(@Param("id") Integer id);
 }

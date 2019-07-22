@@ -26,4 +26,43 @@
 		VALUES
 			(#{taskName},#{taskCode},#{taskType},#{taskInfo},#{taskTarget},#{taskStatus},#{taskProgress},#{taskMemo},#{creatorId},#{createTime},#{updaterId},#{updateTime})
 	</insert>
+	
+	<select id="findByStatus" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT
+			ID,Task_Name,Task_Code,Task_Type,Task_Info,Task_Target,Task_Status,Task_Progress,Task_Memo,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM
+			data_task
+		WHERE
+			Task_Status=#{status}
+	</select>
+	
+	<select id="findByTypeAndStatus" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,Task_Name,Task_Code,Task_Type,Task_Info,Task_Target,Task_Status,Task_Progress,Task_Memo,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM
+			data_task
+		WHERE
+			Task_Type=#{type} AND Task_Status=#{status}
+	</select>
+	
+	<update id="update">
+		UPDATE 
+			data_task
+		<set>
+			<if test="taskStatus != null">Task_Status = #{taskStatus},</if>
+			<if test="taskProgress != null">Task_Progress = #{taskProgress},</if>
+			<if test="taskMemo != null">Task_Memo = #{taskMemo},</if>
+			<if test="updaterId != null">Updater_ID = #{updaterId},</if>
+			<if test="updateTime != null">Update_Time = #{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM 
+			data_task 
+		WHERE 
+			ID= #{id}
+	</delete>
 </mapper>

@@ -2,6 +2,7 @@ package com.selene.dataing.model;
 
 import com.selene.common.BaseModel;
 import com.selene.common.constants.util.ETaskStatus;
+import com.selene.common.constants.util.ETaskType;
 
 /**
  * <b>Selene dataing module<b>
@@ -16,7 +17,7 @@ public class DataingDataTask extends BaseModel {
 	private static final long serialVersionUID = 3181400548913761007L;
 	private String taskName;
 	private String taskCode;
-	private Integer taskType;
+	private ETaskType taskType;
 	private String taskInfo;
 	private String taskTarget;
 	private ETaskStatus taskStatus;
@@ -39,11 +40,11 @@ public class DataingDataTask extends BaseModel {
 		this.taskCode = taskCode;
 	}
 
-	public Integer getTaskType() {
+	public ETaskType getTaskType() {
 		return taskType;
 	}
 
-	public void setTaskType(Integer taskType) {
+	public void setTaskType(ETaskType taskType) {
 		this.taskType = taskType;
 	}
 
