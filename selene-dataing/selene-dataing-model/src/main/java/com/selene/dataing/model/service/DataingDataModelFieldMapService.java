@@ -2,6 +2,8 @@ package com.selene.dataing.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.selene.dataing.model.DataingDataModelFieldMap;
 
 /**
@@ -15,11 +17,11 @@ public interface DataingDataModelFieldMapService {
 
 	public int batchInsert(List<DataingDataModelFieldMap> list);
 
-	public DataingDataModelFieldMap find(Integer id);
+	public DataingDataModelFieldMap find(@Param("id") Integer id);
 
-	public List<DataingDataModelFieldMap> findByModelId(Integer modelId);
+	public List<DataingDataModelFieldMap> findByModelId(@Param("modelId") Integer modelId);
 
-	public int delete(DataingDataModelFieldMap dataModelFieldMap);
+	public int delete(@Param("id") Integer id);
 
-	public int deleteByModelId(Integer modelId);
+	public int deleteByModelId(@Param("modelId") Integer modelId);
 }

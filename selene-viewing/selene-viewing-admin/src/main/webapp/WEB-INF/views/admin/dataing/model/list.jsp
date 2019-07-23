@@ -36,6 +36,6 @@
 				</tfoot>
 			</table>
 		</div>
-		<script src="${appPath}/admin/jscript/dataing/model.js"></script>
+		<script src="${appPath}/admin/jscript/dataing/min/model.js"></script>
 	</body>
 </html>

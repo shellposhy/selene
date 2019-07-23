@@ -44,8 +44,8 @@ public class DataingDataModelFieldMapServiceImpl implements DataingDataModelFiel
 	}
 
 	@Override
-	public int delete(DataingDataModelFieldMap dataModelFieldMap) {
-		return dataModelFieldMapMapper.delete(dataModelFieldMap);
+	public int delete(Integer id) {
+		return dataModelFieldMapMapper.delete(id);
 	}
 
 	@Override

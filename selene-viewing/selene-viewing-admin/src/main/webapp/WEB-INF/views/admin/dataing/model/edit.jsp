@@ -6,7 +6,7 @@
 			<div class="mt10">
 				<ul class="breadcrumb ind_f_tree" value="61">
 					<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
-					<li><a href="${appPath}/admin/library/model" target="_self">数据模板</a><span class="divider">/</span></li>
+					<li><a href="${appPath}/admin/dataing/model" target="_self">数据模板</a><span class="divider">/</span></li>
 					<li><a href="#">编辑</a>
 					</li>
 				</ul>
@@ -71,6 +71,6 @@
 				</div>
 			</div>
 		</div>
-	<script src="${appPath}/admin/jscript/dataing/model.js"></script>
+	<script src="${appPath}/admin/jscript/dataing/min/model.js"></script>
 	</body>
 </html>

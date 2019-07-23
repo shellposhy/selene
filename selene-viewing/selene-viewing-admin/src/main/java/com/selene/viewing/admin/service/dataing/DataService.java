@@ -28,12 +28,15 @@ import com.selene.dataing.model.enums.EDataFieldType;
 import com.selene.dataing.model.service.DataingDataFieldService;
 import com.selene.dataing.model.service.DataingDataModelFieldMapService;
 import com.selene.dataing.model.service.DataingDataModelService;
+import com.selene.dataing.model.service.DataingDataTaskService;
+import com.selene.dataing.model.service.DataingDataTaskSubService;
 
 @Service
 public class DataService {
 	private final static Logger LOG = LoggerFactory.getLogger(DataService.class.getName());
 	private ServiceConfiger dataingConfiger;
 	private Map<String, Object> services = new HashMap<String, Object>();
+	private StringBuilder sb = new StringBuilder(100);
 	@Resource
 	private Client client;
 	@Resource
@@ -49,12 +52,16 @@ public class DataService {
 		String dataingService = dataingConfiger.value(ServiceConstants.DATAING_KEY);
 		LOG.info("merchants service address=" + dataingService);
 		// Initialization dataing service
-		services.put(DataingDataModelService.class.getName(),
+		services.put(/* DataModel */DataingDataModelService.class.getName(),
 				client.create(DataingDataModelService.class, dataingService));
-		services.put(DataingDataModelFieldMapService.class.getName(),
+		services.put(/* DataModelFiled */DataingDataModelFieldMapService.class.getName(),
 				client.create(DataingDataModelFieldMapService.class, dataingService));
-		services.put(DataingDataFieldService.class.getName(),
+		services.put(/* DataField */DataingDataFieldService.class.getName(),
 				client.create(DataingDataFieldService.class, dataingService));
+		services.put(/* DataTask */DataingDataTaskService.class.getName(),
+				client.create(DataingDataTaskService.class, dataingService));
+		services.put(/* DataTaskSub */DataingDataTaskSubService.class.getName(),
+				client.create(DataingDataTaskSubService.class, dataingService));
 	}
 
 	/**
@@ -66,11 +73,11 @@ public class DataService {
 	 */
 	public int saveDataModel(DataingDataModel dataModel) {
 		// Initialize the required services
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+		DataingDataFieldService /* DataField */ dataFieldService = (DataingDataFieldService) services
 				.get(DataingDataFieldService.class.getName());
-		DataingDataModelService dataModelService = (DataingDataModelService) services
+		DataingDataModelService /* DataModel */ dataModelService = (DataingDataModelService) services
 				.get(DataingDataModelService.class.getName());
-		DataingDataModelFieldMapService dataModelFieldMapService = (DataingDataModelFieldMapService) services
+		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = (DataingDataModelFieldMapService) services
 				.get(DataingDataModelFieldMapService.class.getName());
 		// Business process
 		String[] /* New model fields */ newFieldIdArray = split(CommonConstants.COMMA_SEPARATOR,
@@ -98,9 +105,52 @@ public class DataService {
 				}
 			}
 		} /* Update data model */else {
-			
+			List<DataingDataModelFieldMap> /* Delete model old field list */ oldModelFieldList = dataModelFieldMapService
+					.findByModelId(dataModel.getId());
+			if (oldModelFieldList != null && oldModelFieldList.size() > 0) {
+				if (!(/* Delete old field */dataModelFieldMapService.deleteByModelId(dataModel.getId()) > 0)) {
+					return 0;
+				}
+			}
+			if (/* Update data model */dataModelService.update(dataModel) > 0) {
+				if (newFieldIdArray != null && newFieldIdArray.length > 0) {
+					List<DataingDataModelFieldMap> newDieldMapList = new ArrayList<DataingDataModelFieldMap>();
+					for (String fieldId : newFieldIdArray) {
+						DataingDataModelFieldMap modelFieldMap = new DataingDataModelFieldMap(dataModel.getId(),
+								Integer.valueOf(fieldId));
+						newDieldMapList.add(modelFieldMap);
+					}
+					return dataModelFieldMapService.batchInsert(newDieldMapList);
+				}
+			}
 		}
 		return 0;
+	}
+
+	/**
+	 * Query {@code DataingDataModel} by model id
+	 * 
+	 * @param id
+	 * @return {@link DataingDataModel}
+	 */
+	public DataingDataModel findModelById(Integer id) {
+		// Initialize the required services
+		DataingDataModelService /* DataModel */ dataModelService = (DataingDataModelService) services
+				.get(DataingDataModelService.class.getName());
+		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = (DataingDataModelFieldMapService) services
+				.get(DataingDataModelFieldMapService.class.getName());
+		// Business process
+		DataingDataModel dataModel = dataModelService.find(id);
+		List<DataingDataModelFieldMap> modelFieldMap = dataModelFieldMapService.findByModelId(id);
+		if (modelFieldMap != null && modelFieldMap.size() > 0) {
+			sb.setLength(0);
+			for (DataingDataModelFieldMap fieldMap : modelFieldMap) {
+				sb.append(fieldMap.getFieldId()).append(CommonConstants.COMMA_SEPARATOR);
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			dataModel.setModelFieldIds(sb.toString());
+		}
+		return dataModel;
 	}
 
 	/**

@@ -44,13 +44,13 @@ function loadModelDataTable() {
 		}, {
 			"mData" : "modelType",
 			"fnRender":function(obj){
-				if(obj.aData.modelType==0){
+				if(obj.aData.modelType=='Default'){
 					return "普通库";
-				}else if(obj.aData.modelType==1){
+				}else if(obj.aData.modelType=='Image'){
 					return "图片库";
-				}else if(obj.aData.modelType==2){
+				}else if(obj.aData.modelType=='File'){
 					return "文件库";
-				}else if(obj.aData.modelType==3){
+				}else if(obj.aData.modelType=='Video'){
 					return "视频库";
 				}
 			}
@@ -111,10 +111,10 @@ function model_form_validate() {
 			},
 			messages : {
 				modelName : {
-					required : "栏目名称不能为空！"
+					required : "数据模板名称不能为空！"
 				},
 				modelCode : {
-					required : "栏目编码不能为空！"
+					required : "数据模板编码不能为空！"
 				}
 			},
 			errorPlacement : function(error, element) {

@@ -15,7 +15,7 @@ public interface DataingDataModelFieldMapMapper {
 
 	public List<DataingDataModelFieldMap> findByModelId(@Param("modelId") Integer modelId);
 
-	public int delete(DataingDataModelFieldMap dataModelFieldMap);
+	public int delete(Integer id);
 
 	public int deleteByModelId(@Param("modelId") Integer modelId);
 }
