@@ -17,17 +17,8 @@ import com.selene.common.Database;
  */
 public class DataingDatabase extends Database<DataingDatabase> {
 	private static final long serialVersionUID = 2388455131378854343L;
-	private String license;
 	private List<DataingDataField> fieldList;
 	private String fieldValue;
-
-	public String getLicense() {
-		return license;
-	}
-
-	public void setLicense(String license) {
-		this.license = license;
-	}
 
 	public List<DataingDataField> getFieldList() {
 		return fieldList;

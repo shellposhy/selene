@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.dataing.provider.dao.DataingDatabaseMapper">
+	<resultMap id="resultMap" type="com.selene.dataing.model.DataingDatabase">
+		<result property="id" column="ID" />
+		<result property="license" column="License"/>
+		<result property="name" column="Name" />
+		<result property="code" column="Code" />
+		<result property="pathCode" column="Path_Code" />
+		<result property="type" column="Type" />
+		<result property="nodeType" column="Node_Type" />
+		<result property="parentId" column="Parent_ID" />
+		<result property="modelId" column="Model_ID" />
+		<result property="subjectType" column="Subject_Type" />
+		<result property="subjectId" column="Subject_ID" />
+		<result property="tables" column="Tables" />
+		<result property="status" column="Status" />
+		<result property="orderId" column="Order_ID" />
+		<result property="taskId" column="Task_ID" />
+		<result property="dataUpdateTime" column="Data_Update_Time" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="createTime" column="Create_Time" />
+		<result property="updaterId" column="Updater_ID" />
+		<result property="updateTime" column="Update_Time" />
+	</resultMap>
+
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,License,Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Subject_Type,Subject_ID,Tables,
+			Status,Order_ID,Task_ID,Data_Update_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			data_base 
+		WHERE 
+			ID=#{id}
+	</select>
+
+	<select id="findByModelId" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Subject_Type,Subject_ID,Tables,
+			Status,Order_ID,Task_ID,Data_Update_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			data_base 
+		WHERE 
+			License=#{license} AND Model_ID=#{modelId}
+	</select>
+	
+	<select id="findByTypeAndNodeType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Subject_Type,Subject_ID,Tables,
+			Status,Order_ID,Task_ID,Data_Update_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			data_base 
+		WHERE 
+			License=#{license} AND Type=#{type} AND Node_Type=#{nodeType}
+	</select>
+	
+	<select id="findPageByTypeAndNodeType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Subject_Type,Subject_ID,Tables,
+			Status,Order_ID,Task_ID,Data_Update_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			data_base 
+		WHERE 
+			License=#{license} AND Type=#{type} AND Node_Type=#{nodeType}
+		 LIMIT 
+		 	#{first},#{size}
+	</select>
+	
+	<select id="countByTypeAndNodeType" resultType="int" parameterType="java.util.Map" >
+		SELECT 
+			COUNT(*)
+		FROM 
+			data_base 
+		WHERE 
+			License=#{license} AND Type=#{type} AND Node_Type=#{nodeType}
+	</select>
+	
+	<select id="findPageByNameTypeAndNodeType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Subject_Type,Subject_ID,Tables,
+			Status,Order_ID,Task_ID,Data_Update_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			data_base 
+		WHERE 
+			License=#{license} AND ( Name like "%"#{word}"%" )  AND Type=#{type} AND Node_Type=#{nodeType} 
+		 LIMIT 
+		 	#{first},#{size}
+	</select>
+	
+	<select id="countByNameTypeAndNodeType" resultType="int" parameterType="java.util.Map" >
+		SELECT 
+			COUNT(*)
+		FROM 
+			data_base 
+		WHERE 
+			License=#{license} AND ( Name like "%"#{word}"%" )  AND Type=#{type} AND Node_Type=#{nodeType} 
+	</select>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO
+			data_base(
+				License,Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Subject_Type,Subject_ID,Tables,
+				Status,Order_ID,Task_ID,Data_Update_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+			)
+		VALUES(
+			#{license},#{name},#{code},#{pathCode},#{type},#{nodeType},#{parentId},#{modelId},#{subjectType},#{subjectId},#{tables},
+			#{status},#{orderId},#{taskId},#{dataUpdateTime},#{creatorId},#{createTime},#{updaterId},#{updateTime})
+	</insert>
+
+	<update id="update">
+		UPDATE 
+			data_base
+		<set>
+			<if test="name != null">Name = #{name},</if>
+			<if test="code != null">Code = #{code},</if>
+			<if test="pathCode != null">Path_Code =#{pathCode},</if>
+			<if test="type != null">Type = #{type},</if>
+			<if test="nodeType != null">Node_Type = #{nodeType},</if>
+			<if test="parentId != null">Parent_ID =#{parentId},</if>
+			<if test="modelId != null">Model_ID = #{modelId},</if>
+			<if test="status != null">Status = #{status},</if>
+			<if test="tables != null">Tables = #{tables},</if>
+			<if test="taskId != null">Task_ID = #{taskId},</if>
+			<if test="dataUpdateTime != null">Data_Update_Time =#{dataUpdateTime},</if>
+			<if test="updaterId != null">Updater_ID = #{updaterId},</if>
+			<if test="updateTime != null">Update_Time = #{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+</mapper>

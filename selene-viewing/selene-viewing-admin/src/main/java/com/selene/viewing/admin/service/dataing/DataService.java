@@ -19,17 +19,25 @@ import com.nanshan.papaya.rpc.client.Client;
 import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.ServiceConstants;
+import com.selene.common.constants.util.ELibraryNodeType;
+import com.selene.common.constants.util.ELibraryType;
 import com.selene.common.result.ListResult;
+import com.selene.common.tree.support.LibraryTreeNode;
+import com.selene.common.tree.DefaultTreeNode.PropertySetter;
 import com.selene.common.util.RedisClient;
 import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataModel;
 import com.selene.dataing.model.DataingDataModelFieldMap;
+import com.selene.dataing.model.DataingDatabase;
 import com.selene.dataing.model.enums.EDataFieldType;
 import com.selene.dataing.model.service.DataingDataFieldService;
 import com.selene.dataing.model.service.DataingDataModelFieldMapService;
 import com.selene.dataing.model.service.DataingDataModelService;
 import com.selene.dataing.model.service.DataingDataTaskService;
 import com.selene.dataing.model.service.DataingDataTaskSubService;
+import com.selene.dataing.model.service.DataingDatabaseService;
+
+import cn.com.lemon.base.Strings;
 
 @Service
 public class DataService {
@@ -62,6 +70,38 @@ public class DataService {
 				client.create(DataingDataTaskService.class, dataingService));
 		services.put(/* DataTaskSub */DataingDataTaskSubService.class.getName(),
 				client.create(DataingDataTaskSubService.class, dataingService));
+		services.put(/* Database */DataingDatabaseService.class.getName(),
+				client.create(DataingDatabaseService.class, dataingService));
+	}
+
+	/**
+	 * Create the database tree.
+	 * 
+	 * @param license
+	 * @param word
+	 * @param type
+	 * @return {@link LibraryTreeNode}
+	 */
+	public LibraryTreeNode tree(String license, String word, ELibraryType type) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		List<DataingDatabase> list = databaseService.list(license, Strings.nullToEmpty(word), type);
+		return LibraryTreeNode.parseTree(LibraryTreeNode.class, list,
+				new PropertySetter<LibraryTreeNode, DataingDatabase>() {
+					@Override
+					public void setProperty(LibraryTreeNode node, DataingDatabase entity) {
+						if (null != entity) {
+							if (ELibraryNodeType.Lib.equals(entity.getNodeType())) {
+								node.setDir(false);
+								node.checked = true;
+							} else {
+								node.setDir(true);
+							}
+						}
+					}
+				});
 	}
 
 	/**
@@ -125,6 +165,45 @@ public class DataService {
 			}
 		}
 		return 0;
+	}
+
+	/**
+	 * Delete the model by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public int deleteModel(Integer id) {
+		// Initialize the required services
+		DataingDataModelService /* DataModel */ dataModelService = (DataingDataModelService) services
+				.get(DataingDataModelService.class.getName());
+		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = (DataingDataModelFieldMapService) services
+				.get(DataingDataModelFieldMapService.class.getName());
+		// Business process
+		List<DataingDataModelFieldMap> /* Delete model old field list */ oldModelFieldList = dataModelFieldMapService
+				.findByModelId(id);
+		if (oldModelFieldList != null && oldModelFieldList.size() > 0) {
+			if (!(/* Delete old field */dataModelFieldMapService.deleteByModelId(id) > 0)) {
+				return 0;
+			}
+		}
+		return dataModelService.delete(id);
+	}
+
+	/**
+	 * Make sure the model is in use before deleting it.
+	 * 
+	 * @param modelId
+	 * @param license
+	 * @return
+	 */
+	public boolean checkPreDeleteModel(String license, Integer modelId) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		List<?> baseList = databaseService.findByModelId(license, modelId);
+		return baseList != null && baseList.size() > 0 ? true : false;
 	}
 
 	/**

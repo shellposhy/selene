@@ -151,4 +151,6 @@ public interface CommonConstants {
 	String PORT_KEY = "port";
 
 	int SUPER_ADMIN = 1;
+
+	int RPC_DEFAULT_SIZE = 150;
 }

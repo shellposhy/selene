@@ -1,4 +1,6 @@
-package com.selene.viewing.admin.controller.dataing;
+package com.selene.viewing.admin.controller.dataing.model;
+
+import static cn.com.lemon.base.Strings.split;
 
 import java.util.Date;
 import java.util.List;
@@ -17,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.selene.common.HttpStatus;
 import com.selene.common.Operator;
+import com.selene.common.constants.CommonConstants;
 import com.selene.common.datatable.DataTable;
 import com.selene.common.datatable.DataTableArray;
 import com.selene.common.datatable.DataTableResult;
 import com.selene.common.result.ListResult;
+import com.selene.common.result.ObjectResult;
 import com.selene.common.util.Containers;
 import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataModel;
@@ -79,6 +84,34 @@ public class DataingModelController extends BaseController {
 		model.addAttribute("dataModel", dataModel);
 		model.addAttribute("allFields", allFieldList);
 		return "/admin/dataing/model/edit";
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public MappingJacksonValue delete(@RequestBody DataTableArray value, String callback, HttpServletRequest request) {
+		ObjectResult<String> result = new ObjectResult<String>();
+		final MerchantsUserVO vo = commonService.user(request);
+		String[] /* Models need to deleted. */ modelIds = split(CommonConstants.COMMA_SEPARATOR, value.value);
+		boolean isHasDatabase = false;
+		for (String modelId : modelIds) {
+			if (/* Make sure the model is not in use before deleting it. */dataService
+					.checkPreDeleteModel(vo.getLicense(), Integer.valueOf(modelId))) {
+				isHasDatabase = true;
+				break;
+			}
+		}
+		if (isHasDatabase) {
+			result.setCode(HttpStatus.ERROR.code());
+			result.setMsg("数据模型删除前，请确保该模型没有被数据库使用！");
+		} else {
+			for (String modelId : modelIds) {
+				dataService.deleteModel(Integer.valueOf(modelId));
+			}
+			result.setCode(HttpStatus.OK.code());
+		}
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		mv.setJsonpFunction(callback);
+		return mv;
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)

@@ -16,6 +16,7 @@ import com.selene.common.tree.TreeNodeModel;
  */
 public class Database<T extends Database<T>> extends TreeNodeModel<T> {
 	private static final long serialVersionUID = -3471570371542285596L;
+	private String license;
 	private String code;
 	private String pathCode;
 	private ELibraryType type;
@@ -24,10 +25,18 @@ public class Database<T extends Database<T>> extends TreeNodeModel<T> {
 	private Integer subjectType;
 	private Integer subjectId;
 	private EDataStatus status;
-	private int orderId;
+	private Integer orderId;
 	private Integer taskId;
 	private Date dataUpdateTime;
 	private int tables;
+
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
+	}
 
 	public String getCode() {
 		return code;
@@ -93,11 +102,11 @@ public class Database<T extends Database<T>> extends TreeNodeModel<T> {
 		this.status = status;
 	}
 
-	public int getOrderId() {
+	public Integer getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(int orderId) {
+	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
 	}
 

@@ -59,7 +59,9 @@ public class DefaultTreeNode extends Node<Integer, String> {
 			if (null != propertySetter) {
 				propertySetter.setProperty(rootNode, null);
 			}
-			generateTree(clazz, rootNode, list, propertySetter);
+			if (list != null && list.size() > 0) {
+				generateTree(clazz, rootNode, list, propertySetter);
+			}
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
