@@ -11,7 +11,7 @@
 			</div>
 			<div class="box-content">
 				<div class="padlrn span12 action_buttons">
-					<a class="btn btn-small" href="#" onclick="add_directory(0);" id="add_directory" target="_self"><i class="icon-plus"></i> 添加目录</a>
+					<a class="btn btn-small" href="#" onclick="addNewDirectory(0);" id="add_directory" target="_self"><i class="icon-plus"></i> 添加目录</a>
 					<div class="input-append floatr">
 						<input id="search_u_db" size="16" type="text" />
 						<button id="search_u_db_btn" class="btn" type="button">搜索</button>

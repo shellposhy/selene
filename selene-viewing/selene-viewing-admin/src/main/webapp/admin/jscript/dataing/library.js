@@ -6,6 +6,7 @@
  */
 $(document).ready(function() {
 	loadDatabaseTree();
+	loadDirectoryTree();
 	bind_search();
 	// edit
 	init_lib_edit();
@@ -34,6 +35,24 @@ function loadDatabaseTree() {
 	}
 }
 
+//load directory tree by add or edit 
+function loadDirectoryTree() {
+	if($("#type_tree")[0]){
+		$.ajax({
+			type : "POST",
+			url :  appPath+"/admin/dataing/directory/emptyTree",
+			beforeSend: function(request) {//beforeSend
+                request.setRequestHeader("token", token);
+                request.setRequestHeader("refreshToken",refreshToken);
+             },
+			success : function(data) {
+				treeRadioCom($("#type_tree .treeNew"),data.data);
+				setTimeout("$('.treeSelId').click()",800);
+			}
+		});	
+	}
+}
+
 //bind the database tree click event
 function bindTreeNodeEvent(nodeId, nodeType, isDir) {
 	$("#libId").val(nodeId);
@@ -55,168 +74,109 @@ function bindTreeNodeEvent(nodeId, nodeType, isDir) {
 		$('#search_u_db_btn').hide();
 		$('#libraries').hide();
 		$('#data_content').show();
-		find_data_by_libId(nodeId);
+		loadLibraryData(nodeId);
 	}
 }
 
-// the edit database tree list
-function init_lib_edit() {
-	if ($("#categories_tree_radio").length > 0) {
-		var url = thisPath + "/directory/tree";
-		if ($("#categories_tree_radio")[0]) {
-			$.ajax({
-				url : url,
-				success : function(data) {
-					treeRadioCom($("#categories_tree_radio .treeNew"),
-							data.children, true);
-					setTimeout("$('.treeSelId').click()", 800);
+//add database directory
+function addNewDirectory(selid) {
+	selid = selid > 0 ? selid : 0;
+	window.location.href = appPath + "/admin/dataing/directory/"+selid+"/new/";
+}
+
+//when the current database node is the parent node,loading the database node
+//what the parent node is the current database node
+function find_by_parentId(parentId) {
+	$("#libId").val(parentId);
+	var treeObject = $.fn.zTree.getZTreeObj("directoryTree");
+	var treeNode = treeObject.getNodeByParam("id", parentId, null);
+	$("#colname").html(treeNode.name);
+	$.ajax({
+		type : "GET",
+		url : appPath + "/admin/system/library/find/" + parentId,
+		dataType : 'json',
+		beforeSend: function(request) {//beforeSend
+            request.setRequestHeader("token", token);
+            request.setRequestHeader("refreshToken",refreshToken);
+         },
+		success : function(data) {
+			$("#libraries").html("");
+			if (data != null) {
+				var data_node = data[0];
+				var node_type = data_node.nodeType;
+				if (node_type == "Lib") {
+					var libMenu = "";
+					libMenu += '<li id="add_lib">';
+					libMenu += ' <a href="' + thisPath + "new/" + $("#libId").val() + '"><div class="addimg_db"></div></a>';
+					libMenu += '	 <div class="actions"><a class="lh30 block db_repair mt10" href="'+ thisPath + 'new/' + $("#libId").val() + '">添加数据库</a></div>';
+					libMenu += '</li>';
+					$("#libraries").html(libMenu);
+					for (var i = 0; i < data.length; i++) {
+						var editLink = "";
+						editLink += "<li id='dbv_" + data[i].id + "'>";
+						editLink += "	<a class='' target='_blank' href='javascript:init_library("+ data[i].id + ",false)' target='_self' ><div class='dbimg'></div></a>";
+						editLink += "	<span class='dbname'><i class='dbname'>" + data[i].name + "</i></span>";
+						editLink += "	<span class='dbtime'>更新时间：<br />" + data[i].dataUpdateTimeStr + "</span>";
+						editLink += "	<div class='actions' >";
+						editLink += "		<a title='修改数据库' class='btn btn-small db_edit pop_link cboxElement' href='" + thisPath + "edit/" + data[i].id + "' target='_self'><i class='icon-pencil'></i></a>";
+						editLink += "		<a title='删除数据库' class='btn btn-small ml3 db_del' href='#' onclick='delete_lib("+ data[i].id+ ")' target='_self'><i class='icon-trash'></i></a>";
+						editLink += "		<a class='lh30 block db_repair mt10' href='#' onclick='repair_lib(" + data[i].id + ")' target='_self'>修复数据库</a>";
+						editLink += "	</div>";
+						editLink += "	<div class='progress progress-striped progress-success active none'><div class='bar'></div></div>";
+						editLink += "</li>";
+						$("#libraries").append(editLink);
+						if (data[i].status == "Repairing") {
+							repair_pregress(data[i].id, data[i].taskId);
+						}
+					}
+				} else if (node_type == "Directory") {
+					var libMenu = "";
+					libMenu += '<li id="add_library">';
+					libMenu += '		<a href="' + thisPath + "directory/new/" + $("#libId").val() + '"><div class="addimg_db"></div></a>';
+					libMenu += '		<div class="actions"><a class="lh30 block  mt10" href="' + 'javascript:addNewDirectory(' + $("#libId").val() + ')' + '">添加目录</a></div>';
+					libMenu += '</li>';
+					$("#libraries").html(libMenu);
+					for (var i = 0; i < data.length; i++) {
+						var editLink = "";
+						editLink += "<li id='dbv_" + data[i].id + "'>";
+						editLink += "	<a class='' target='_blank' href='" + "javascript:init_library(" + data[i].id + ",true" + ")" + "' target='_self' ><div class='dbimg'></div></a>";
+						editLink += "	<span class='dbname'><i class='dbname'>" + data[i].name + "</i></span>";
+						editLink += "	<div class='actions' >";
+						editLink += "		<a title='修改目录' class='btn btn-small db_edit pop_link cboxElement' href='" + thisPath + "directory/" + data[i].id + "/edit" + "' target='_self'><i class='icon-pencil'></i></a>";
+						editLink += "		<a title='删除目录' class='btn btn-small ml3 db_del' href='#' onclick='delete_library(" + data[i].id + ")' target='_self'><i class='icon-trash'></i></a>";
+						editLink += "	</div>";
+						editLink += "	<div class='progress progress-striped progress-success active none'><div class='bar'></div></div>";
+						editLink += "</li>";
+						$("#libraries").append(editLink);
+					}
 				}
-			});
+				$('#search_u_db').show();
+				$('#search_u_db_btn').show();
+			}
 		}
-	}
+	});
 }
 
-
-
-// add database directory
-function add_directory(selid) {
-	var url = appPath + "/admin/system/library/directory/new/";
-	if (selid > 0) {
-		url += selid;
-	} else {
-		url += "0";
-	}
-	window.location.href = url;
-}
-
-// when the current database node has not database library,add two buttons
+//when the current database node has not database library,add two buttons
 function find_by_parentId_init(parentId) {
 	var libMenu = "";
 	libMenu += '<li id="add_library">';
-	libMenu += ' 	<a href="' + thisPath + "directory/new/" + $("#libId").val()
-			+ '"><div class="addimg_db"></div></a>';
-	libMenu += '	 	<div class="actions"><a class="lh30 block  mt10" href="'
-			+ 'javascript:add_directory(' + $("#libId").val() + ')'
-			+ '">添加目录</a></div>';
+	libMenu += ' 	<a href="' + thisPath + "directory/new/" + $("#libId").val() + '"><div class="addimg_db"></div></a>';
+	libMenu += '	 	<div class="actions"><a class="lh30 block  mt10" href="' + 'javascript:addNewDirectory(' + $("#libId").val() + ')' + '">添加目录</a></div>';
 	libMenu += '</li>';
 	libMenu += '<li id="add_lib">';
-	libMenu += ' 	<a href="' + thisPath + "new/" + $("#libId").val()
-			+ '"><div class="addimg_db"></div></a>';
-	libMenu += '	 	<div class="actions"><a class="lh30 block db_repair mt10" href="'
-			+ thisPath + 'new/' + $("#libId").val() + '">添加数据库</a></div>';
+	libMenu += ' 	<a href="' + thisPath + "new/" + $("#libId").val() + '"><div class="addimg_db"></div></a>';
+	libMenu += '	 	<div class="actions"><a class="lh30 block db_repair mt10" href="' + thisPath + 'new/' + $("#libId").val() + '">添加数据库</a></div>';
 	libMenu += '</li>';
 	$("#libraries").html(libMenu);
 }
 
-// when the current database node is the parent node,loading the database node
-// what the parent node is the current database node
-function find_by_parentId(parentId) {
-	$("#libId").val(parentId);
-	var treeObj = $.fn.zTree.getZTreeObj("directoryTree");
-	var treenode = treeObj.getNodeByParam("id", parentId, null);
-	$("#colname").html(treenode.name);
-	$
-			.ajax({
-				type : "GET",
-				url : thisPath + "find/" + parentId,
-				dataType : 'json',
-				success : function(data) {
-					$("#libraries").html("");
-					if (data != null) {
-						var data_node = data[0];
-						var node_type = data_node.nodeType;
-						if (node_type == "Lib") {
-							var libMenu = "";
-							libMenu += '<li id="add_lib">';
-							libMenu += ' <a href="' + thisPath + "new/"
-									+ $("#libId").val()
-									+ '"><div class="addimg_db"></div></a>';
-							libMenu += '	 <div class="actions"><a class="lh30 block db_repair mt10" href="'
-									+ thisPath
-									+ 'new/'
-									+ $("#libId").val()
-									+ '">添加数据库</a></div>';
-							libMenu += '</li>';
-							$("#libraries").html(libMenu);
-							for (var i = 0; i < data.length; i++) {
-								var editLink = "";
-								editLink += "<li id='dbv_" + data[i].id + "'>";
-								editLink += "	<a class='' target='_blank' href='javascript:init_library("
-										+ data[i].id
-										+ ",false)' target='_self' ><div class='dbimg'></div></a>";
-								editLink += "	<span class='dbname'><i class='dbname'>"
-										+ data[i].name + "</i></span>";
-								editLink += "	<span class='dbtime'>更新时间：<br />"
-										+ data[i].dataUpdateTimeStr + "</span>";
-								editLink += "	<div class='actions' >";
-								editLink += "		<a title='修改数据库' class='btn btn-small db_edit pop_link cboxElement' href='"
-										+ thisPath
-										+ "edit/"
-										+ data[i].id
-										+ "' target='_self'><i class='icon-pencil'></i></a>";
-								editLink += "		<a title='删除数据库' class='btn btn-small ml3 db_del' href='#' onclick='delete_lib("
-										+ data[i].id
-										+ ")' target='_self'><i class='icon-trash'></i></a>";
-								editLink += "		<a class='lh30 block db_repair mt10' href='#' onclick='repair_lib("
-										+ data[i].id
-										+ ")' target='_self'>修复数据库</a>";
-								editLink += "	</div>";
-								editLink += "	<div class='progress progress-striped progress-success active none'><div class='bar'></div></div>";
-								editLink += "</li>";
-								$("#libraries").append(editLink);
-								if (data[i].status == "Repairing") {
-									repair_pregress(data[i].id, data[i].taskId);
-								}
-							}
-						} else if (node_type == "Directory") {
-							var libMenu = "";
-							libMenu += '<li id="add_library">';
-							libMenu += '		<a href="' + thisPath
-									+ "directory/new/" + $("#libId").val()
-									+ '"><div class="addimg_db"></div></a>';
-							libMenu += '		<div class="actions"><a class="lh30 block  mt10" href="'
-									+ 'javascript:add_directory('
-									+ $("#libId").val()
-									+ ')'
-									+ '">添加目录</a></div>';
-							libMenu += '</li>';
-							$("#libraries").html(libMenu);
-							for (var i = 0; i < data.length; i++) {
-								var editLink = "";
-								editLink += "<li id='dbv_" + data[i].id + "'>";
-								editLink += "	<a class='' target='_blank' href='"
-										+ "javascript:init_library("
-										+ data[i].id
-										+ ",true"
-										+ ")"
-										+ "' target='_self' ><div class='dbimg'></div></a>";
-								editLink += "	<span class='dbname'><i class='dbname'>"
-										+ data[i].name + "</i></span>";
-								editLink += "	<div class='actions' >";
-								editLink += "		<a title='修改目录' class='btn btn-small db_edit pop_link cboxElement' href='"
-										+ thisPath
-										+ "directory/"
-										+ data[i].id
-										+ "/edit"
-										+ "' target='_self'><i class='icon-pencil'></i></a>";
-								editLink += "		<a title='删除目录' class='btn btn-small ml3 db_del' href='#' onclick='delete_library("
-										+ data[i].id
-										+ ")' target='_self'><i class='icon-trash'></i></a>";
-								editLink += "	</div>";
-								editLink += "	<div class='progress progress-striped progress-success active none'><div class='bar'></div></div>";
-								editLink += "</li>";
-								$("#libraries").append(editLink);
-							}
-						}
-						$('#search_u_db').show();
-						$('#search_u_db_btn').show();
-					}
-				}
-			});
-}
+
+
+
 
 // when the current database node is the library,loading the data
-function find_data_by_libId(libId) {
+function loadLibraryData(libId) {
 	$("#libId").val(libId);
 	$('#search_u_db').hide();
 	$('#search_u_db_btn').hide();
@@ -299,6 +259,23 @@ function callback_library_data(otd) {
 	listDelete(thisPath + "data/delete", otd);
 	library_data_copy(otd);
 	editPopWithDT(otd);
+}
+
+//the edit database tree list
+function init_lib_edit() {
+	if ($("#categories_tree_radio").length > 0) {
+		var url = thisPath + "/directory/tree";
+		if ($("#categories_tree_radio")[0]) {
+			$.ajax({
+				url : url,
+				success : function(data) {
+					treeRadioCom($("#categories_tree_radio .treeNew"),
+							data.children, true);
+					setTimeout("$('.treeSelId').click()", 800);
+				}
+			});
+		}
+	}
 }
 
 // the current database data copy to other database
@@ -444,7 +421,7 @@ function init_library(parentId, isDir) {
 	} else {
 		$('#libraries').hide();
 		$('#data_content').show();
-		find_data_by_libId(parentId);
+		loadLibraryData(parentId);
 	}
 }
 

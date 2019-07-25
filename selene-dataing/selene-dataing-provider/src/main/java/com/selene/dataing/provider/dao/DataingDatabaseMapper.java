@@ -38,6 +38,8 @@ public interface DataingDatabaseMapper {
 	public int countByNameTypeAndNodeType(@Param("license") String license, @Param("word") String word,
 			@Param("type") ELibraryType type, @Param("nodeType") ELibraryNodeType nodeType);
 
+	public List<DataingDatabase> findEmptyDirectory(@Param("license") String license, @Param("type") ELibraryType type);
+
 	public int insert(DataingDatabase database);
 
 	public int update(DataingDatabase database);

@@ -75,6 +75,50 @@ public class DataService {
 	}
 
 	/**
+	 * Save database directory
+	 * 
+	 * @param dataModel
+	 *            {@code DataingDataModel}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveDirectory(DataingDatabase database) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		DataingDatabase parent = databaseService.find(database.getParentId());
+		if (parent != null) {
+			database.setPathCode(parent.getPathCode() + database.getCode() + "/");
+		} else {
+			database.setPathCode("/" + database.getCode() + "/");
+		}
+		if (/* New directory */database.getId() == null) {
+			return databaseService.insert(database);
+		} else {
+			DataingDatabase old = databaseService.find(database.getId());
+			database.setTables(old.getTables());
+			database.setStatus(old.getStatus());
+			return databaseService.update(database);
+		}
+	}
+
+	/**
+	 * Query the database list by not child.
+	 * 
+	 * @param license
+	 * @param type
+	 * @return {@link List}
+	 */
+	public List<DataingDatabase> emptyTreeList(String license, ELibraryType type) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		List<DataingDatabase> list = databaseService.findEmptyDirectory(license, type);
+		return list;
+	}
+
+	/**
 	 * Create the database tree.
 	 * 
 	 * @param license

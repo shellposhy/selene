@@ -112,4 +112,9 @@ public class DataingDatabaseServiceImpl implements DataingDatabaseService {
 		}
 		return list.size() > 0 ? list : null;
 	}
+
+	@Override
+	public List<DataingDatabase> findEmptyDirectory(String license, ELibraryType type) {
+		return databaseMapper.findEmptyDirectory(license, type);
+	}
 }

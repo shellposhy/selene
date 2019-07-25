@@ -28,6 +28,8 @@ public interface DataingDatabaseService {
 			ELibraryNodeType nodeType, Integer first, Integer size);
 
 	public int countByNameTypeAndNodeType(String license, String word, ELibraryType type, ELibraryNodeType nodeType);
+	
+	public List<DataingDatabase> findEmptyDirectory(String license, ELibraryType type);
 
 	public int insert(DataingDatabase database);
 
