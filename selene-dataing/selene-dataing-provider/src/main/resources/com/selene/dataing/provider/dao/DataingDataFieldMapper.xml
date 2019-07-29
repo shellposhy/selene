@@ -142,4 +142,24 @@
 		WHERE 
 			Type = #{type}
 	</select>
+	
+	<select id="findDisplayFieldsByModelId" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT DISTINCT
+			f.ID,f.Component_ID,f.Name,f.Code,f.Code_Name,f.Data_Type,f.Nosg,f.Leng,f.Prec,f.Mand,f.Uniq,f.Multi_Value,f.Use_Enum,
+			f.Index_Type,f.Index_Store,f.Required,f.Type,f.Order_ID,f.Access_Type,f.For_Display,f.For_Order,f.Memo
+		FROM
+		  data_field f
+		 LEFT JOIN 
+		 	data_model_field_map m
+		 ON 
+		 	m.Field_ID = f.ID
+		 LEFT JOIN 
+		 	data_model c
+		 ON 
+		 	m.Model_ID = c.ID
+		WHERE 
+			f.For_Display = 1 AND c.ID =#{modelId}
+		ORDER BY 
+			f.ID
+	</select>
 </mapper>

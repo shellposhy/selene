@@ -7,16 +7,17 @@
 		<ul class="breadcrumb ind_f_tree" value="62">
 			<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
 			<li><a href="${appPath }/admin/dataing/library" target="_self">数据库管理</a><span class="divider">/</span></li>
-			<li><a href="#">数据库目录</a></li>
+			<li><a href="#">数据库编辑</a></li>
 		</ul>
 	</div>
 	<div class="box-content">
 		<div id="myTabContent" class="tab-content">
 			<div class="tab-pane active" id="setting">
-				<form:form modelAttribute="dataBase" class="form-horizontal u_group_form" id="db_new_form" action="${appPath}/admin/dataing/directory/save" method="post" target="_self">
+				<form:form modelAttribute="library" class="form-horizontal u_group_form" id="db_new_form" 
+										 action="${appPath}/admin/dataing/library/save" method="post" target="_self">
 					<fieldset>
 						<legend>
-							<span title="" class="icon32 icon-inbox floatl"></span>数据库目录编辑
+							<span title="" class="icon32 icon-inbox floatl"></span>数据库编辑
 						</legend>
 						<div class="control-group">
 							<label class="control-label" for="database_name">名称</label>
@@ -33,11 +34,21 @@
 								<label class="error"><form:errors path="code" cssClass="error" /> </label>
 							</div>
 						</div>
-						<div class="control-group backhide" class="tree_sel_box" id="type_tree">
-							<label class="control-label" for="u_group_memo">父目录</label>
+						<div class="control-group">
+							<label class="control-label" for="database_fields">数据库模型</label>
 							<div class="controls">
-								<input class="treeRadio" type="text" readonly value="" />
-								<label class="error"><form:errors path="parentId" cssClass="error" /> </label>
+								<form:select path="modelId" class="autogrow" name="columnModelId" id="db_columnModelId" onchange="listenModelId()">
+									<form:options items="${modelList}" itemValue="id" itemLabel="modelName" />
+								</form:select>
+								<label class="error"><form:errors path="modelId" cssClass="error" /> </label>
+							</div>
+						</div>
+
+						<div class="control-group" class="tree_sel_box" id="categories_tree_radio">
+							<label class="control-label" for="u_group_memo">分类</label>
+							<div class="controls">
+								<input class="treeRadio" type="text" readonly="readonly" value="" /> <label class="error">
+								<form:errors path="parentId" cssClass="error" /> </label>
 								<form:hidden path="parentId" class="treeSelId" name="parentId" value="" />
 							</div>
 							<div class="menuContent">
@@ -45,11 +56,16 @@
 								<a class="selOk btn btn-small" href="#"><i class="icon-ok"></i>确定</a>
 							</div>
 						</div>
+						<div  class="control-group">
+							<form:input type="hidden"  path ="dataFieldsStr" value=""  name = "dataFieldsStr" id ="dataFieldsStr"/>
+							<label class="control-label" for="list_showFields">列表显示字段</label>
+							<div class="controls" id = "columnModelFileds"  class="list_fields">
+							</div>
+						</div>
 						<form:hidden path="type" name="type" id="type" />
-						<form:hidden path="type.value" name="dbtype" id="dbtype" />
+						<form:hidden path="type.value" name="dbType" id="dbType" />
 						<div class="form-actions">
 							<button type="submit" class="btn btn-primary">保存</button>
-							<input type="button" name="cancel" value="取消" class="btn backBtn"/>
 						</div>
 					</fieldset>
 				</form:form>

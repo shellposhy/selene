@@ -37,4 +37,6 @@ public interface DataingDataFieldMapper {
 	public List<DataingDataField> findByRequired(@Param("required") Boolean required);
 
 	public List<DataingDataField> findByType(@Param("type") Integer type);
+
+	public List<DataingDataField> findDisplayFieldsByModelId(@Param("modelId") Integer modelId);
 }

@@ -32,4 +32,6 @@ public interface DataingDataFieldService {
 	public List<DataingDataField> findByRequired(Boolean required);
 
 	public List<DataingDataField> findByType(Integer type);
+	
+	public List<DataingDataField> findDisplayFieldsByModelId(Integer modelId);
 }

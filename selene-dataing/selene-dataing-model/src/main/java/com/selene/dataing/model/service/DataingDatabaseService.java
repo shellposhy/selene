@@ -15,6 +15,8 @@ import com.selene.dataing.model.DataingDatabase;
 public interface DataingDatabaseService {
 	public DataingDatabase find(Integer id);
 
+	public List<DataingDatabase> list(String license, String word, ELibraryType type);
+
 	public List<DataingDatabase> findByModelId(String license, Integer modelId);
 
 	public List<DataingDatabase> findByTypeAndNodeType(String license, ELibraryType type, ELibraryNodeType nodeType);
@@ -28,12 +30,14 @@ public interface DataingDatabaseService {
 			ELibraryNodeType nodeType, Integer first, Integer size);
 
 	public int countByNameTypeAndNodeType(String license, String word, ELibraryType type, ELibraryNodeType nodeType);
-	
+
 	public List<DataingDatabase> findEmptyDirectory(String license, ELibraryType type);
+
+	public List<DataingDatabase> findByParentId(String license, ELibraryType type, Integer parentId);
 
 	public int insert(DataingDatabase database);
 
 	public int update(DataingDatabase database);
 
-	public List<DataingDatabase> list(String license, String word, ELibraryType type);
+	public int delete(Integer id);
 }

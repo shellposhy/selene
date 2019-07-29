@@ -75,6 +75,37 @@ public class DataingDirectoryController extends BaseController {
 		return "/admin/dataing/directory/edit";
 	}
 
+	@RequestMapping("/{id}/edit")
+	public String edit(@PathVariable("id") int id, Model model) {
+		DataingDatabase database = dataService.findDatabase(id);
+		model.addAttribute("dataBase", database);
+		return "/admin/dataing/directory/edit";
+	}
+
+	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public MappingJacksonValue delete(@PathVariable Integer id, String callback, HttpServletRequest request) {
+		ObjectResult<String> result = new ObjectResult<String>();
+		MerchantsUserVO vo = commonService.user(request);
+		List<DataingDatabase> /* Make sure no subitems in the directory. */ list = dataService
+				.findBaseByParentId(vo.getLicense(), ELibraryType.Default, id);
+		if (list != null && list.size() > 0) {
+			result.setCode(HttpStatus.ERROR.code());
+			result.setMsg("数据库目录删除前，请确保该目录下没有子目录或数据库！");
+		} else {
+			int number = dataService.deleteDirectory(id);
+			if (number > 0) {
+				result.setCode(HttpStatus.OK.code());
+			} else {
+				result.setCode(HttpStatus.ERROR.code());
+				result.setMsg("数据库目录删除失败！");
+			}
+		}
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		mv.setJsonpFunction(callback);
+		return mv;
+	}
+
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(final DataingDatabase database, BindingResult result, final Model model,
 			final HttpServletRequest request) {

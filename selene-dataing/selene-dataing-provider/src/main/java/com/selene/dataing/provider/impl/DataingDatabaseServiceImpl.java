@@ -68,16 +68,6 @@ public class DataingDatabaseServiceImpl implements DataingDatabaseService {
 	}
 
 	@Override
-	public int insert(DataingDatabase database) {
-		return databaseMapper.insert(database);
-	}
-
-	@Override
-	public int update(DataingDatabase database) {
-		return databaseMapper.update(database);
-	}
-
-	@Override
 	public List<DataingDatabase> list(String license, String word, ELibraryType type) {
 		List<DataingDatabase> list = new ArrayList<DataingDatabase>();
 		int size = CommonConstants.RPC_DEFAULT_SIZE;
@@ -116,5 +106,25 @@ public class DataingDatabaseServiceImpl implements DataingDatabaseService {
 	@Override
 	public List<DataingDatabase> findEmptyDirectory(String license, ELibraryType type) {
 		return databaseMapper.findEmptyDirectory(license, type);
+	}
+
+	@Override
+	public List<DataingDatabase> findByParentId(String license, ELibraryType type, Integer parentId) {
+		return databaseMapper.findByParentId(license, type, parentId);
+	}
+
+	@Override
+	public int insert(DataingDatabase database) {
+		return databaseMapper.insert(database);
+	}
+
+	@Override
+	public int update(DataingDatabase database) {
+		return databaseMapper.update(database);
+	}
+
+	@Override
+	public int delete(Integer id) {
+		return databaseMapper.delete(id);
 	}
 }

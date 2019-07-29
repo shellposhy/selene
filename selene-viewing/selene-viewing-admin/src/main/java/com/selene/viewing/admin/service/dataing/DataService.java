@@ -75,6 +75,20 @@ public class DataService {
 	}
 
 	/**
+	 * Delete database directory
+	 * 
+	 * @param id
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int deleteDirectory(Integer id) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		return databaseService.delete(id);
+	}
+
+	/**
 	 * Save database directory
 	 * 
 	 * @param dataModel
@@ -100,6 +114,36 @@ public class DataService {
 			database.setStatus(old.getStatus());
 			return databaseService.update(database);
 		}
+	}
+
+	/**
+	 * Query the database by parent id.
+	 * 
+	 * @param license
+	 * @param type
+	 * @param parentId
+	 * @return {@link List}
+	 */
+	public List<DataingDatabase> findBaseByParentId(String license, ELibraryType type, Integer parentId) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		return databaseService.findByParentId(license, type, parentId);
+	}
+
+	/**
+	 * Query the database by id.
+	 * 
+	 * @param id
+	 * @return {@link DataingDatabase}
+	 */
+	public DataingDatabase findDatabase(Integer id) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		return databaseService.find(id);
 	}
 
 	/**
@@ -277,6 +321,20 @@ public class DataService {
 	}
 
 	/**
+	 * Query can show data fields by {@code DataingDataModel}
+	 * 
+	 * @param modelId
+	 * @return {@link List}
+	 */
+	public List<DataingDataField> findDisplayFieldsByModelId(Integer modelId) {
+		// Initialize the required services
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		// Business process
+		return dataFieldService.findDisplayFieldsByModelId(modelId);
+	}
+
+	/**
 	 * Query can select data fields when a data template is added
 	 * 
 	 * @param type
@@ -288,6 +346,21 @@ public class DataService {
 				.get(DataingDataFieldService.class.getName());
 		// Business process
 		return dataFieldService.findByType(type.ordinal());
+	}
+
+	/**
+	 * Query all database model by {@code ELibraryType}
+	 * 
+	 * @param modelType
+	 * @param license
+	 * @return {@link List}
+	 */
+	public List<DataingDataModel> findModelByType(ELibraryType modelType, String license) {
+		// Initialize the required services
+		DataingDataModelService dataModelService = (DataingDataModelService) services
+				.get(DataingDataModelService.class.getName());
+		// Business process
+		return dataModelService.findByType(modelType.ordinal(), license);
 	}
 
 	/**

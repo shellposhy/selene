@@ -40,7 +40,12 @@ public interface DataingDatabaseMapper {
 
 	public List<DataingDatabase> findEmptyDirectory(@Param("license") String license, @Param("type") ELibraryType type);
 
+	public List<DataingDatabase> findByParentId(@Param("license") String license, @Param("type") ELibraryType type,
+			@Param("parentId") Integer parentId);
+
 	public int insert(DataingDatabase database);
 
 	public int update(DataingDatabase database);
+
+	public int delete(@Param("id") Integer id);
 }

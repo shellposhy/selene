@@ -19,6 +19,7 @@ public class DataingDatabase extends Database<DataingDatabase> {
 	private static final long serialVersionUID = 2388455131378854343L;
 	private List<DataingDataField> fieldList;
 	private String fieldValue;
+	private String dataFieldsStr;
 
 	public List<DataingDataField> getFieldList() {
 		return fieldList;
@@ -34,6 +35,14 @@ public class DataingDatabase extends Database<DataingDatabase> {
 
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
+	}
+
+	public String getDataFieldsStr() {
+		return dataFieldsStr;
+	}
+
+	public void setDataFieldsStr(String dataFieldsStr) {
+		this.dataFieldsStr = dataFieldsStr;
 	}
 
 	public void addField(DataingDataField dataField) {
