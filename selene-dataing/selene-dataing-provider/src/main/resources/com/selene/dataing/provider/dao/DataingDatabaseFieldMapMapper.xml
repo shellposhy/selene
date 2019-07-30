@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.dataing.provider.dao.DataingDatabaseFieldMapMapper">
+	<resultMap id="resultMap" type="com.selene.dataing.model.DataingDatabaseFieldMap">
+		<result property="id" column="ID" />
+		<result property="baseId" column="Base_ID" />
+		<result property="fieldId" column="Field_ID" />
+		<result property="type" column="Type" />
+		<result property="isDisplay" column="Is_Display" />
+	</resultMap>
+
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT
+			 ID,Base_ID,Field_ID,Type,Is_Display
+		FROM 
+			data_base_field_map 
+		WHERE 
+			ID=#{id}
+		ORDER BY 
+			ID
+	</select>
+
+	<select id="findByDBId" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT
+			 ID,Base_ID,Field_ID,Type,Is_Display
+		FROM 
+			data_base_field_map 
+		WHERE 
+			Base_ID = #{baseId}
+		ORDER BY 
+			ID
+	</select>
+
+	<select id="findByDBIdAndIsDisplay" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			 ID,Base_ID,Field_ID,Type,Is_Display
+		FROM 
+			data_base_field_map 
+		WHERE 
+			Base_ID = #{baseId} AND Is_Display= #{isDisplay}
+		ORDER BY 
+			ID
+	</select>
+
+	<select id="countByFieldId" resultType="int" parameterType="java.lang.Integer">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			data_base_field_map 
+		WHERE 
+			Field_ID = #{fieldId}
+	</select>
+
+	<select id="findAllBaseId" resultType="java.lang.Integer">
+		SELECT DISTINCT 
+			Base_ID 
+		FROM
+			data_base_field_map
+		ORDER BY 
+			ID
+	</select>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO 
+			data_base_field_map(
+				Base_ID,Field_ID,Type, Is_Display
+			)
+		VALUES(
+			#{baseId},#{fieldId},#{type},#{isDisplay}
+		)
+	</insert>
+
+	<delete id="delete">
+		DELETE FROM 
+			data_base_field_map 
+		WHERE 
+			ID=#{id}
+	</delete>
+	
+	<delete id="deleteByDBId" parameterType="java.lang.Integer">
+		DELETE FROM 
+			data_base_field_map 
+		WHERE 
+			Base_ID = #{baseId}
+	</delete>
+	
+	<delete id="deleteByDbIdAndFieldId" parameterType="java.util.Map">
+		DELETE FROM 
+			data_base_field_map 
+		WHERE 
+			Base_ID=#{baseId} AND Field_ID=#{fieldId}
+	</delete>
+</mapper>

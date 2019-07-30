@@ -1,5 +1,6 @@
 package com.selene.viewing.admin.controller.dataing.databse;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -8,12 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.selene.common.HttpStatus;
+import com.selene.common.Operator;
+import com.selene.common.constants.util.EDataStatus;
+import com.selene.common.constants.util.ELibraryNodeType;
 import com.selene.common.constants.util.ELibraryType;
 import com.selene.common.result.ListResult;
 import com.selene.dataing.model.DataingDataField;
@@ -69,11 +75,50 @@ public class DataingLibraryController extends BaseController {
 		DataingDatabase library = new DataingDatabase();
 		MerchantsUserVO vo = commonService.user(request);
 		List<DataingDataModel> modelList = dataService.findModelByType(ELibraryType.Default, vo.getLicense());
-		// modelList.addAll(dataService);
 		library.setParentId(directoryId);
 		library.setType(ELibraryType.Default);
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("library", library);
 		return "/admin/dataing/library/edit";
+	}
+
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public String save(@Validated final DataingDatabase library, BindingResult result, final Model model,
+			HttpServletRequest request) {
+		final MerchantsUserVO vo = commonService.user(request);
+		return super.save(library, result, model, new Operator() {
+			@Override
+			public void operate() {
+				if (/* New database */library.getId() == null) {
+					library.setCreatorId(vo.getId());
+					library.setCreateTime(new Date());
+					library.setType(ELibraryType.Default);
+					library.setNodeType(ELibraryNodeType.Lib);
+					library.setTables(0);
+					library.setStatus(EDataStatus.Normal);
+				}
+				library.setLicense(vo.getLicense());
+				library.setUpdaterId(vo.getId());
+				library.setUpdateTime(new Date());
+				dataService.saveLibrary(/* Save process */library);
+			}
+
+			@Override
+			public String success() {
+				return "redirect:/admin/dataing/library";
+			}
+
+			@Override
+			public String fail() {
+				List<DataingDataModel> modelList = dataService.findModelByType(ELibraryType.Default, vo.getLicense());
+				model.addAttribute("modelList", modelList);
+				model.addAttribute("library", library);
+				return "/admin/dataing/library/edit";
+			}
+
+			@Override
+			public void error() {
+			}
+		});
 	}
 }

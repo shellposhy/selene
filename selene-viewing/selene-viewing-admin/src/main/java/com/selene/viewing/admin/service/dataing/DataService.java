@@ -4,9 +4,12 @@ import static cn.com.lemon.base.Strings.isNullOrEmpty;
 import static cn.com.lemon.base.Strings.split;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -29,12 +32,14 @@ import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataModel;
 import com.selene.dataing.model.DataingDataModelFieldMap;
 import com.selene.dataing.model.DataingDatabase;
+import com.selene.dataing.model.DataingDatabaseFieldMap;
 import com.selene.dataing.model.enums.EDataFieldType;
 import com.selene.dataing.model.service.DataingDataFieldService;
 import com.selene.dataing.model.service.DataingDataModelFieldMapService;
 import com.selene.dataing.model.service.DataingDataModelService;
 import com.selene.dataing.model.service.DataingDataTaskService;
 import com.selene.dataing.model.service.DataingDataTaskSubService;
+import com.selene.dataing.model.service.DataingDatabaseFieldMapService;
 import com.selene.dataing.model.service.DataingDatabaseService;
 
 import cn.com.lemon.base.Strings;
@@ -72,6 +77,72 @@ public class DataService {
 				client.create(DataingDataTaskSubService.class, dataingService));
 		services.put(/* Database */DataingDatabaseService.class.getName(),
 				client.create(DataingDatabaseService.class, dataingService));
+		services.put(/* DatabaseFieldMap */DataingDatabaseFieldMapService.class.getName(),
+				client.create(DataingDatabaseFieldMapService.class, dataingService));
+	}
+
+	/**
+	 * Save database library
+	 * 
+	 * @param database
+	 *            {@code DataingDatabase}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveLibrary(DataingDatabase database) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		// Business process
+		DataingDatabase /* Is exist parent and set path code */ parent = databaseService.find(database.getParentId());
+		if (parent != null) {
+			database.setPathCode(parent.getPathCode() + database.getCode() + "/");
+		} else {
+			database.setPathCode("/" + database.getCode() + "/");
+		}
+		Set<DataingDataField> /* Database all data fields */ allFields = new TreeSet<DataingDataField>();
+		allFields.addAll(/* Must need fields */dataFieldService.findByType(EDataFieldType.Required.ordinal()));
+		allFields.addAll(/* Model need fields */dataFieldService.findFieldsByModelId(database.getModelId()));
+		database.setFieldList(allFields);
+		if (/* New database */database.getId() == null) {
+
+		}
+		return 0;
+	}
+
+	/**
+	 * Save database library data field {@code DataingDataField}
+	 * 
+	 * @param database
+	 *            {@code DataingDatabase}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveLibraryFields(DataingDatabase database) {
+		// Initialize the required services
+		DataingDatabaseFieldMapService databaseFieldMapService = (DataingDatabaseFieldMapService) services
+				.get(DataingDatabaseFieldMapService.class.getName());
+		// Business process
+		if (database != null && database.getFieldList() != null && database.getFieldList().size() > 0) {
+			String[] /* Fields for display */ newShowFields = Strings.isNullOrEmpty(database.getDataFieldsStr()) ? null
+					: split(CommonConstants.COMMA_SEPARATOR, database.getDataFieldsStr());
+			for (DataingDataField dataField : database.getFieldList()) {
+				DataingDatabaseFieldMap databaseFieldMap = new DataingDatabaseFieldMap();
+				databaseFieldMap.setBaseId(database.getId());
+				databaseFieldMap.setFieldId(dataField.getId());
+				databaseFieldMap.setType(database.getType());
+				databaseFieldMap.setDisplay(false);
+				if (/* Contain display field */newShowFields != null && newShowFields.length > 0) {
+					if (Arrays.binarySearch(newShowFields, String.valueOf(dataField.getId())) >= 0) {
+						databaseFieldMap.setDisplay(true);
+					}
+				}
+				if (!(databaseFieldMapService.insert(databaseFieldMap) > 0)) {
+					return 0;
+				}
+			}
+		}
+		return 1;
 	}
 
 	/**
@@ -91,8 +162,8 @@ public class DataService {
 	/**
 	 * Save database directory
 	 * 
-	 * @param dataModel
-	 *            {@code DataingDataModel}
+	 * @param database
+	 *            {@code DataingDatabase}
 	 * @return {@code int} if {@code int }>0 true else false
 	 */
 	public int saveDirectory(DataingDatabase database) {

@@ -39,4 +39,6 @@ public interface DataingDataFieldMapper {
 	public List<DataingDataField> findByType(@Param("type") Integer type);
 
 	public List<DataingDataField> findDisplayFieldsByModelId(@Param("modelId") Integer modelId);
+
+	public List<DataingDataField> findFieldsByModelId(@Param("modelId") Integer modelId);
 }

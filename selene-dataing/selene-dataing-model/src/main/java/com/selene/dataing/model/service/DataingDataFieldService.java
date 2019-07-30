@@ -12,7 +12,7 @@ import com.selene.dataing.model.DataingDataField;
  */
 public interface DataingDataFieldService {
 	public int insert(DataingDataField dataField);
-	
+
 	public DataingDataField find(Integer id);
 
 	public List<DataingDataField> findPageByName(String name, Integer first, Integer size);
@@ -32,6 +32,8 @@ public interface DataingDataFieldService {
 	public List<DataingDataField> findByRequired(Boolean required);
 
 	public List<DataingDataField> findByType(Integer type);
-	
+
 	public List<DataingDataField> findDisplayFieldsByModelId(Integer modelId);
+
+	public List<DataingDataField> findFieldsByModelId(Integer modelId);
 }

@@ -82,4 +82,9 @@ public class DataingDataFieldServiceImpl implements DataingDataFieldService {
 	public List<DataingDataField> findDisplayFieldsByModelId(Integer modelId) {
 		return dataFieldMapper.findDisplayFieldsByModelId(modelId);
 	}
+
+	@Override
+	public List<DataingDataField> findFieldsByModelId(Integer modelId) {
+		return dataFieldMapper.findFieldsByModelId(modelId);
+	}
 }
