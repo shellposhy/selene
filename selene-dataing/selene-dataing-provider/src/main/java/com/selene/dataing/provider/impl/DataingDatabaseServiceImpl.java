@@ -68,6 +68,11 @@ public class DataingDatabaseServiceImpl implements DataingDatabaseService {
 	}
 
 	@Override
+	public List<DataingDatabase> findByNameType(String license, String word, ELibraryType type) {
+		return databaseMapper.findByNameType(license, word, type);
+	}
+
+	@Override
 	public List<DataingDatabase> list(String license, String word, ELibraryType type) {
 		List<DataingDatabase> list = new ArrayList<DataingDatabase>();
 		int size = CommonConstants.RPC_DEFAULT_SIZE;
@@ -115,7 +120,8 @@ public class DataingDatabaseServiceImpl implements DataingDatabaseService {
 
 	@Override
 	public int insert(DataingDatabase database) {
-		return databaseMapper.insert(database);
+		int result = databaseMapper.insert(database);
+		return result > 0 ? /* Return the database id */database.getId() : result;
 	}
 
 	@Override

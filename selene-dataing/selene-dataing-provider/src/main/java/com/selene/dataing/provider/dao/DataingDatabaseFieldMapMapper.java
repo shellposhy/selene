@@ -29,6 +29,8 @@ public interface DataingDatabaseFieldMapMapper {
 
 	public int insert(DataingDatabaseFieldMap databaseFieldMap);
 
+	public int batchInsert(List<DataingDatabaseFieldMap> list);
+
 	public int delete(@Param("id") Integer id);
 
 	public int deleteByDBId(@Param("baseId") Integer baseId);

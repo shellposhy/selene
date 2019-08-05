@@ -36,4 +36,6 @@ public interface DataingDataFieldService {
 	public List<DataingDataField> findDisplayFieldsByModelId(Integer modelId);
 
 	public List<DataingDataField> findFieldsByModelId(Integer modelId);
+
+	public List<DataingDataField> compare(List<DataingDataField> source, List<DataingDataField> target);
 }

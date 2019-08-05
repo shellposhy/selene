@@ -26,7 +26,4 @@ public interface DataingDataTableMapper {
 
 	public int delete(@Param("id") Integer id);
 
-	public int increaseRowCount(@Param("num") Integer num);
-
-	public int decreaseRowCount(@Param("num") Integer num);
 }

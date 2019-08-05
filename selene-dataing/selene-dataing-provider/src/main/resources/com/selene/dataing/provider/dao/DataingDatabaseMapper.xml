@@ -97,6 +97,16 @@
 			License=#{license} AND ( Name like "%"#{word}"%" )  AND Type=#{type} AND Node_Type=#{nodeType} 
 	</select>
 	
+	<select id="findByNameType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Subject_Type,Subject_ID,Tables,
+			Status,Order_ID,Task_ID,Data_Update_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			data_base 
+		WHERE 
+			License=#{license} AND ( Name like "%"#{word}"%" )  AND Type=#{type}
+	</select>
+	
 	<select id="findEmptyDirectory" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
 			ID,License,Name,Code,Path_Code,Type,Node_Type,Parent_ID,Model_ID,Subject_Type,Subject_ID,Tables,

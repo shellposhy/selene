@@ -1,7 +1,7 @@
 package com.selene.dataing.model;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.selene.common.BaseModel;
 import com.selene.common.Database;
@@ -17,15 +17,15 @@ import com.selene.common.Database;
  */
 public class DataingDatabase extends Database<DataingDatabase> {
 	private static final long serialVersionUID = 2388455131378854343L;
-	private Set<DataingDataField> fieldList;
+	private List<DataingDataField> fieldList;
 	private String fieldValue;
 	private String dataFieldsStr;
 
-	public Set<DataingDataField> getFieldList() {
+	public List<DataingDataField> getFieldList() {
 		return fieldList;
 	}
 
-	public void setFieldList(Set<DataingDataField> fieldList) {
+	public void setFieldList(List<DataingDataField> fieldList) {
 		this.fieldList = fieldList;
 	}
 
@@ -47,7 +47,7 @@ public class DataingDatabase extends Database<DataingDatabase> {
 
 	public void addField(DataingDataField dataField) {
 		if (this.fieldList == null) {
-			this.fieldList = new TreeSet<DataingDataField>();
+			this.fieldList = new ArrayList<DataingDataField>();
 		}
 		if (!fieldList.contains(dataField)) {
 			fieldList.add(dataField);

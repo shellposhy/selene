@@ -17,6 +17,15 @@ public class DataingDataTable extends BaseModel {
 	private String name;
 	private Integer rowCount;
 
+	public DataingDataTable(Integer baseId, String name, Integer rowCount) {
+		this.baseId = baseId;
+		this.name = name;
+		this.rowCount = rowCount;
+	}
+
+	public DataingDataTable() {
+	}
+
 	public Integer getBaseId() {
 		return baseId;
 	}

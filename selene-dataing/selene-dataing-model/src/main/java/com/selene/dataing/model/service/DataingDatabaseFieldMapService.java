@@ -24,6 +24,8 @@ public interface DataingDatabaseFieldMapService {
 
 	public int insert(DataingDatabaseFieldMap databaseFieldMap);
 
+	public int batchInsert(List<DataingDatabaseFieldMap> list);
+
 	public int delete(Integer id);
 
 	public int deleteByDBId(Integer baseId);

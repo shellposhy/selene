@@ -11,12 +11,11 @@ $(document).ready(function() {
 	loadLibraryTree();
 	//library need show fields
 	loadLibraryNeedShowFields();
-	//
-	bind_search();
+	//Search library
+	bindLibrarySearch();
 	// edit
-	bind_validate();
+	validateDatabase();
 });
-var thisPath = appPath + "/admin/system/library/";
 
 //load default database tree
 function loadDatabaseTree() {
@@ -140,18 +139,15 @@ function loadParentLibrary(parentId) {
 						editLink += "<li id='dbv_" + data.data[i].id + "'>";
 						editLink += "	<a class='' target='_blank' href='javascript:loadLinkLibraryEvent("+ data.data[i].id + ",false)' target='_self' ><div class='dbimg'></div></a>";
 						editLink += "	<span class='dbname'><i class='dbname'>" + data.data[i].name + "</i></span>";
-						editLink += "	<span class='dbtime'>更新时间：<br />" + data.data[i].dataUpdateTimeStr + "</span>";
+						editLink += "	<span class='dbtime'>更新时间<br />" + new Date(data.data[i].updateTime).format("yyyy-MM-dd hh:mm:ss") + "</span>";
 						editLink += "	<div class='actions' >";
-						editLink += "		<a title='修改数据库' class='btn btn-small db_edit pop_link cboxElement' href='" + thisPath + "edit/" + data.data[i].id + "' target='_self'><i class='icon-pencil'></i></a>";
-						editLink += "		<a title='删除数据库' class='btn btn-small ml3 db_del' href='#' onclick='delete_lib("+ data.data[i].id+ ")' target='_self'><i class='icon-trash'></i></a>";
+						editLink += "		<a title='修改数据库' class='btn btn-small db_edit' href='" + appPath + "/admin/dataing/library/" + data.data[i].id +"/edit' target='_self'><i class='icon-pencil'></i></a>";
+						editLink += "		<a title='删除数据库' class='btn btn-small ml3 db_del' href='#' onclick='deleteLibrary("+ data.data[i].id+ ")' target='_self'><i class='icon-trash'></i></a>";
 						editLink += "		<a class='lh30 block db_repair mt10' href='#' onclick='repair_lib(" + data.data[i].id + ")' target='_self'>修复数据库</a>";
 						editLink += "	</div>";
 						editLink += "	<div class='progress progress-striped progress-success active none'><div class='bar'></div></div>";
 						editLink += "</li>";
 						$("#libraries").append(editLink);
-						if (data.data[i].status == "Repairing") {
-							repair_pregress(data.data[i].id, data.data[i].taskId);
-						}
 					}
 				} else if (node_type == "Directory") {
 					var libMenu = "";
@@ -163,10 +159,11 @@ function loadParentLibrary(parentId) {
 					for (var i = 0; i < data.data.length; i++) {
 						var editLink = "";
 						editLink += "<li id='dbv_" + data.data[i].id + "'>";
-						editLink += "	<a class='' target='_blank' href='" + "javascript:loadLinkLibraryEvent(" + data.data[i].id + ",true" + ")" + "' target='_self' ><div class='dbimg'></div></a>";
+						editLink += "	<a class='' target='_blank' href='javascript:loadLinkLibraryEvent(" + data.data[i].id + ",true" + ")" + "' target='_self' ><div class='dbimg'></div></a>";
 						editLink += "	<span class='dbname'><i class='dbname'>" + data.data[i].name + "</i></span>";
+						editLink += "	<span class='dbtime'>创建时间<br />" + new Date(data.data[i].createTime).format("yyyy-MM-dd hh:mm:ss") + "</span>";
 						editLink += "	<div class='actions' >";
-						editLink += "		<a title='修改目录' class='btn btn-small db_edit pop_link cboxElement' href='" + appPath + "/admin/dataing/directory/" + data.data[i].id + "/edit" + "' target='_self'><i class='icon-pencil'></i></a>";
+						editLink += "		<a title='修改目录' class='btn btn-small db_edit' href='" + appPath + "/admin/dataing/directory/" + data.data[i].id + "/edit" + "' target='_self'><i class='icon-pencil'></i></a>";
 						editLink += "		<a title='删除目录' class='btn btn-small ml3 db_del' href='#' onclick='deleteDirectory(" + data.data[i].id + ")' target='_self'><i class='icon-trash'></i></a>";
 						editLink += "	</div>";
 						editLink += "	<div class='progress progress-striped progress-success active none'><div class='bar'></div></div>";
@@ -186,11 +183,11 @@ function loadLeafLibrary(parentId) {
 	var libMenu = "";
 	libMenu += '<li id="add_library">';
 	libMenu += ' 	<a href="' + appPath + "/admin/dataing/directory/" + $("#libId").val() + '/new"><div class="addimg_db"></div></a>';
-	libMenu += '	 	<div class="actions"><a class="lh30 block  mt10" href="' + 'javascript:addNewDirectory(' + $("#libId").val() + ')' + '">添加目录</a></div>';
+	libMenu += '	 <div class="actions"><a class="lh30 block  mt10" href="' + 'javascript:addNewDirectory(' + $("#libId").val() + ')' + '">添加目录</a></div>';
 	libMenu += '</li>';
 	libMenu += '<li id="add_lib">';
 	libMenu += ' 	<a href="' + appPath + "/admin/dataing/library/" + $("#libId").val() + '/new"><div class="addimg_db"></div></a>';
-	libMenu += '	 	<div class="actions"><a class="lh30 block db_repair mt10" href="' + appPath + '/admin/dataing/library/' + $("#libId").val() + '/new">添加数据库</a></div>';
+	libMenu += '	 <div class="actions"><a class="lh30 block db_repair mt10" href="' + appPath + '/admin/dataing/library/' + $("#libId").val() + '/new">添加数据库</a></div>';
 	libMenu += '</li>';
 	$("#libraries").html(libMenu);
 }
@@ -235,6 +232,8 @@ function deleteDirectory(id) {
 				}else if(data.code==200){
 					noty({"text" : "删除成功！","layout" : "center","type" : "success"});
 					$('#dbv_' + id).remove();
+					//reload database tree
+					loadDatabaseTree();
 				}
 			}
 		});
@@ -244,21 +243,29 @@ function deleteDirectory(id) {
 }
 
 // delete library
-function delete_lib(id) {
+function deleteLibrary(id) {
 	if (confirm("确定删除?")) {
 		$.ajax({
-			url : thisPath + "delete/" + id,
+			url : appPath + "/admin/dataing/library/"+id+"/delete",
 			type : 'POST',
 			beforeSend: function(request) {//beforeSend
 	            request.setRequestHeader("token", token);
 	            request.setRequestHeader("refreshToken",refreshToken);
 	         },
-			success : function(response) {
-				$('#dbv_' + id).remove();
+			success : function(data) {
+				if(data.code==100){
+					noty({"text" :data.msg ,"layout" : "center","type" : "error"});
+				}else if(data.code==200){
+					noty({"text" : "删除成功！","layout" : "center","type" : "success"});
+					$('#dbv_' + id).remove();
+					//reload database tree
+					loadDatabaseTree();
+				}
 			}
 		});
-	} else
+	} else{
 		return false;
+	}
 }
 
 //The showing database fields before the database created
@@ -352,93 +359,8 @@ function libraryShowFieldEvent() {
 	$('#dataFieldsStr').val(temVal);
 }
 
-// when the current database node is the library,loading the data
-function loadLibraryData(libId) {
-	$("#libId").val(libId);
-	$('#search_u_db').hide();
-	$('#search_u_db_btn').hide();
-	var treeObj = $.fn.zTree.getZTreeObj("directoryTree");
-	var treenode = treeObj.getNodeByParam("id", libId, null);
-	$("#colname").html(treenode.name);
-	$('#into_as_search').attr("href", appPath + '/admin/data/as');
-	$('#colDatas thead tr th, #colDatas tfoot tr th').remove();
-	$('#colDatas thead tr')
-			.append(
-					'<th><label class="checkbox inline"><input type="checkbox" class="selAll" />标题</label></th>');
-	$('#colDatas tfoot tr').append('<th>标题</th>');
-	var headTitle = [ {
-		"mData" : "title",
-		"fnRender" : function(obj) {
-			var sumImg = '', attach = '';
-			if (obj.aData.img)
-				sumImg = '<div class="sum_img_div"><img class="list_sum_img" src="'
-						+ obj.aData.img + '"/></div>';
-			if (obj.aData.attach)
-				attach = '<span class="icon icon-blue icon-attachment"></span>';
-			return '<h3>' + '	<label class="checkbox inline mt0">'
-					+ '		<input type="checkbox" id="inlineCheckbox'
-					+ obj.aData.id
-					+ '" name="idStr'
-					+ obj.aData.id
-					+ '" value="'
-					+ obj.aData.id
-					+ '_'
-					+ obj.aData.tableId
-					+ '" style="opacity: 0;">'
-					+ '	</label>'
-					+ '	<a class="data_title edit_pop_link" href="'
-					+ thisPath
-					+ 'data/edit/'
-					+ obj.aData.tableId
-					+ '/'
-					+ obj.aData.id
-					+ '" target="_blank">'
-					+ obj.aData.title
-					+ '</a>'
-					+ '	<a class="padmbt btn floatr none edit_pop_link" href = "'
-					+ thisPath
-					+ 'data/info/'
-					+ obj.aData.tableId
-					+ '/'
-					+ obj.aData.id
-					+ '" target="_blank"><i class="icon-eye-open" title="稿件预览"></i></a>'
-					+ '</h3>'
-					+ '<p class="summary clearfix" >'
-					+ sumImg
-					+ obj.aData.summary + attach + '</p>';
-		}
-	} ];
-	var add_data_url = appPath + "/admin/system/library/data/new/" + libId;
-	$('#add_to_dsu').attr('href', add_data_url);
-	$.ajax({
-		url : appPath + "/admin/system/library/data/tablehead/" + libId,
-		async : false,
-		success : function(data) {
-			for (var i = 0; i < data.length; i++) {
-				var mData = {
-					"mData" : data[i].codeName
-				};
-				headTitle.push(mData);
-				$('#colDatas thead tr,#colDatas tfoot tr').append(
-						"<th>" + data[i].name + "</th>");
-			}
-		}
-	});
-	dataTablesCom($('#colDatas'), "/admin/system/library/data/search/" + libId,
-			headTitle, null, callback_library_data, true);
-}
-
-// datatable callback function
-function callback_library_data(otd) {
-	docReady();
-	trHoverEdit();
-	$(".action_buttons").show();
-	listDelete(thisPath + "data/delete", otd);
-	editPopWithDT(otd);
-}
-
-// database node search
-function bind_search() {
+//database node search
+function bindLibrarySearch() {
 	$("#search_u_db_btn").click(function() {
 		if ($("#search_u_db").val()) {
 			$("#categoryTree .curSelectedNode").removeClass("curSelectedNode");
@@ -449,31 +371,37 @@ function bind_search() {
 				dataType : 'json',
 				contentType : 'application/json',
 				data : sdata,
+				beforeSend: function(request) {//beforeSend
+		            request.setRequestHeader("token", token);
+		            request.setRequestHeader("refreshToken",refreshToken);
+		         },
 				success : function(data) {
-					if (data.length != 0) {
-						var libMenu = "";
-						libMenu += '<li id="add_lib">';
-						libMenu += '		<a href="' + thisPath + "new/" + $("#libId").val() + '"><div class="addimg_db"></div></a>';
-						libMenu += '		<div class="actions"><a class="lh30 block db_repair mt10" href="' + thisPath + 'new/' + $("#libId").val() + '">添加数据库</a></div>';
-						libMenu += '</li>';
-						$("#libraries").html(libMenu);
-						for (var i = 0; i < data.length; i++) {
-							var editLink = "";
-							editLink += "<li id='dbv_" + data[i].id + "'>";
-							editLink += "	<a class='' target='_blank' href='" + thisPath + 'data/' + data[i].id + "' target='_self' ><div class='dbimg'></div></a>";
-							editLink += "	<span class='dbname'><i class='dbname'>" + data[i].name + "</i></span>";
-							editLink += "	<span class='dbtime'>更新时间：<br />" + data[i].dataUpdateTimeStr + "</span>";
-							editLink += "	<div class='actions' >";
-							editLink += "		<a class='btn btn-small db_edit' href='" + thisPath + "edit/" + data[i].id + "' target='_self'><i class='icon-pencil'></i>修改</a>";
-							editLink += "		<a class='btn btn-small ml5 db_del' href='#' onclick='delete_lib(" + data[i].id + ")' target='_self'><i class='icon-trash'></i>删除</a>";
-							editLink += "		<a class='lh30 block db_repair mt10' href='#' onclick='repair_lib(" + data[i].id + ")' target='_self'>修复数据库</a>";
-							editLink += "	</div>";
-							editLink += "	<div class='progress progress-striped progress-success active none'><div class='bar'></div></div>";
-							editLink += "</li>";
-							$("#libraries").append(editLink);
-							if (data[i].status == "Repairing") {
-								repair_pregress(data[i].id,data[i].taskId);
-							}
+					if (data.data.length != 0) {
+						for (var i = 0; i < data.data.length; i++) {
+							var nodeType=data.data[i].nodeType=='Lib' ? "false" :"true";
+							var content = "<li id='dbv_" + data.data[i].id + "'>";
+									content += "	<a class='' target='_blank' href='javascript:loadLinkLibraryEvent(" + data.data[i].id + ","+nodeType + ")' target='_self' ><div class='dbimg'></div></a>";
+									content += "	<span class='dbname'><i class='dbname'>" + data.data[i].name + "</i></span>";
+									if(data.data[i].nodeType=='Lib'){
+										content += "	<span class='dbtime'>更新时间<br />" +  new Date(data.data[i].updateTime).format("yyyy-MM-dd hh:mm:ss")  + "</span>";
+									}else{
+										content += "	<span class='dbtime'>创建时间<br />" +  new Date(data.data[i].createTime).format("yyyy-MM-dd hh:mm:ss")  + "</span>";
+									}
+									content += "	<div class='actions' >";
+									if(data.data[i].nodeType=='Lib'){
+										content += "		<a class='btn btn-small db_edit' href='" + appPath + "/admin/dataing/library/" + data.data[i].id +"/edit' target='_self'><i class='icon-pencil'></i></a>";
+										content += "		<a class='btn btn-small ml5 db_del' href='#' onclick='deleteLibrary(" + data.data[i].id + ")' target='_self'><i class='icon-trash'></i></a>";
+									}else{
+										content += "		<a class='btn btn-small db_edit' href='" +appPath + "/admin/dataing/directory/" + data.data[i].id + "/edit' target='_self'><i class='icon-pencil'></i></a>";
+										content += "		<a class='btn btn-small ml5 db_del' href='#' onclick='deleteDirectory(" + data.data[i].id + ")' target='_self'><i class='icon-trash'></i></a>";
+									}
+									if(data.data[i].nodeType=='Lib'){
+										content += "		<a class='lh30 block db_repair mt10' href='#' onclick='repair_lib(" + data.data[i].id + ")' target='_self'>修复数据库</a>";
+									}
+									content += "	</div>";
+									content += "	<div class='progress progress-striped progress-success active none'><div class='bar'></div></div>";
+									content += "</li>";
+							$("#libraries").html(content);
 						}
 					} else {
 						$("#libraries").html("<h3 class='alert alert-info' >无匹配的搜索结果！</h3>");
@@ -499,11 +427,73 @@ function bind_search() {
 	});
 }
 
+// when the current database node is the library,loading the data
+function loadLibraryData(libId) {
+	$("#libId").val(libId);
+	$('#search_u_db').hide();
+	$('#search_u_db_btn').hide();
+	var treeObject = $.fn.zTree.getZTreeObj("directoryTree");
+	var treeNode = treeObject.getNodeByParam("id", libId, null);
+	$("#colname").html(treeNode.name);
+	$('#into_as_search').attr("href", appPath + '/admin/data/as');
+	$('#colDatas thead tr th, #colDatas tfoot tr th').remove();
+	$('#colDatas thead tr').append('<th><label class="checkbox inline"><input type="checkbox" class="selAll" />标题</label></th>');
+	$('#colDatas tfoot tr').append('<th>标题</th>');
+	var headTitle = [ {
+		"mData" : "title",
+		"fnRender" : function(obj) {
+			var sumImg = '', attach = '';
+			if (obj.aData.img){
+				sumImg = '<div class="sum_img_div"><img class="list_sum_img" src="'+ obj.aData.img + '"/></div>';
+			}
+			if (obj.aData.attach){
+				attach = '<span class="icon icon-blue icon-attachment"></span>';
+			}
+			return		'<h3>' 
+							+ '	<label class="checkbox inline mt0">' 
+							+ '		<input type="checkbox" id="inlineCheckbox' + obj.aData.id + '" name="idStr' + obj.aData.id + '" value="' + obj.aData.id + '_' + obj.aData.tableId + '" style="opacity: 0;">'
+							+ '	</label>'
+							+ '	<a class="data_title edit_pop_link" href="'+ appPath+ '/admin/dataing/library/data/edit/'+ obj.aData.tableId+ '/'+ obj.aData.id+ '" target="_blank">'+ obj.aData.title+ '</a>'
+							+ '	<a class="padmbt btn floatr none edit_pop_link" href = "'+ appPath+ '/admin/dataing/library/data/info/'+ obj.aData.tableId+ '/'+ obj.aData.id+ '" target="_blank"><i class="icon-eye-open" title="稿件预览"></i></a>'
+							+ '</h3>'
+							+ '<p class="summary clearfix" >'+ sumImg+ obj.aData.summary + attach + '</p>';
+		}
+	} ];
+	$('#add_to_dsu').attr('href', appPath+"/admin/dataing/library/data/"+libId+"/new");
+	$.ajax({
+		url : appPath + "/admin/system/library/data/title/" + libId,
+		async : false,
+		beforeSend: function(request) {//beforeSend
+            request.setRequestHeader("token", token);
+            request.setRequestHeader("refreshToken",refreshToken);
+         },
+		success : function(data) {
+			for (var i = 0; i < data.length; i++) {
+				var mData = {
+					"mData" : data[i].codeName
+				};
+				headTitle.push(mData);
+				$('#colDatas thead tr,#colDatas tfoot tr').append("<th>" + data[i].name + "</th>");
+			}
+		}
+	});
+	dataTablesCom($('#colDatas'), "/admin/dataing/library/data/search/" + libId,headTitle, null, callback_library_data, true);
+}
+
+// datatable callback function
+function callback_library_data(otd) {
+	docReady();
+	trHoverEdit();
+	$(".action_buttons").show();
+	listDelete(appPath + "/admin/dataing/library/data/delete", otd);
+	editPopWithDT(otd);
+}
+
 // repair the database index
 function repair_lib(id) {
 	function repair(id) {
 		$.ajax({
-			url : thisPath + "data/repair/" + id,
+			url : appPath + "/admin/dataing/library/data/repair/" + id,
 			type : 'POST',
 			success : function(data) {
 				var thisact = $('#dbv_' + id).find(".actions");
@@ -546,46 +536,8 @@ function repair_lib(id) {
 	comConfirmModel(repair, id, "确定修复", "修复将耗时较长，确定修复?");
 }
 
-// catch the repairing database processing
-function repair_pregress(id, data) {
-	var thisact = $('#dbv_' + id).find(".actions");
-	thisact.hide();
-	var thispro = $('#dbv_' + id).find(".progress");
-	var thisbar = $('#dbv_' + id).find(".progress .bar");
-	thispro.show();
-	thisbar.css("width", "0%");
-	var oShowProgress = function showProgress() {
-		$.ajax({
-			type : "GET",
-			url : appPath + "/admin/task/progress/" + data,
-			cache : false,
-			dataType : "json",
-			success : function(data) {
-				var barpres = data.progress + "%";
-				if (data.progress < 100) {
-					thisbar.css("width", barpres);
-				} else if (data.progress == 100) {
-					thisbar.css("width", "100%");
-					thispro.hide();
-					thisact.show();
-					clearInterval(intIntervalPre);
-					noty({
-						"text" : "修复成功！",
-						"layout" : "center",
-						"type" : "success",
-						"animateOpen" : {
-							"opacity" : "show"
-						}
-					});
-				}
-			}
-		});
-	};
-	var intIntervalPre = setInterval(oShowProgress, 5000);
-}
-
 // validate the form
-function bind_validate() {
+function validateDatabase() {
 	$("#db_new_form").validate({
 		ignore : "",
 		rules : {

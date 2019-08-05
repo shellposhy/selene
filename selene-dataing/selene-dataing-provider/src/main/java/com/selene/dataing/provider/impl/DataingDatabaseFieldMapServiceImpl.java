@@ -56,6 +56,11 @@ public class DataingDatabaseFieldMapServiceImpl implements DataingDatabaseFieldM
 	}
 
 	@Override
+	public int batchInsert(List<DataingDatabaseFieldMap> list) {
+		return databaseFieldMapMapper.batchInsert(list);
+	}
+
+	@Override
 	public int delete(Integer id) {
 		return databaseFieldMapMapper.delete(id);
 	}

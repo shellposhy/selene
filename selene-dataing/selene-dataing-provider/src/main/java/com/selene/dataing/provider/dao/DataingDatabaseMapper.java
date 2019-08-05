@@ -38,6 +38,9 @@ public interface DataingDatabaseMapper {
 	public int countByNameTypeAndNodeType(@Param("license") String license, @Param("word") String word,
 			@Param("type") ELibraryType type, @Param("nodeType") ELibraryNodeType nodeType);
 
+	public List<DataingDatabase> findByNameType(@Param("license") String license, @Param("word") String word,
+			@Param("type") ELibraryType type);
+
 	public List<DataingDatabase> findEmptyDirectory(@Param("license") String license, @Param("type") ELibraryType type);
 
 	public List<DataingDatabase> findByParentId(@Param("license") String license, @Param("type") ELibraryType type,

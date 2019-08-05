@@ -1,5 +1,7 @@
 package com.selene.dataing.provider.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -86,5 +88,23 @@ public class DataingDataFieldServiceImpl implements DataingDataFieldService {
 	@Override
 	public List<DataingDataField> findFieldsByModelId(Integer modelId) {
 		return dataFieldMapper.findFieldsByModelId(modelId);
+	}
+
+	@Override
+	public List<DataingDataField> compare(List<DataingDataField> source, List<DataingDataField> target) {
+		if (source == null || source.size() == 0) {
+			return null;
+		}
+		if (target == null || target.size() == 0) {
+			return source;
+		}
+		List<DataingDataField> result = new ArrayList<DataingDataField>();
+		DataingDataField[] targetArray = target.toArray(new DataingDataField[target.size()]);
+		for (DataingDataField dataField : source) {
+			if (Arrays.binarySearch(targetArray, dataField) < 0) {
+				result.add(dataField);
+			}
+		}
+		return result;
 	}
 }

@@ -66,12 +66,18 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO 
-			data_base_field_map(
-				Base_ID,Field_ID,Type, Is_Display
-			)
-		VALUES(
-			#{baseId},#{fieldId},#{type},#{isDisplay}
-		)
+			data_base_field_map(Base_ID,Field_ID,Type, Is_Display)
+		VALUES
+			(#{baseId},#{fieldId},#{type},#{isDisplay})
+	</insert>
+	
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO 
+			data_base_field_map(Base_ID,Field_ID,Type, Is_Display)
+		VALUES
+			<foreach collection="list" item="item" index="index" separator=",">
+				(#{item.baseId},#{item.fieldId},#{item.type},#{item.isDisplay})
+			</foreach>
 	</insert>
 
 	<delete id="delete">

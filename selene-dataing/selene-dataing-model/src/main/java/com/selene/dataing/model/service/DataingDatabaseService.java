@@ -31,6 +31,8 @@ public interface DataingDatabaseService {
 
 	public int countByNameTypeAndNodeType(String license, String word, ELibraryType type, ELibraryNodeType nodeType);
 
+	public List<DataingDatabase> findByNameType(String license, String word, ELibraryType type);
+
 	public List<DataingDatabase> findEmptyDirectory(String license, ELibraryType type);
 
 	public List<DataingDatabase> findByParentId(String license, ELibraryType type, Integer parentId);

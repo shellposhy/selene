@@ -33,6 +33,8 @@
 		<script type="text/javascript" src="${appPath}/admin/js/javascript/cmstree.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/javascript/commen.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/javascript/chart.js"></script>
+		<!-- Plugins -->
+		<script type="text/javascript" src="${appPath}/admin/js/plugins/plugins-date.js"></script>
 		<!-- JQuery global variable -->
 		<script type="text/javascript">
 			var appPath = "${appPath}";
