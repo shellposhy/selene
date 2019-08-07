@@ -109,7 +109,6 @@ public class DataingLibraryController extends BaseController {
 		MerchantsUserVO vo = commonService.user(request);
 		DataingDatabase library = dataService.findDatabase(id);
 		List<DataingDataModel> modelList = dataService.findModelByType(ELibraryType.Default, vo.getLicense());
-
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("library", library);
 		return "/admin/dataing/library/edit";
