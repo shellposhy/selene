@@ -28,6 +28,8 @@ public interface DataingDataFieldService {
 	public List<DataingDataField> findByCode(String code);
 
 	public List<DataingDataField> findFieldsByBaseId(Integer baseId);
+	
+	public List<DataingDataField> findDisplayFieldsByBaseId(Integer baseId);
 
 	public List<DataingDataField> findByRequired(Boolean required);
 

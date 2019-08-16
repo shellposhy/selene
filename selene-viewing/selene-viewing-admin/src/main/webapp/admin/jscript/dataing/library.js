@@ -15,6 +15,10 @@ $(document).ready(function() {
 	bindLibrarySearch();
 	// edit
 	validateDatabase();
+	loadDataField();
+	if ($("#contentArea").length > 0) {
+		UE.getEditor('contentArea');
+	}
 });
 
 //load default database tree
@@ -459,9 +463,9 @@ function loadLibraryData(libId) {
 							+ '<p class="summary clearfix" >'+ sumImg+ obj.aData.summary + attach + '</p>';
 		}
 	} ];
-	$('#add_to_dsu').attr('href', appPath+"/admin/dataing/library/data/"+libId+"/new");
+	$('#add_to_dsu').attr('href', appPath+"/admin/dataing/library/data/new/"+libId);
 	$.ajax({
-		url : appPath + "/admin/system/library/data/title/" + libId,
+		url : appPath + "/admin/dataing/library/data/head/" + libId,
 		async : false,
 		beforeSend: function(request) {//beforeSend
             request.setRequestHeader("token", token);
@@ -534,6 +538,62 @@ function repair_lib(id) {
 		});
 	}
 	comConfirmModel(repair, id, "确定修复", "修复将耗时较长，确定修复?");
+}
+
+function loadDataField() {
+	if ($("#Article_new_form").length > 0) {
+		$("#Article_new_form").hide();
+		var dataField = $("#fieldsStr").val().split(",");
+		for (var i = 0; i < $("#Article_new_form input").length; i++) {
+			var flag = true;
+			for (var j = 0; j < dataField.length; j++) {
+				if ($("#Article_new_form input:eq(" + i + ")").attr("id") == dataField[j]) {
+					flag = false;
+					break;
+				}
+				if ($("#Article_new_form select:eq(" + i + ")").attr("id") == dataField[j]) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				if ($("#Article_new_form input:eq(" + i + ")").hasClass("treeSel")
+						|| $("#Article_new_form input:eq(" + i + ")").hasClass("treeRadio")
+						|| $("#Article_new_form input:eq(" + i + ")").hasClass("ios_toggle")) {
+					continue;
+				}
+				if ($("#Article_new_form input:eq(" + i + ")").attr("id") == "Imgs") {
+					$("#Article_new_form input:eq(" + i + ")").parents(".futu_imgs").addClass("beremove");
+				} else if ($("#Article_new_form input:eq(" + i + ")").attr("id") == "Data_Status") {
+					$("#Article_new_form input:eq(" + i + ")").parents(".control-group").addClass("beremove");
+				} else if ($("#Article_new_form select:eq(" + i + ")").attr("id") == "Secret_Level") {
+					$("#Article_new_form select:eq(" + i + ")").parents(".control-group").addClass("beremove");
+				} else {
+					$("#Article_new_form input:eq(" + i + ")").parents(".control-group").addClass("beremove");
+				}
+			}
+		}
+		var summaryFlag = true;
+		for (var j = 0; j < dataField.length; j++) {
+			if (dataField[j] == "Summary") {
+				summaryFlag = false;
+				break;
+			}
+		}
+		if (summaryFlag) {
+			$("#Summary").parents(".control-group").addClass("beremove");
+		}
+		$(".beremove").remove();
+		$("#Article_new_form").show();
+		$("#Article_new_form").submit(function() {
+			$(this).ajaxSubmit({
+				success : function() {
+					parent.$.colorbox.close();
+				}
+			});
+			return false;
+		});
+	}
 }
 
 // validate the form

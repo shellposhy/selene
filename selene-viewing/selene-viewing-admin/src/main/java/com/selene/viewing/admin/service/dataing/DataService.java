@@ -592,6 +592,34 @@ public class DataService {
 	}
 
 	/**
+	 * Query can select data fields when a data template is added
+	 * 
+	 * @param type
+	 * @return {@link List}
+	 */
+	public List<DataingDataField> findFieldsByBaseId(Integer baseId) {
+		// Initialize the required services
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		// Business process
+		return dataFieldService.findFieldsByBaseId(baseId);
+	}
+
+	/**
+	 * Query can show data fields when a data list
+	 * 
+	 * @param type
+	 * @return {@link List}
+	 */
+	public List<DataingDataField> findDisplayFieldsByBaseId(Integer baseId) {
+		// Initialize the required services
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		// Business process
+		return dataFieldService.findDisplayFieldsByBaseId(baseId);
+	}
+
+	/**
 	 * Query all database model by {@code ELibraryType}
 	 * 
 	 * @param modelType

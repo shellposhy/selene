@@ -123,6 +123,17 @@
 			m.ID=t.Field_ID AND n.ID=t.Base_ID AND n.ID=#{baseId}
 	</select>
 	
+	<select id="findDisplayFieldsByBaseId"  resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			DISTINCT
+		  	m.ID,m.Component_ID,m.Name,m.Code,m.Code_Name,m.Data_Type,m.Nosg,m.Leng,m.Prec,m.Mand,Uniq,m.Multi_Value,m.Use_Enum,
+			m.Index_Type,m.Index_Store,m.Required,m.Type,m.Order_ID,m.Access_Type,m.For_Display,m.For_Order,m.Memo
+		FROM 
+			data_field m, data_base_field_map  a 
+		WHERE 
+			a.Field_ID = m.ID AND a.Base_ID = #{baseId} AND a.Is_Display <![CDATA[ <> ]]> 0
+	</select>
+	
 	<select id="findByRequired" resultMap="resultMap" parameterType="boolean">
 		SELECT 
 			ID,Component_ID,Name,Code,Code_Name,Data_Type,Nosg,Leng,Prec,Mand,Uniq,Multi_Value,Use_Enum,

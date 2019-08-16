@@ -34,6 +34,8 @@ public interface DataingDataFieldMapper {
 
 	public List<DataingDataField> findFieldsByBaseId(@Param("baseId") Integer baseId);
 
+	public List<DataingDataField> findDisplayFieldsByBaseId(@Param("baseId") Integer baseId);
+
 	public List<DataingDataField> findByRequired(@Param("required") Boolean required);
 
 	public List<DataingDataField> findByType(@Param("type") Integer type);

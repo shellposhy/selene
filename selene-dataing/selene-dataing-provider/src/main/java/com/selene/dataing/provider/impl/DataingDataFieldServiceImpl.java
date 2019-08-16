@@ -71,6 +71,11 @@ public class DataingDataFieldServiceImpl implements DataingDataFieldService {
 	}
 
 	@Override
+	public List<DataingDataField> findDisplayFieldsByBaseId(Integer baseId) {
+		return dataFieldMapper.findDisplayFieldsByBaseId(baseId);
+	}
+
+	@Override
 	public List<DataingDataField> findByRequired(Boolean required) {
 		return dataFieldMapper.findByRequired(required);
 	}
