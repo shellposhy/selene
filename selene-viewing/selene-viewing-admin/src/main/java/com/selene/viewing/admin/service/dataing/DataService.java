@@ -21,6 +21,7 @@ import com.nanshan.papaya.rpc.client.Client;
 import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.ServiceConstants;
+import com.selene.common.constants.util.EDataStatus;
 import com.selene.common.constants.util.ELibraryNodeType;
 import com.selene.common.constants.util.ELibraryType;
 import com.selene.common.result.ListResult;
@@ -31,6 +32,7 @@ import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataModel;
 import com.selene.dataing.model.DataingDataModelFieldMap;
 import com.selene.dataing.model.DataingDataTable;
+import com.selene.dataing.model.DataingDataTag;
 import com.selene.dataing.model.DataingDatabase;
 import com.selene.dataing.model.DataingDatabaseFieldMap;
 import com.selene.dataing.model.enums.EDataFieldType;
@@ -39,6 +41,7 @@ import com.selene.dataing.model.service.DataingDataFieldService;
 import com.selene.dataing.model.service.DataingDataModelFieldMapService;
 import com.selene.dataing.model.service.DataingDataModelService;
 import com.selene.dataing.model.service.DataingDataTableService;
+import com.selene.dataing.model.service.DataingDataTagService;
 import com.selene.dataing.model.service.DataingDataTaskService;
 import com.selene.dataing.model.service.DataingDataTaskSubService;
 import com.selene.dataing.model.service.DataingDatabaseFieldMapService;
@@ -74,6 +77,8 @@ public class DataService {
 				client.create(DataingDataModelFieldMapService.class, dataingService));
 		services.put(/* DataField */DataingDataFieldService.class.getName(),
 				client.create(DataingDataFieldService.class, dataingService));
+		services.put(/* DataTag */DataingDataTagService.class.getName(),
+				client.create(DataingDataTagService.class, dataingService));
 		services.put(/* DataTask */DataingDataTaskService.class.getName(),
 				client.create(DataingDataTaskService.class, dataingService));
 		services.put(/* DataTaskSub */DataingDataTaskSubService.class.getName(),
@@ -86,6 +91,131 @@ public class DataService {
 				client.create(DataingDataTableService.class, dataingService));
 		services.put(/* JdbcTemplate */DataingJdbcTemplateService.class.getName(),
 				client.create(DataingJdbcTemplateService.class, dataingService));
+	}
+
+	/**
+	 * Initialize custom data labels when adding a new merchant.
+	 * 
+	 * @param license
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int installTag(String license) {
+		// Initialize the required services
+		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
+				.get(DataingDataTagService.class.getName());
+		// Business process
+		DataingDataTag dataTag = new DataingDataTag();
+		dataTag./* New merchants license */setLicense(license);
+		dataTag.setName("自定义数据标签");
+		dataTag.setType(1);
+		dataTag.setCode("custom");
+		dataTag.setPathCode("/custom/");
+		dataTag.setParentId(0);
+		dataTag.setOrderId(1);
+		dataTag.setStatus(EDataStatus.Normal);
+		dataTag.setCreatorId(1);
+		dataTag.setCreateTime(new Date());
+		dataTag.setUpdaterId(1);
+		dataTag.setUpdateTime(new Date());
+		return tagService.insert(dataTag);
+	}
+
+	/**
+	 * Delete data tag
+	 * 
+	 * @param dataTag
+	 *            {@code DataingDataTag}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int deleteTag(Integer id) {
+		// Initialize the required services
+		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
+				.get(DataingDataTagService.class.getName());
+		// Business process
+		return tagService.delete(id);
+	}
+
+	/**
+	 * Save data tag
+	 * 
+	 * @param dataTag
+	 *            {@code DataingDataTag}
+	 * @return {@code int} if {@code int }>0 true else false
+	 */
+	public int saveTag(DataingDataTag dataTag) {
+		// Initialize the required services
+		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
+				.get(DataingDataTagService.class.getName());
+		// Business process
+		if (dataTag.getId() == null) {
+			return tagService.insert(dataTag);
+		} else {
+			return tagService.update(dataTag);
+		}
+	}
+
+	/**
+	 * Query data tag by {@code Integer} key
+	 * 
+	 * @param id
+	 * @return {@link List}
+	 */
+	public DataingDataTag findTagById(Integer id) {
+		// Initialize the required services
+		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
+				.get(DataingDataTagService.class.getName());
+		// Business process
+		return tagService.find(id);
+	}
+
+	/**
+	 * Query all custom data tag by {@code String} license and {@code Integer }
+	 * type
+	 * 
+	 * @param type
+	 * @param license
+	 * @return {@link List}
+	 */
+	public List<DataingDataTag> findTagByType(String license, Integer type) {
+		// Initialize the required services
+		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
+				.get(DataingDataTagService.class.getName());
+		// Business process
+		return tagService.findByLicenseAndType(license, type);
+	}
+
+	/**
+	 * Query all data tag by {@code String} license and {@code Integer } parent
+	 * 
+	 * @param parentId
+	 * @param license
+	 * @return {@link List}
+	 */
+	public List<DataingDataTag> findSubTag(String license, Integer parentId) {
+		// Initialize the required services
+		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
+				.get(DataingDataTagService.class.getName());
+		// Business process
+		return tagService.findByLicenseAndParentId(license, parentId);
+	}
+
+	/**
+	 * Query all data tag by {@code String} license and {@code String } word
+	 * 
+	 * @param word
+	 * @param license
+	 * @return {@link List}
+	 */
+	public List<DataingDataTag> findTag(String license, String word) {
+		// Initialize the required services
+		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
+				.get(DataingDataTagService.class.getName());
+		// Business process
+		if (isNullOrEmpty(word)) {
+			return tagService.findByLicense(license);
+		} else {
+			return tagService.findByLicenseAndName(license, word);
+		}
 	}
 
 	/**

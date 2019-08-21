@@ -18,6 +18,7 @@ import com.selene.common.util.RedisClient;
 import com.selene.merchants.model.Merchants;
 import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsUser;
+import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.service.merchants.UserService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
@@ -30,13 +31,21 @@ public class LoginController extends BaseController {
 	@Resource
 	private UserService userService;
 	@Resource
+	private DataService dataService;
+	@Resource
 	private RedisClient redisClient;
 
 	@RequestMapping("/install/save")
 	public String save(@Validated Merchants merchants, BindingResult result, Model model, HttpServletRequest request) {
 		merchants/* Set IP */.setIp(cn.com.lemon.base.Strings.ip(request));
 		if (userService.saveInstall(merchants) > 0) {
-			return "redirect:/admin/login";
+			if (dataService.installTag(merchants.getLicense()) > 0) {
+				return "redirect:/admin/login";
+			} else {
+				model.addAttribute("code", "100");
+				model.addAttribute("msg", "首次安装失败，请联系客服人员！");
+				return "redirect:/admin/error";
+			}
 		} else {
 			model.addAttribute("code", "100");
 			model.addAttribute("msg", "首次安装失败，请联系客服人员！");

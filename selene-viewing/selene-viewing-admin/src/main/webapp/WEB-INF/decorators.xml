@@ -22,6 +22,7 @@
 	
 	<decorator name="popup" page="popup.jsp">
 		<pattern>/admin/merchants/org/*/edit</pattern>
+		<pattern>/admin/dataing/tag/*/edit</pattern>
 		<pattern>/admin/dataing/library/data/new/*</pattern>
 	</decorator>
 </decorators>

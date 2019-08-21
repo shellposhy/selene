@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.dataing.provider.dao.DataingDataTagMapper">
+	<resultMap id="resultMap" type="com.selene.dataing.model.DataingDataTag">
+		<result property="id" column="ID" />
+		<result property="license" column="License"/>
+		<result property="name" column="Name" />
+		<result property="type" column="Type" />
+		<result property="code" column="Code" />
+		<result property="pathCode" column="Path_Code" />
+		<result property="parentId" column="Parent_ID" />
+		<result property="orderId" column="Order_ID" />
+		<result property="status" column="Status" />
+		<result property="createTime" column="Create_Time" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="updateTime" column="Update_Time" />
+		<result property="updaterId" column="Updater_ID" />
+	</resultMap>
+	
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,License,Name,Type,Code,Path_Code,Parent_ID,Order_ID,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			data_tag
+		WHERE
+			ID=#{id}
+	</select>
+	
+	<select id="findByLicense" resultMap="resultMap" parameterType="java.lang.String">
+		SELECT 
+			ID,License,Name,Type,Code,Path_Code,Parent_ID,Order_ID,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			data_tag
+		WHERE
+			License=#{license} OR Type=0
+		ORDER BY 
+			Order_ID
+	</select>
+	
+	<select id="findByLicenseAndParentId" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Name,Type,Code,Path_Code,Parent_ID,Order_ID,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			data_tag
+		WHERE
+			License=#{license} AND Parent_ID=#{parentId}
+		ORDER BY 
+			Order_ID
+	</select>
+	
+	<select id="findByLicenseAndType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Name,Type,Code,Path_Code,Parent_ID,Order_ID,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			data_tag
+		WHERE
+			License=#{license} AND Type=#{type}
+		ORDER BY 
+			Order_ID
+	</select>
+
+	<select id="findByLicenseAndName" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Name,Type,Code,Path_Code,Parent_ID,Order_ID,Status,Create_Time,Creator_ID,Update_Time,Updater_ID
+		FROM 
+			data_tag
+		WHERE
+			(License=#{license} AND Name like "%"#{name}"%") OR Type=0
+		ORDER BY 
+			Order_ID
+	</select>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO 
+			data_tag(License,Name,Type,Code,Path_Code,Parent_ID,Order_ID,Status,Create_Time,Creator_ID,Update_Time,Updater_ID)
+		VALUES 
+			(#{license},#{name},#{type},#{code},#{pathCode},#{parentId},#{orderId},#{status},#{createTime},#{creatorId},#{updateTime},#{updaterId})
+	</insert>
+
+	<update id="update">
+		UPDATE 
+			data_tag 
+		<set>
+			<if test="name != null">Name = #{name},</if>
+			<if test="code != null">Code = #{code},</if>
+			<if test="pathCode != null">Path_Code = #{pathCode},</if>
+			<if test="parentId != null">Parent_ID = #{parentId},</if>
+			<if test="status != null">Status = #{status},</if>
+			<if test="updateTime != null">Update_Time =#{updateTime},</if>
+			<if test="updaterId != null">Updater_ID = #{updaterId}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM 
+			data_tag 
+		WHERE 
+			ID=#{id}
+	</delete>
+</mapper>
