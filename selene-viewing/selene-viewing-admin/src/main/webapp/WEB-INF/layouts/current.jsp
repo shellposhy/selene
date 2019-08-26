@@ -106,8 +106,8 @@
 		<script type="text/javascript" src="${appPath}/admin/js/jquery-ui-timepicker-zh-CN.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/jquery.form.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/json2.js"></script>
-		<!-- application script for Charisma -->
-		<script src="${appPath}/admin/js/charisma.js"></script>
+		<!-- application script -->
+		<script src="${appPath}/admin/js/javascript/charisma.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/jquery.ztree.core-3.4.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/jquery.ztree.excheck-3.4.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/jquery.ztree.exedit-3.4.js"></script>

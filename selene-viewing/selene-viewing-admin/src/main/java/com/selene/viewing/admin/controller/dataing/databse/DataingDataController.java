@@ -79,7 +79,7 @@ public class DataingDataController extends BaseController {
 		StringBuilder sb = new StringBuilder(200);
 		if (libraryFieldList != null && libraryFieldList.size() > 0) {
 			for (DataingDataField dataField : libraryFieldList) {
-				if (dataField.getAccessType() != EAccessType.System) {
+				if (dataField.getAccessType() != EAccessType.System || dataField.getCode().equals("Keywords")) {
 					dataVo.putFieldMap(dataField.getCode(), "");
 					sb.append(dataField.getCode()).append(CommonConstants.COMMA_SEPARATOR);
 				}

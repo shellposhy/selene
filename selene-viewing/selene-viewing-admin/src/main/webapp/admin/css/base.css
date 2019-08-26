@@ -655,7 +655,7 @@ body {
 	position: absolute;
 	background: #f6f6f6;
 	border: 1px solid #A0D0EC;
-	z-index: 999;
+	z-index: 1000;
 	overflow: auto;
 }
 
@@ -1987,6 +1987,22 @@ table th label {
 
 .min50{
 	min-height: 50px;
+}
+
+.wds40{
+	width: 40%;
+}
+
+.wds42{
+	width: 42%;
+}
+
+.wds44{
+	width: 44%;
+}
+
+.wds45{
+	width: 45%;
 }
 
 .min100{

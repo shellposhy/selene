@@ -37,7 +37,7 @@
 						<div class="control-group">
 							<label class="control-label" for="database_fields">数据库模型</label>
 							<div class="controls">
-								<form:select path="modelId" class="autogrow" name="columnModelId" id="db_columnModelId" onchange="listenModelId()">
+								<form:select path="modelId" class="autogrow" name="columnModelId" id="db_columnModelId" onchange="bindLibraryModelChange()">
 									<form:options items="${modelList}" itemValue="id" itemLabel="modelName" />
 								</form:select>
 								<label class="error"><form:errors path="modelId" cssClass="error" /> </label>
@@ -47,8 +47,8 @@
 						<div class="control-group" class="tree_sel_box" id="categories_tree_radio">
 							<label class="control-label" for="u_group_memo">分类</label>
 							<div class="controls">
-								<input class="treeRadio" type="text" readonly="readonly" value="" /> <label class="error">
-								<form:errors path="parentId" cssClass="error" /> </label>
+								<input class="treeRadio" type="text" readonly="readonly" value="" />
+								<label class="error"><form:errors path="parentId" cssClass="error" /> </label>
 								<form:hidden path="parentId" class="treeSelId" name="parentId" value="" />
 							</div>
 							<div class="menuContent">

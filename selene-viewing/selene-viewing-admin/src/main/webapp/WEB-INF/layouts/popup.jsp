@@ -36,7 +36,9 @@
 		<!-- Plugins -->
 		<script type="text/javascript" src="${appPath}/admin/js/plugins/plugins-date.js"></script>
 		<script type="text/javascript">
-			var appPath = "${appPath}"
+			var appPath = "${appPath}";
+			var token="${login_session_user.token}";
+			var refreshToken="${login_session_user.refreshToken}";
 		</script>
 		<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
@@ -88,7 +90,8 @@
 		<script type="text/javascript" src="${appPath}/admin/js/jquery-ui-timepicker-zh-CN.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/jquery.form.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/json2.js"></script>
-		<script src="${appPath}/admin/js/charisma.js"></script>
+		<!-- application script -->
+		<script src="${appPath}/admin/js/javascript/charisma.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/jquery.ztree.core-3.4.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/jquery.ztree.excheck-3.4.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/jquery.ztree.exedit-3.4.js"></script>

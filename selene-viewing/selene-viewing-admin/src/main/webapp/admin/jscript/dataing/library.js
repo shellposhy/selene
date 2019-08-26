@@ -13,9 +13,11 @@ $(document).ready(function() {
 	loadLibraryNeedShowFields();
 	//Search library
 	bindLibrarySearch();
+	bindLibraryModelChange();
 	// edit
 	validateDatabase();
 	loadDataField();
+	loadDataEditTag();
 	if ($("#contentArea").length > 0) {
 		UE.getEditor('contentArea');
 	}
@@ -350,6 +352,13 @@ function loadLibraryNeedShowFields() {
 	}
 }
 
+//Bind the library model change 
+function bindLibraryModelChange(){
+	$("#db_columnModelId").on('change',function(){
+		loadLibraryNeedShowFields();
+	});
+}
+
 //Library show fields( or column) for data list
 function libraryShowFieldEvent() {
 	var checkElem = document.getElementsByName("chk");
@@ -540,6 +549,28 @@ function repair_lib(id) {
 	comConfirmModel(repair, id, "确定修复", "修复将耗时较长，确定修复?");
 }
 
+function loadDataEditTag() {
+    if ($("#sort_tree")[0]) {
+        $.ajax({
+			type : "POST",
+			url : appPath + "/admin/dataing/tag/s",
+			data : '[{"name":"sSearch","value":""}]',
+			dataType : 'json',
+			beforeSend: function(request) {//beforeSend
+                request.setRequestHeader("token", token);
+                request.setRequestHeader("refreshToken",refreshToken);
+             },
+             contentType : 'application/json',
+			success : function(data) {
+				if (data != null) {
+					treeSleCom($("#sort_tree .treeNew"), data);
+	                setTimeout("$('.treeSelId').click()", 800);
+				}
+			}
+		});
+    }
+}
+
 function loadDataField() {
 	if ($("#Article_new_form").length > 0) {
 		$("#Article_new_form").hide();
@@ -557,17 +588,13 @@ function loadDataField() {
 				}
 			}
 			if (flag) {
-				if ($("#Article_new_form input:eq(" + i + ")").hasClass("treeSel")
-						|| $("#Article_new_form input:eq(" + i + ")").hasClass("treeRadio")
-						|| $("#Article_new_form input:eq(" + i + ")").hasClass("ios_toggle")) {
+				if ($("#Article_new_form input:eq(" + i + ")").hasClass("treeSel") || $("#Article_new_form input:eq(" + i + ")").hasClass("treeRadio") || $("#Article_new_form input:eq(" + i + ")").hasClass("ios_toggle")) {
 					continue;
 				}
 				if ($("#Article_new_form input:eq(" + i + ")").attr("id") == "Imgs") {
 					$("#Article_new_form input:eq(" + i + ")").parents(".futu_imgs").addClass("beremove");
 				} else if ($("#Article_new_form input:eq(" + i + ")").attr("id") == "Data_Status") {
 					$("#Article_new_form input:eq(" + i + ")").parents(".control-group").addClass("beremove");
-				} else if ($("#Article_new_form select:eq(" + i + ")").attr("id") == "Secret_Level") {
-					$("#Article_new_form select:eq(" + i + ")").parents(".control-group").addClass("beremove");
 				} else {
 					$("#Article_new_form input:eq(" + i + ")").parents(".control-group").addClass("beremove");
 				}

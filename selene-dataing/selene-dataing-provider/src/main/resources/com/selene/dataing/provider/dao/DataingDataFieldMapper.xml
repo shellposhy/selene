@@ -181,7 +181,7 @@
 		FROM
 		  data_field f, data_model c, data_model_field_map m
 		WHERE 
-			m.Model_ID = c.ID AND m.Field_ID = f.ID AND c.ID = 1
+			m.Model_ID = c.ID AND m.Field_ID = f.ID AND c.ID = #{modelId}
 		ORDER BY 
 			f.ID
 	</select>
