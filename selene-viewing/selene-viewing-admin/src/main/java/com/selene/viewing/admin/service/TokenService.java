@@ -14,8 +14,8 @@ import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
 
 @Service
-public class CommonService {
-	private static final Logger LOG = LoggerFactory.getLogger(CommonService.class.getName());
+public class TokenService {
+	private static final Logger LOG = LoggerFactory.getLogger(TokenService.class.getName());
 	@Resource
 	private RedisClient redisClient;
 

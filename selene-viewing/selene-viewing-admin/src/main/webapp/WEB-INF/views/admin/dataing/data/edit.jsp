@@ -8,12 +8,12 @@
 <div id="content" class="span12">
 	<input type="hidden" id="baseId" value="${baseId}" />
 	 <input type="hidden" id="fieldsStr" value="${fieldsStr}" />
-	 <input type="hidden" id="tableId" value="${tableId}">
-	<input type="hidden" id="dataId" value="${dataId }">
 	<div class="row-fluid">
 		<form:form modelAttribute="dataVo" class="form-horizontal span12" id="Article_new_form"
 			action="${appPath}/admin/dataing/library/data/save" method="post" target="_self">
 			<form:hidden path="id" />
+			<form:hidden path="tableId"/>
+			<form:hidden path="baseId"/>
 			<form:hidden path="uuid" />
 			<form:hidden path="createTime" />
 			<fieldset>
@@ -182,24 +182,10 @@
 			'auto' : false,
 			'buttonText' : '选择文件...',
 			'swf' : '${appPath}/admin/js/uploadify.swf',
-			'uploader' : '${appPath}/admin/upload/file?baseId=${dataBase.id}&uuid=${dataVo.uuid}&dateTime=${dataVo.createTime}',
+			'uploader' : '${appPath}/admin/upload/file?baseId=${dataVo.baseId}&uuid=${dataVo.uuid}&dateTime=${dataVo.createTime}',
 			'cancelImg' : '${appPath}/admin/img/uploadify-cancel.png',
 		});
 	});
-	
-	//delete file
-	function deleteFile(fileName) {
-		var url = appPath + "/admin/upload/delete?baseId=" + $("#baseId").val()+ "&uuid=" + $("#uuid").val() + "&dateTime="+ $("#createTime").val() + "&fileName="+fileName;
-		$.ajax({
-			type : "PUT",
-			url : url,
-			dataType : 'json',
-			contentType : 'application/json',
-			success : function() {
-				$('p:contains(' + fileName + ')').remove();
-			}
-		});
-	}
 </script>
 <script type="text/javascript" 	src="${appPath}/admin/jscript/dataing/library.js"></script>
 </body>

@@ -25,7 +25,7 @@ import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.tree.support.LibraryTreeNode;
 import com.selene.dataing.model.DataingDatabase;
 import com.selene.viewing.admin.controller.BaseController;
-import com.selene.viewing.admin.service.CommonService;
+import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
@@ -35,7 +35,7 @@ public class DataingDirectoryController extends BaseController {
 	@Resource
 	private DataService dataService;
 	@Resource
-	private CommonService commonService;
+	private TokenService commonService;
 
 	@RequestMapping(value = "/tree", method = RequestMethod.POST)
 	@ResponseBody

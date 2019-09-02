@@ -5,28 +5,38 @@ import java.util.Map;
 
 public class DataingData {
 	private Integer /* 主键 */ id;
+	private String /* 数据表号 */ tableId;
+	private Integer /* 数据库编号 */ baseId;
 	private String /* UUID */ uuid;
+	private int /* 文章状态 */ status;
 	private String /* 标题 */ title;
+	private String /* 肩标题 */ introTitle;
+	private String /* 副标题 */ subTitle;
+	private String /* 作者 */ authors;
+	private String /* 文档时间 */ docTime;
+	private int /* 图片数量 */ imgs;
+	private String /* 关键词 */ keywords;
+	private String /* 摘要 */ summary;
+	private String /* 标签 */ tags;
+	private String /* 正文 */ content;
 	private String /* 频道名称 */ channelName;
 	private String /* 栏目 */ colum;
 	private Integer /* 版次 */ pageNum;
 	private String /* 版名 */ pageName;
 	private String /* 专题 */ subject;
-	private String /* 肩标题 */ introTitle;
-	private String /* 副标题 */ subTitle;
-	private String /* 作者 */ authors;
-	private String /* 文档时间 */ docTime;
-	private String /* 摘要 */ summary;
-	private String /* 正文 */ content;
-	private int /* 文章状态 */ status;
-	private int /* 图片数量 */ imgs;
-	private String /* 关键词 */ keywords;
-	private String /* 标签 */ tags;
+	private String /* 专题分类 */ subjectClass;
 	private String /* 创建日期 */ createTime;
 	private String /* 更新日期 */ updateTime;
 	private String /* 创建人 */ creator;
 	private String /* 更新人 */ updater;
-	private String /* 数据表号 */ tableId;
+	private String /* 样式 */ style;
+	private Integer /* 次数 */ times;
+	private String /* 生效日期 */ startTime;
+	private String /* 失效日期 */ endTime;
+	private String /* 人物 */ peoples;
+	private String /* 地区 */ places;
+	private String /* 机构 */ orgs;
+	private String /* 来源 */ source;
 	private String /* 年 */ year;
 	private String /* 月 */ month;
 	private String /* 日 */ day;
@@ -41,6 +51,22 @@ public class DataingData {
 		this.id = id;
 	}
 
+	public String getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(String tableId) {
+		this.tableId = tableId;
+	}
+
+	public Integer getBaseId() {
+		return baseId;
+	}
+
+	public void setBaseId(Integer baseId) {
+		this.baseId = baseId;
+	}
+
 	public String getUuid() {
 		return uuid;
 	}
@@ -49,12 +75,92 @@ public class DataingData {
 		this.uuid = uuid;
 	}
 
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public String getTitle() {
 		return title;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getIntroTitle() {
+		return introTitle;
+	}
+
+	public void setIntroTitle(String introTitle) {
+		this.introTitle = introTitle;
+	}
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+
+	public String getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(String authors) {
+		this.authors = authors;
+	}
+
+	public String getDocTime() {
+		return docTime;
+	}
+
+	public void setDocTime(String docTime) {
+		this.docTime = docTime;
+	}
+
+	public int getImgs() {
+		return imgs;
+	}
+
+	public void setImgs(int imgs) {
+		this.imgs = imgs;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public String getChannelName() {
@@ -97,84 +203,12 @@ public class DataingData {
 		this.subject = subject;
 	}
 
-	public String getIntroTitle() {
-		return introTitle;
+	public String getSubjectClass() {
+		return subjectClass;
 	}
 
-	public void setIntroTitle(String introTitle) {
-		this.introTitle = introTitle;
-	}
-
-	public String getSubTitle() {
-		return subTitle;
-	}
-
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
-	}
-
-	public String getAuthors() {
-		return authors;
-	}
-
-	public void setAuthors(String authors) {
-		this.authors = authors;
-	}
-
-	public String getDocTime() {
-		return docTime;
-	}
-
-	public void setDocTime(String docTime) {
-		this.docTime = docTime;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public int getImgs() {
-		return imgs;
-	}
-
-	public void setImgs(int imgs) {
-		this.imgs = imgs;
-	}
-
-	public String getKeywords() {
-		return keywords;
-	}
-
-	public void setKeywords(String keywords) {
-		this.keywords = keywords;
-	}
-
-	public String getTags() {
-		return tags;
-	}
-
-	public void setTags(String tags) {
-		this.tags = tags;
+	public void setSubjectClass(String subjectClass) {
+		this.subjectClass = subjectClass;
 	}
 
 	public String getCreateTime() {
@@ -209,12 +243,68 @@ public class DataingData {
 		this.updater = updater;
 	}
 
-	public String getTableId() {
-		return tableId;
+	public String getStyle() {
+		return style;
 	}
 
-	public void setTableId(String tableId) {
-		this.tableId = tableId;
+	public void setStyle(String style) {
+		this.style = style;
+	}
+
+	public Integer getTimes() {
+		return times;
+	}
+
+	public void setTimes(Integer times) {
+		this.times = times;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getPeoples() {
+		return peoples;
+	}
+
+	public void setPeoples(String peoples) {
+		this.peoples = peoples;
+	}
+
+	public String getPlaces() {
+		return places;
+	}
+
+	public void setPlaces(String places) {
+		this.places = places;
+	}
+
+	public String getOrgs() {
+		return orgs;
+	}
+
+	public void setOrgs(String orgs) {
+		this.orgs = orgs;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getYear() {

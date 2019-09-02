@@ -27,7 +27,7 @@ import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.util.Containers;
 import com.selene.dataing.model.DataingDataTag;
 import com.selene.viewing.admin.controller.BaseController;
-import com.selene.viewing.admin.service.CommonService;
+import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
@@ -37,7 +37,7 @@ public class DataingTagController extends BaseController {
 	@Resource
 	private DataService dataService;
 	@Resource
-	private CommonService commonService;
+	private TokenService commonService;
 
 	@RequestMapping
 	public String list() {

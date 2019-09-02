@@ -36,7 +36,7 @@ import com.selene.merchants.model.MerchantsRole;
 import com.selene.merchants.model.enums.EActionUserType;
 import com.selene.merchants.model.enums.EPageType;
 import com.selene.viewing.admin.controller.BaseController;
-import com.selene.viewing.admin.service.CommonService;
+import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.merchants.UserService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
@@ -46,7 +46,7 @@ public class MerchantsRoleController extends BaseController {
 	@Resource
 	private UserService userService;
 	@Resource
-	private CommonService commonService;
+	private TokenService commonService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {

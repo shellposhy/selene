@@ -31,7 +31,7 @@ import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataModel;
 import com.selene.dataing.model.DataingDatabase;
 import com.selene.viewing.admin.controller.BaseController;
-import com.selene.viewing.admin.service.CommonService;
+import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
@@ -41,7 +41,7 @@ public class DataingLibraryController extends BaseController {
 	@Resource
 	private DataService dataService;
 	@Resource
-	private CommonService commonService;
+	private TokenService commonService;
 
 	@RequestMapping
 	private String list() {
