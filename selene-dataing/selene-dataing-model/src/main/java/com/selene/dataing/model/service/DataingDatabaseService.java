@@ -40,6 +40,8 @@ public interface DataingDatabaseService {
 	public int insert(DataingDatabase database);
 
 	public int update(DataingDatabase database);
+	
+	public int updateDataUpdateTime(Integer id);
 
 	public int delete(Integer id);
 }

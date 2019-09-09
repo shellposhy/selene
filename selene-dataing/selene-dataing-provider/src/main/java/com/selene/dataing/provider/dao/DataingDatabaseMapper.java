@@ -50,5 +50,7 @@ public interface DataingDatabaseMapper {
 
 	public int update(DataingDatabase database);
 
+	public int updateDataUpdateTime(@Param("id") Integer id);
+
 	public int delete(@Param("id") Integer id);
 }

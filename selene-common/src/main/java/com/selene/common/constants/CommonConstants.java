@@ -153,4 +153,6 @@ public interface CommonConstants {
 	int SUPER_ADMIN = 1;
 
 	int RPC_DEFAULT_SIZE = 150;
+
+	int MYSQL_TABLE_MAX_SIZE = 5000000;
 }

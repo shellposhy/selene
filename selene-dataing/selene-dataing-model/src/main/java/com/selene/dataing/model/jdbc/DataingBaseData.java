@@ -19,6 +19,7 @@ import com.selene.common.constants.util.EDataStatus;
 public class DataingBaseData {
 	private Integer id;
 	private Integer tableId;
+	private String tableName;
 	private Integer baseId;
 	private EDataStatus dataStatus;
 	private List<Integer> refBaseIdList;
@@ -28,6 +29,18 @@ public class DataingBaseData {
 
 	public DataingBaseData() {
 		lowerFieldMap = new ConcurrentHashMap<String, Object>();
+	}
+
+	public DataingBaseData(Integer id, Integer tableId, String tableName, Integer baseId, EDataStatus dataStatus,
+			String description, String ver) {
+		lowerFieldMap = new ConcurrentHashMap<String, Object>();
+		this.id = id;
+		this.tableId = tableId;
+		this.tableName = tableName;
+		this.baseId = baseId;
+		this.dataStatus = dataStatus;
+		this.description = description;
+		this.ver = ver;
 	}
 
 	public void put(String field, Object value) {
@@ -77,6 +90,14 @@ public class DataingBaseData {
 	public void setId(Integer id) {
 		lowerFieldMap.put(FieldsConstants.ID.toLowerCase(), id);
 		this.id = id;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 	public EDataStatus getDataStatus() {

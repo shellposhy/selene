@@ -1,10 +1,10 @@
 package com.selene.dataing.model;
 
 import com.selene.common.BaseModel;
-import com.selene.dataing.model.enums.EAccessType;
-import com.selene.dataing.model.enums.EDataFieldType;
-import com.selene.dataing.model.enums.EDataType;
-import com.selene.dataing.model.enums.ELuceneIndexType;
+import com.selene.common.constants.util.EAccessType;
+import com.selene.common.constants.util.EDataFieldType;
+import com.selene.common.constants.util.EDataType;
+import com.selene.common.constants.util.ELuceneIndexType;
 
 /**
  * <b>Selene dataing module<b>

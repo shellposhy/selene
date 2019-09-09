@@ -19,6 +19,10 @@ public interface DataingDataTableService {
 
 	public int insert(DataingDataTable dataTable);
 
+	public int increment(Integer id, Integer num);
+
+	public int decrement(Integer id, Integer num);
+
 	public int update(DataingDataTable dataTable);
 
 	public int delete(Integer id);

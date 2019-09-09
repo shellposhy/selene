@@ -27,11 +27,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import com.selene.common.constants.FieldsConstants;
+import com.selene.common.constants.util.EDataType;
+import com.selene.common.constants.util.ERollbackPolicy;
 import com.selene.common.result.ListResult;
 import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataTable;
-import com.selene.dataing.model.enums.EDataType;
-import com.selene.dataing.model.enums.ERollbackPolicy;
 import com.selene.dataing.model.jdbc.DataingBaseData;
 import com.selene.dataing.model.jdbc.DataingDbData;
 import com.selene.dataing.model.jdbc.DataingTable;

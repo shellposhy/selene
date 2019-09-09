@@ -7,10 +7,10 @@
 		<!-- Base  Enum -->
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="cn.com.lemon.common.enums.EGender" />
 		<!-- Dataing Enum -->
-		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EAccessType" />
-		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EDataFieldType" />
-		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.EDataType" />
-		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.dataing.model.enums.ELuceneIndexType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.EAccessType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.EDataFieldType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.EDataType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.ELuceneIndexType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.ELibraryNodeType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.ELibraryType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.common.constants.util.EDataStatus" />

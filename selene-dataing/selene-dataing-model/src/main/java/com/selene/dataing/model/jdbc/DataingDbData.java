@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.selene.common.constants.util.EDataType;
 import com.selene.dataing.model.DataingDataField;
-import com.selene.dataing.model.enums.EDataType;
 
 /**
  * The data{@code Object} change to database data {@code Object}

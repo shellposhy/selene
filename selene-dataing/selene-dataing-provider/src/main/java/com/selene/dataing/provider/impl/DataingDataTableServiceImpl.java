@@ -41,7 +41,18 @@ public class DataingDataTableServiceImpl implements DataingDataTableService {
 
 	@Override
 	public int insert(DataingDataTable dataTable) {
-		return dataTableMapper.insert(dataTable);
+		int result = dataTableMapper.insert(dataTable);
+		return result > 0 ? dataTable.getId() : result;
+	}
+
+	@Override
+	public int increment(Integer id, Integer num) {
+		return dataTableMapper.increment(id, num);
+	}
+
+	@Override
+	public int decrement(Integer id, Integer num) {
+		return dataTableMapper.decrement(id, num);
 	}
 
 	@Override

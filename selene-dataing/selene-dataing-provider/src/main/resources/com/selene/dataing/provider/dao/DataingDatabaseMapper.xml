@@ -170,6 +170,15 @@
 			ID=#{id}
 	</update>
 	
+	<update id="updateDataUpdateTime">
+		UPDATE 
+			data_base 
+		SET 
+			Data_Update_Time = NOW() 
+		WHERE 
+			ID=#{id}
+	</update>
+	
 	<delete id="delete">
 		DELETE FROM
 			data_base

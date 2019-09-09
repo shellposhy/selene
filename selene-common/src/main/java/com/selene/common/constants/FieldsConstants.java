@@ -12,7 +12,16 @@ public interface FieldsConstants {
 	String TABLE_ID = "Table_ID";
 	String DATA_STATUS = "Data_Status";
 	String UUID = "UUID";
+	String IMGS = "Imgs";
+	String FINGER_PRINT = "Finger_Print";
 	String TASK_ID = "Task_ID";
 	String SORT_IDS = "Sort_Ids";
 	String TITLE = "Title";
+	String CONTENT = "Content";
+	String DOC_TIME = "Doc_Time";
+	String ATTACH = "Attach";
+	String CREATOR_ID = "Creator_ID";
+	String CREATE_TIME = "Create_Time";
+	String UPDATER_ID = "Updater_ID";
+	String UPDATE_TIME = "Update_Time";
 }

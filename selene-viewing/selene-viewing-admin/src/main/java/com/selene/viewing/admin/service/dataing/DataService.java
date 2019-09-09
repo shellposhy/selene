@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +22,14 @@ import com.nanshan.papaya.rpc.client.Client;
 import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.ServiceConstants;
+import com.selene.common.constants.util.EDataFieldType;
 import com.selene.common.constants.util.EDataStatus;
 import com.selene.common.constants.util.ELibraryNodeType;
 import com.selene.common.constants.util.ELibraryType;
 import com.selene.common.result.ListResult;
 import com.selene.common.tree.support.LibraryTreeNode;
 import com.selene.common.tree.DefaultTreeNode.PropertySetter;
+import com.selene.common.util.DataUtil;
 import com.selene.common.util.RedisClient;
 import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataModel;
@@ -35,7 +38,8 @@ import com.selene.dataing.model.DataingDataTable;
 import com.selene.dataing.model.DataingDataTag;
 import com.selene.dataing.model.DataingDatabase;
 import com.selene.dataing.model.DataingDatabaseFieldMap;
-import com.selene.dataing.model.enums.EDataFieldType;
+import com.selene.dataing.model.jdbc.DataingBaseData;
+import com.selene.dataing.model.jdbc.DataingDbData;
 import com.selene.dataing.model.jdbc.DataingTable;
 import com.selene.dataing.model.service.DataingDataFieldService;
 import com.selene.dataing.model.service.DataingDataModelFieldMapService;
@@ -91,6 +95,123 @@ public class DataService {
 				client.create(DataingDataTableService.class, dataingService));
 		services.put(/* JdbcTemplate */DataingJdbcTemplateService.class.getName(),
 				client.create(DataingJdbcTemplateService.class, dataingService));
+	}
+
+	/**
+	 * Save data
+	 * 
+	 * @param data
+	 * @return int
+	 */
+	public int saveData(DataingBaseData data) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		DataingJdbcTemplateService jdbcTemplateService = (DataingJdbcTemplateService) services
+				.get(DataingJdbcTemplateService.class.getName());
+		DataingDataTableService dataTableService = (DataingDataTableService) services
+				.get(DataingDataTableService.class.getName());
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		// Business process
+		if (data.getBaseId() == null) {
+			return 0;
+		}
+		if (/* New date */data.getId() == null) {
+			DataingDbData dbData = getDbData(data, dataFieldService.findFieldsByBaseId(data.getBaseId()));
+			Integer dataId = jdbcTemplateService.insert(data.getTableName(), dbData);
+			if (dataId > 0) {
+				data.setId(dataId);
+				databaseService./* Update data time */updateDataUpdateTime(data.getBaseId());
+				dataTableService.increment(data.getTableId(), 1);
+				// Insert search index
+				return 1;
+			}
+		} else/* Update data */ {
+			List<DataingDataField> updateFields = new ArrayList<DataingDataField>();
+			for (DataingDataField dataField : dataFieldService.findFieldsByBaseId(data.getBaseId())) {
+				if (data.getLowerFieldSet().contains(dataField.getCode().toLowerCase())) {
+					updateFields.add(dataField);
+				}
+			}
+			int result = jdbcTemplateService.update(data.getTableName(), getDbData(data, updateFields));
+			if (result > 0) {
+				databaseService./* Update data time */updateDataUpdateTime(data.getBaseId());
+				// Insert search index
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * Data transfer to {@code JdbcTemplate} use
+	 * 
+	 * @param data
+	 * @param fieldList
+	 * @return {@code DataingDbData}
+	 */
+	public DataingDbData getDbData(DataingBaseData data, List<DataingDataField> fieldList) {
+		// Business process
+		DataingDbData result = new DataingDbData();
+		for (DataingDataField dataField : fieldList) {
+			Object value = data.get(dataField.getCode());
+			if (value == null) {
+				result.add(dataField, DataUtil.defaultValue(dataField.getDataType(), dataField.isMand()));
+			} else {
+				result.add(dataField, value);
+			}
+		}
+		result.setDescription(data.getDescription());
+		return result;
+	}
+
+	/**
+	 * Get {@code DataingDataField} map by {@code Integer} database id
+	 * 
+	 * @param baseId
+	 * @return {@code Map}
+	 */
+	public Map<String, DataingDataField> findFieldMapByBaseId(Integer baseId) {
+		// Initialize the required services
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		// Business process
+		List<DataingDataField> fieldList = dataFieldService.findFieldsByBaseId(baseId);
+		Map<String, DataingDataField> result = new LinkedHashMap<String, DataingDataField>();
+		for (DataingDataField dataField : fieldList) {
+			result.put(dataField.getCode(), dataField);
+		}
+		return result;
+	}
+
+	/**
+	 * Get {@code DataingDataTable} by {@code Integer} database id
+	 * 
+	 * @param baseId
+	 * @return {@code DataingDataTable}
+	 */
+	public DataingDataTable findDataTableByBaseId(Integer baseId) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		DataingJdbcTemplateService jdbcTemplateService = (DataingJdbcTemplateService) services
+				.get(DataingJdbcTemplateService.class.getName());
+		DataingDataTableService dataTableService = (DataingDataTableService) services
+				.get(DataingDataTableService.class.getName());
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		// Business process
+		DataingDatabase database = /**/ databaseService.find(baseId);
+		String tableName = tableName(database, false);
+		Integer total = jdbcTemplateService.count(tableName);
+		if (/* Single table maximum data volume for MySQL */total >= CommonConstants.MYSQL_TABLE_MAX_SIZE) {
+			database.setFieldList(dataFieldService.findFieldsByBaseId(baseId));
+			return /* Create new data table */saveLibraryTable(database);
+		} else {
+			List<DataingDataTable> tableList = dataTableService.findByName(tableName);
+			return tableList != null && tableList.size() > 0 ? tableList.get(0) : null;
+		}
 	}
 
 	/**
@@ -309,7 +430,12 @@ public class DataService {
 			if (/* Create new database */newBaseId > 0) {
 				database.setId(newBaseId);
 				if (/* Save database field */saveLibraryFields(database) > 0) {
-					return /* Save table and create data registry */saveLibraryTable(database);
+					DataingDataTable dataTable = saveLibraryTable(database);
+					if (dataTable != null && dataTable.getId() != null) {
+						database.setTables(database.getTables() + 1);
+						database.setUpdateTime(new Date());
+						return databaseService.update(database);
+					}
 				}
 			}
 		} else/* Update database */ {
@@ -331,7 +457,6 @@ public class DataService {
 				}
 				newTable./* Add field */setAdds(dataFieldService.compare(database.getFieldList(), oldFieldList));
 				newTable./* Drop field */setDrops(dataFieldService.compare(oldFieldList, database.getFieldList()));
-
 				if (/* Delete old fields */databaseFieldMapService.deleteByDBId(database.getId()) > 0) {
 					if (/* Save database field */saveLibraryFields(database) > 0) {
 						return /* Alter all database data registry */jdbcTemplateService.alter(newTable);
@@ -384,26 +509,24 @@ public class DataService {
 	 *            {@code DataingDatabase}
 	 * @return {@code int} if {@code int }>0 true else false
 	 */
-	public int saveLibraryTable(DataingDatabase database) {
+	public DataingDataTable saveLibraryTable(DataingDatabase database) {
 		// Initialize the required services
 		DataingJdbcTemplateService jdbcTemplateService = (DataingJdbcTemplateService) services
 				.get(DataingJdbcTemplateService.class.getName());
 		DataingDataTableService dataTableService = (DataingDataTableService) services
 				.get(DataingDataTableService.class.getName());
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
 		// Business process
 		String tableName = tableName(database, true);
 		DataingTable table = new DataingTable(tableName, database.getFieldList());
 		if (/* Create database for real data repository */jdbcTemplateService.create(table) > 0) {
 			DataingDataTable dataTable = new DataingDataTable(database.getId(), tableName, 0);
-			if (/* Create data table for current database */dataTableService.insert(dataTable) > 0) {
-				database.setTables(database.getTables() + 1);
-				database.setUpdateTime(new Date());
-				return databaseService.update(database);
+			int newTableId = dataTableService.insert(dataTable);
+			if (/* Create data table for current database */newTableId > 0) {
+				dataTable/* Set new table id */.setId(newTableId);
+				return dataTable;
 			}
 		}
-		return 0;
+		return null;
 	}
 
 	/**
@@ -419,9 +542,7 @@ public class DataService {
 	public String tableName(DataingDatabase database, boolean isFirstCreate) {
 		String result = "data_" + database.getId() + "_";
 		int tables = database.getTables();
-		if (isFirstCreate) {
-			tables = 0;
-		} else {
+		if (!isFirstCreate) {
 			if (tables > 0) {
 				tables--;
 			} else {

@@ -130,6 +130,11 @@ public class DataingDatabaseServiceImpl implements DataingDatabaseService {
 	}
 
 	@Override
+	public int updateDataUpdateTime(Integer id) {
+		return databaseMapper.updateDataUpdateTime(id);
+	}
+
+	@Override
 	public int delete(Integer id) {
 		return databaseMapper.delete(id);
 	}

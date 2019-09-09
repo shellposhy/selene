@@ -64,10 +64,10 @@ INSERT INTO
 VALUES('61','数据模板管理','Model_Manage','60','0','/admin/dataing/model,/admin/dataing/model/s,/admin/dataing/model/new,/admin/dataing/model/(\\d+)/edit,/admin/dataing/model/save,/admin/dataing/model/delete',NULL,'601');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('62','数据库管理','Database_Manage','60','0','/admin/dataing/library,/admin/dataing/directory/tree,/admin/dataing/directory/(\\d+)/new,/admin/dataing/directory/(\\d+)/edit,/admin/dataing/directory/save,/admin/dataing/library/find/(\\d+),/admin/dataing/library/show/(\\d+),/admin/dataing/library/(\\d+)/new,/admin/dataing/library/(\\d+)/edit,/admin/dataing/library/search,/admin/dataing/library/save,/admin/dataing/library/data/new/(\\d+),/admin/dataing/library/data/head/(\\d+),/admin/dataing/library/data/search/(\\d+)',NULL,'602');
+VALUES('62','数据库管理','Database_Manage','60','0','/admin/dataing/library,/admin/dataing/directory/tree,/admin/dataing/directory/(\\d+)/new,/admin/dataing/directory/(\\d+)/edit,/admin/dataing/directory/save,/admin/dataing/library/find/(\\d+),/admin/dataing/library/show/(\\d+),/admin/dataing/library/(\\d+)/new,/admin/dataing/library/(\\d+)/edit,/admin/dataing/library/search,/admin/dataing/library/save,/admin/dataing/library/data/new/(\\d+),/admin/dataing/library/data/head/(\\d+),/admin/dataing/library/data/search/(\\d+),/admin/dataing/library/data/save',NULL,'602');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
-VALUES('63','数据标签管理','Tag_Manage','60','0','/admin/dataing/tag',NULL,'603');
+VALUES('63','数据标签管理','Tag_Manage','60','0','/admin/dataing/tag,/admin/dataing/tag/s,/admin/dataing/tag/custom/s,/admin/dataing/tag/(\\d+)/new,/admin/dataing/tag/(\\d+)/edit,/admin/dataing/tag/(\\d+)/delete,/admin/dataing/tag/save',NULL,'603');
 INSERT INTO 
 	merchants_action (ID, Name, Code, Parent_ID, Type, Uri, Icon_Skin, Order_ID) 
 VALUES('70','商户管理','Merchants_Manage','0','0','#','menu_user','700');

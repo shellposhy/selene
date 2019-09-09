@@ -42,6 +42,7 @@ public class DataingData {
 	private String /* 日 */ day;
 	private String /* 附件 */ attach;
 	private Map<String, String> fieldMap = new HashMap<String, String>();
+	private String fieldsString;
 
 	public Integer getId() {
 		return id;
@@ -350,4 +351,13 @@ public class DataingData {
 	public void putFieldMap(String key, String value) {
 		this.fieldMap.put(key, value);
 	}
+
+	public String getFieldsString() {
+		return fieldsString;
+	}
+
+	public void setFieldsString(String fieldsString) {
+		this.fieldsString = fieldsString;
+	}
+
 }

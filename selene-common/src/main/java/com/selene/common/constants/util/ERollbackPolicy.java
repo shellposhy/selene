@@ -1,4 +1,4 @@
-package com.selene.dataing.model.enums;
+package com.selene.common.constants.util;
 
 /**
  * Enumeration of database transaction rollback strategy

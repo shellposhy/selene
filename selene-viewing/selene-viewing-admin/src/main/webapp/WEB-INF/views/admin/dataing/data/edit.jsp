@@ -16,6 +16,7 @@
 			<form:hidden path="baseId"/>
 			<form:hidden path="uuid" />
 			<form:hidden path="createTime" />
+			<form:hidden path="fieldsString"/>
 			<fieldset>
 				<legend>
 					<span title="" class="icon32 icon-blue icon-note  floatl"></span>添加稿件

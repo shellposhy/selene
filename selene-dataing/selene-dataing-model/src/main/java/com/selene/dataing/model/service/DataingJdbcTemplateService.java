@@ -2,9 +2,9 @@ package com.selene.dataing.model.service;
 
 import java.util.List;
 
+import com.selene.common.constants.util.ERollbackPolicy;
 import com.selene.common.result.ListResult;
 import com.selene.dataing.model.DataingDataTable;
-import com.selene.dataing.model.enums.ERollbackPolicy;
 import com.selene.dataing.model.jdbc.DataingBaseData;
 import com.selene.dataing.model.jdbc.DataingDbData;
 import com.selene.dataing.model.jdbc.DataingTable;

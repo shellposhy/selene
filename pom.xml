@@ -85,6 +85,7 @@
 		<!-- Commons -->
 		<commons-codec.version>1.12</commons-codec.version>
 		<commons-pool2.version>2.4.2</commons-pool2.version>
+		<commons-io.version>2.6</commons-io.version>
 		<!--Database -->
 		<tomcat_version>7.0.47</tomcat_version>
 		<mysql_version>5.1.28</mysql_version>
@@ -365,6 +366,11 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-pool2</artifactId>
 				<version>${commons-pool2.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
 			</dependency>
 			<!--Database -->
 			<dependency>

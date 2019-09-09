@@ -65,6 +65,24 @@
 			ID=#{id}
 	</update>
 	
+	<update id="increment">
+		UPDATE 
+			data_table 
+		SET
+			Row_Count = Row_Count + #{num}
+		WHERE 
+			ID=#{id}
+	</update>
+	
+	<update id="decrement">
+		UPDATE 
+			data_table 
+		SET
+			Row_Count = Row_Count - #{num}
+		WHERE 
+			ID=#{id}
+	</update>
+	
 	<delete id="delete">
 		DELETE FROM 
 			data_table 

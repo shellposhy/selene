@@ -20,6 +20,10 @@ public interface DataingDataTableMapper {
 
 	public DataingDataTable find(@Param("id") Integer id);
 
+	public int increment(@Param("id") Integer id, @Param("num") Integer num);
+
+	public int decrement(@Param("id") Integer id, @Param("num") Integer num);
+
 	public int insert(DataingDataTable dataTable);
 
 	public int update(DataingDataTable dataTable);
