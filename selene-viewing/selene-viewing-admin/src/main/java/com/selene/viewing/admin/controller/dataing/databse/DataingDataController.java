@@ -45,6 +45,7 @@ import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.DateUtil.format;
 import static cn.com.lemon.base.Strings.uuid;
+import static cn.com.lemon.base.Strings.isNullOrEmpty;
 import static cn.com.lemon.base.Preasserts.checkNotNull;
 
 @Controller
@@ -115,6 +116,7 @@ public class DataingDataController extends BaseController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	@ResponseBody
 	public String save(@Validated final DataingData dataVo, BindingResult result, final Model model,
 			HttpServletRequest request) {
 		checkNotNull(dataVo.getBaseId(), "Database not null before insert database!");
@@ -156,11 +158,13 @@ public class DataingDataController extends BaseController {
 				// Initialization value
 				baseData.put(FieldsConstants.UUID, dataVo.getUuid());
 				baseData.put(FieldsConstants.FINGER_PRINT, dataVo.getUuid());
-				baseData.put(FieldsConstants.CONTENT, realContent);
+				baseData.put(FieldsConstants.CONTENT,
+						isNullOrEmpty(realContent) ? dataVo.getFieldMap().get(FieldsConstants.CONTENT) : realContent);
 				baseData.put(FieldsConstants.IMGS, 0);
 				baseData.put(FieldsConstants.DATA_STATUS, EDataStatus.Normal.ordinal());
 				baseData.put(FieldsConstants.UPDATER_ID, vo.getId());
 				baseData.put(FieldsConstants.UPDATE_TIME, new Date());
+				baseData.put(FieldsConstants.TABLE_ID, dataTable.getId());
 				if (dataVo.getId() == null) {
 					baseData.put(FieldsConstants.CREATOR_ID, vo.getId());
 					baseData.put(FieldsConstants.CREATE_TIME, new Date());
@@ -185,16 +189,22 @@ public class DataingDataController extends BaseController {
 				if (docList != null && docList.size() > 0) {
 					baseData.put(FieldsConstants.ATTACH, DataUtil.names(docList));
 				}
-				if (/* Save data */dataService.saveData(baseData) > 0) {
-					success();
-				} else {
-					fail();
+				if (/* Set keywords */baseData.get(FieldsConstants.KEYWORDS) == null
+						|| isNullOrEmpty(String.valueOf(baseData.get(FieldsConstants.KEYWORDS)))) {
+					baseData.put(FieldsConstants.KEYWORDS,
+							DataUtil.keyword(String.valueOf(baseData.get(FieldsConstants.CONTENT))));
 				}
+				if (/* Set summary */baseData.get(FieldsConstants.SUMMARY) == null
+						|| isNullOrEmpty(String.valueOf(baseData.get(FieldsConstants.SUMMARY)))) {
+					baseData.put(FieldsConstants.SUMMARY,
+							DataUtil.summary(String.valueOf(baseData.get(FieldsConstants.CONTENT))));
+				}
+				dataService./* Save data */saveData(baseData);
 			}
 
 			@Override
 			public String success() {
-				return null;
+				return "redirect:/admin/dataing/library/data/search/" + dataVo.getBaseId();
 			}
 
 			@Override

@@ -14,11 +14,19 @@ import javax.swing.text.html.HTML.Attribute;
 import javax.swing.text.html.HTML.Tag;
 import javax.swing.text.html.parser.ParserDelegator;
 
+import static com.hankcs.hanlp.summary.TextRankKeyword.getKeywordList;
+import static com.hankcs.hanlp.summary.TextRankSentence.getSummary;
+
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.util.EDataType;
 
 import static cn.com.lemon.base.DateUtil.parse;
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
+import static cn.com.lemon.base.Strings.text;
+import static cn.com.lemon.base.Strings.join;
+import static cn.com.lemon.base.Strings.toArray;
+
+import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 
 /**
  * The utilities for data transfer process
@@ -31,6 +39,76 @@ public final class DataUtil {
 	private DataUtil() {
 	}
 
+	/**
+	 * Get keywords from the text.
+	 * <p>
+	 * get 5 keywords
+	 * 
+	 * @param content
+	 */
+	public static String keyword(String content) {
+		if (!isNullOrEmpty(content)) {
+			try {
+				content = /* Unescapes a string */ unescape(content);
+				content = /* Remove HTML tags */ text(content);
+				List<String> words = getKeywordList(content, CommonConstants.DEFAULT_KEYWORDS_SIZE);
+				if (words != null && words.size() > 0) {
+					return join(CommonConstants.SPACE_SEPARATOR, toArray(words));
+				}
+			} catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get summary from the text.
+	 * <p>
+	 * get 200 summary
+	 * 
+	 * @param content
+	 */
+	public static String summary(String content) {
+		if (!isNullOrEmpty(content)) {
+			try {
+				content = /* Unescapes a string */unescape(content);
+				content = /* Remove HTML tags */ text(content);
+				return getSummary(content, CommonConstants.DEFAULT_SUMMARY_LENGTH);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Unescapes a string containing entity escapes to a string containing the
+	 * actual Unicode characters corresponding to the escapes. Supports HTML 4.0
+	 * entities.
+	 * 
+	 * @param content
+	 * @return {@code String}
+	 */
+	public static String unescape(String content) {
+		if (!isNullOrEmpty(content)) {
+			try {
+				return unescapeHtml(content);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get data{@code Object} objects based on values,if value null,return
+	 * default {@code Object} value
+	 * 
+	 * @param dataType
+	 * @param isNotNull
+	 * @return {@code Object}
+	 */
 	public static Object defaultValue(EDataType dataType, boolean isNotNull) {
 		switch (dataType) {
 		case Date:

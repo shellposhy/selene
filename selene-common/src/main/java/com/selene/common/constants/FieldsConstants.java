@@ -18,6 +18,8 @@ public interface FieldsConstants {
 	String SORT_IDS = "Sort_Ids";
 	String TITLE = "Title";
 	String CONTENT = "Content";
+	String KEYWORDS = "Keywords";
+	String SUMMARY = "Summary";
 	String DOC_TIME = "Doc_Time";
 	String ATTACH = "Attach";
 	String CREATOR_ID = "Creator_ID";

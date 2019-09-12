@@ -372,6 +372,11 @@
 				<artifactId>commons-io</artifactId>
 				<version>${commons-io.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
 			<!--Database -->
 			<dependency>
 				<groupId>org.apache.tomcat</groupId>

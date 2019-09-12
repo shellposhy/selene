@@ -30,6 +30,8 @@ public interface CommonConstants {
 
 	String COMMA_SEPARATOR = ",";
 
+	String SPACE_SEPARATOR = " ";
+
 	Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
 
 	public final static String PATH_SEPARATOR = "/";
@@ -155,4 +157,8 @@ public interface CommonConstants {
 	int RPC_DEFAULT_SIZE = 150;
 
 	int MYSQL_TABLE_MAX_SIZE = 5000000;
+
+	int DEFAULT_KEYWORDS_SIZE = 5;
+
+	int DEFAULT_SUMMARY_LENGTH = 200;
 }

@@ -55,7 +55,7 @@ public class DataingBaseData {
 	}
 
 	public Object get(String field) {
-		return lowerFieldMap.get(field);
+		return lowerFieldMap.get(field.toLowerCase());
 	}
 
 	public void remove(String field) {
