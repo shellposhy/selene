@@ -28,6 +28,11 @@
 			<artifactId>selene-merchants-model</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.selene</groupId>
+			<artifactId>selene-searching-model</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

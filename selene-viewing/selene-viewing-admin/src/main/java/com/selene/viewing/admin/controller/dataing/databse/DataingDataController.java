@@ -41,6 +41,7 @@ import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.service.ResourceService;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
+import com.selene.viewing.admin.service.searching.SearchingService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.DateUtil.format;
@@ -53,6 +54,8 @@ import static cn.com.lemon.base.Preasserts.checkNotNull;
 public class DataingDataController extends BaseController {
 	@Resource
 	private DataService dataService;
+	@Resource
+	private SearchingService searchingService;
 	@Resource
 	private TokenService commonService;
 	@Resource

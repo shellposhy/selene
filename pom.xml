@@ -63,7 +63,7 @@
 		<paoding_version>1.0</paoding_version>
 		<lucene_tool_version>1.0</lucene_tool_version>
 		<!-- Lucene Service -->
-		<index_service_version>1.0</index_service_version>
+		<index_service_version>1.1</index_service_version>
 		<!-- Zookeeper -->
 		<zookeeper_version>3.4.13</zookeeper_version>
 		<!-- Thumbnailator -->

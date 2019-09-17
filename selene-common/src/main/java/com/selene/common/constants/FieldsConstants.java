@@ -7,6 +7,7 @@ package com.selene.common.constants;
  * @version 1.0
  */
 public interface FieldsConstants {
+	String INDEX_TIME = "Index_Time";
 	String ID = "ID";
 	String BASE_ID = "Base_ID";
 	String TABLE_ID = "Table_ID";

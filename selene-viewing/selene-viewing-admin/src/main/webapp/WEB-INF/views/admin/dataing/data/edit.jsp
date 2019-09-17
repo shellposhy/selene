@@ -29,11 +29,24 @@
 							</div>
 						</div>
 						<div class="control-group">
+							<label class="control-label" for="Intro_Title">肩标题</label>
+							<div class="controls">
+								<form:input path="fieldMap[Intro_Title]"  class="wds40 typeahead" id="Intro_Title" name="Intro_Title" />
+								<span class="inline_label">副标题</span>
+								<form:input path="fieldMap[Sub_Title]"   class="wds40 typeahead" id="Sub_Title" name="Sub_Title" />
+							</div>
+						</div>
+						<div class="control-group">
 							<label class="control-label" for="Authors">稿件作者</label>
 							<div class="controls">
 								<form:input path="fieldMap[Authors]"  class="wds40 typeahead" id="Authors" name="Authors" />
 								<span class="inline_label">稿件日期</span>
 								<form:input path="fieldMap[Doc_Time]"  class="wds40 typeahead timepicker" id="Doc_Time" name="Doc_Time" placeholder="请选择稿件日期" readonly="true" />
+								<script type="text/javascript">
+									$(document).ready(function() {
+										$("#Doc_Time").val(new Date().format("yyyy-MM-dd hh:mm:ss"));
+									});
+								</script>
 							</div>
 						</div>
 						<div class="control-group">
@@ -42,14 +55,6 @@
 								<form:input path="fieldMap[Start_Time]" class="wds40 datepicker" id="Start_Time" name="Start_Time" />
 								<span class="inline_label">失效日期</span>
 								<form:input path="fieldMap[End_Time]" class="wds40 datepicker" id="End_Time" name="End_Time" />
-							</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="Intro_Title">肩标题</label>
-							<div class="controls">
-								<form:input path="fieldMap[Intro_Title]"  class="wds40 typeahead" id="Intro_Title" name="Intro_Title" />
-								<span class="inline_label">副标题</span>
-								<form:input path="fieldMap[Sub_Title]"   class="wds40 typeahead" id="Sub_Title" name="Sub_Title" />
 							</div>
 						</div>
 						<div class="control-group" id=sort_tree>
@@ -118,7 +123,7 @@
 						<div class="control-group">
 							<label class="control-label" for="Style">稿件样式</label>
 							<div class="controls ">
-								<form:textarea path="fieldMap[Style]" class="span12 typeahead" id="Style" name="Style"  rows="3"/>
+								<form:textarea path="fieldMap[Style]" class="span12 typeahead" id="Style" name="Style"  rows="4"/>
 							</div>
 						</div>
 						<div class="control-group">

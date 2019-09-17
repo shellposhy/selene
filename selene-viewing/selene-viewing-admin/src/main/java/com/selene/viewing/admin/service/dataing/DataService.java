@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.apache.lucene.document.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import com.nanshan.papaya.rpc.client.Client;
 import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
+import com.selene.common.constants.FieldsConstants;
 import com.selene.common.constants.ServiceConstants;
 import com.selene.common.constants.util.EDataFieldType;
 import com.selene.common.constants.util.EDataStatus;
@@ -51,6 +53,8 @@ import com.selene.dataing.model.service.DataingDataTaskSubService;
 import com.selene.dataing.model.service.DataingDatabaseFieldMapService;
 import com.selene.dataing.model.service.DataingDatabaseService;
 import com.selene.dataing.model.service.DataingJdbcTemplateService;
+import com.selene.dataing.model.util.DataingUtil;
+import com.selene.viewing.admin.service.searching.SearchingService;
 
 import cn.com.lemon.base.Strings;
 
@@ -64,6 +68,8 @@ public class DataService {
 	private Client client;
 	@Resource
 	private RedisClient redisClient;
+	@Resource
+	private SearchingService searchingService;
 
 	@PostConstruct
 	@SuppressWarnings("static-access")
@@ -73,7 +79,7 @@ public class DataService {
 		dataingConfiger = new ServiceConfiger(
 				DataService.class.getResource("/").getPath() + "selene.sevice.properties");
 		String dataingService = dataingConfiger.value(ServiceConstants.DATAING_KEY);
-		LOG.info("merchants service address=" + dataingService);
+		LOG.info("dataing service address=" + dataingService);
 		// Initialization dataing service
 		services.put(/* DataModel */DataingDataModelService.class.getName(),
 				client.create(DataingDataModelService.class, dataingService));
@@ -125,6 +131,10 @@ public class DataService {
 				databaseService./* Update data time */updateDataUpdateTime(data.getBaseId());
 				dataTableService.increment(data.getTableId(), 1);
 				// Insert search index
+				Document doc = DataingUtil.doc(data, dataFieldService.findFieldsByBaseId(data.getBaseId()));
+				if (doc != null) {
+					searchingService.index(doc, data.getBaseId());
+				}
 				return 1;
 			}
 		} else/* Update data */ {
@@ -138,6 +148,10 @@ public class DataService {
 			if (result > 0) {
 				databaseService./* Update data time */updateDataUpdateTime(data.getBaseId());
 				// Insert search index
+				Document doc = DataingUtil.doc(data, dataFieldService.findFieldsByBaseId(data.getBaseId()));
+				if (doc != null) {
+					searchingService.update(doc, data.getBaseId(), (String) data.get(FieldsConstants.UUID));
+				}
 				return 1;
 			}
 		}

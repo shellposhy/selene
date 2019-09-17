@@ -161,4 +161,6 @@ public interface CommonConstants {
 	int DEFAULT_KEYWORDS_SIZE = 5;
 
 	int DEFAULT_SUMMARY_LENGTH = 200;
+	
+	String INDEX_DATE_FORMAT = "yyyyMMddHHmmss";
 }

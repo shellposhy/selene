@@ -18,7 +18,7 @@
 	http://www.springframework.org/schema/task/spring-task-4.3.xsd" default-lazy-init="true">
 
 	<!-- properties -->
-	<bean id="propertyConfigurer" class="com.selene.dataing.provider.config.PropertyPlaceholderConfigurerExtension">
+	<bean id="propertyConfigurer" class="com.selene.searching.provider.config.PropertyPlaceholderConfigurerExtension">
 		<property name="locations">
                 <list>
                     <value>classpath:config.properties</value>
