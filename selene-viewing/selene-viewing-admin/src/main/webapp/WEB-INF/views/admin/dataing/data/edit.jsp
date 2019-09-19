@@ -159,8 +159,8 @@
 								<p><button type="button" class="btn" onclick="javascript:$('#Attach').uploadify('upload','*')">上传</button></p>
 								<c:if test="${!empty attachList}">
 									<c:if test="${fn:length(attachList) > 0 }">
-										<c:forEach var="fl" items="${attachList }">
-											<p><span>${fl.fileName }</span>&nbsp;<a href="javascript:deleteFile('${fl.fileName}')">删除</a></p>
+										<c:forEach var="fileName" items="${attachList }">
+											<p><span>${fileName }</span>&nbsp;<a href="javascript:deleteFile('${fileName}')">删除</a></p>
 										</c:forEach>
 									</c:if>
 								</c:if>

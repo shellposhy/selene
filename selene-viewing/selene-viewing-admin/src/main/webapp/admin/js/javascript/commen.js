@@ -369,7 +369,7 @@ function dataTablesCom(tbId, url, headTitle, otherField, callback, isMutiTime,no
 		"oLanguage" : {"sUrl" : appPath + "/admin/js/javascript/de_CN.js"},
 		"aoColumns" : headTitle,
 		"aoColumnDefs" : [{
-			"sWidth" : "400px",
+			"sWidth" : "600px",
 			"aTargets" : [ 0 ]
 		} ],
 		"fnDrawCallback" : function() {

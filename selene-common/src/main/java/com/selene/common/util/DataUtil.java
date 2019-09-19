@@ -7,6 +7,8 @@ import java.io.StringReader;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTMLEditorKit;
@@ -14,11 +16,16 @@ import javax.swing.text.html.HTML.Attribute;
 import javax.swing.text.html.HTML.Tag;
 import javax.swing.text.html.parser.ParserDelegator;
 
+import org.apache.oro.text.perl.Perl5Util;
+
 import static com.hankcs.hanlp.summary.TextRankKeyword.getKeywordList;
 import static com.hankcs.hanlp.summary.TextRankSentence.getSummary;
 
+import com.pepper.lucene.comparator.base.PepperSortField.FieldType;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.util.EDataType;
+
+import cn.com.lemon.base.DateUtil;
 
 import static cn.com.lemon.base.DateUtil.parse;
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
@@ -37,6 +44,43 @@ import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 public final class DataUtil {
 
 	private DataUtil() {
+	}
+
+	/**
+	 * Remove HTML tags and keep p img span tags
+	 * 
+	 * @param html
+	 * @return {@code String}
+	 */
+	public static String filter(String html) {
+		if (isNullOrEmpty(html)) {
+			return "";
+		}
+		StringBuffer sb = new StringBuffer();
+		Perl5Util preg = new Perl5Util();
+		preg.substitute(sb, "s/<script[^>]*?>.*?<\\/script>//gmi", html);
+		html = sb.toString();
+		sb.setLength(0);
+		preg.substitute(sb, "s#<[/]*?(?!p|img|span)[^<>]*?>##gmi", html);
+		html = sb.toString();
+		sb.setLength(0);
+		return html;
+	}
+
+	/**
+	 * Remove HTML tags and keep p img span tags
+	 * 
+	 * @param html
+	 * @return {@code String}
+	 */
+	public static String clear(String html) {
+		if (isNullOrEmpty(html)) {
+			return "";
+		}
+		String regEx = "(?!<(img|p|span).*?>)<.*?>";
+		Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(html);
+		return matcher.replaceAll("");
 	}
 
 	/**
@@ -103,6 +147,29 @@ public final class DataUtil {
 
 	/**
 	 * Get data{@code Object} objects based on values,if value null,return
+	 * default {@code String} value
+	 * 
+	 * @param object
+	 * @param dataType
+	 * @return {@code String}
+	 */
+	public static String dataTypeString(Object object, EDataType dataType) {
+		switch (dataType) {
+		case Date:
+		case DateTime:
+		case Time:
+			if ("".equals(object)) {
+				return "";
+			} else {
+				return DateUtil.format((Date) object, CommonConstants.COMMON_DATE_FORMAT);
+			}
+		default:
+			return null == object ? "" : object.toString();
+		}
+	}
+
+	/**
+	 * Get data{@code Object} objects based on values,if value null,return
 	 * default {@code Object} value
 	 * 
 	 * @param dataType
@@ -135,6 +202,32 @@ public final class DataUtil {
 		case UUID:
 		default:
 			return "";
+		}
+	}
+
+	/**
+	 * Data type reverse sort type
+	 * 
+	 * @param dataType
+	 * @return {@code FieldType}
+	 */
+	public static FieldType sortLuceneType(EDataType dataType) {
+		switch (dataType) {
+		case Int:
+		case IntAutoIncrement:
+			return FieldType.Int;
+		case Long:
+			return FieldType.Long;
+		case Float:
+			return FieldType.Float;
+		case Double:
+			return FieldType.Double;
+		case Time:
+		case DateTime:
+			return FieldType.StringVal;
+		// return FieldType.Long;
+		default:
+			return FieldType.StringVal;
 		}
 	}
 

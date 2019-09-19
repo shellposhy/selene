@@ -440,12 +440,12 @@ public class DataingJdbcTemplateDao {
 				break;
 			case Types.LONGVARBINARY:
 			case Types.BLOB:
-				value = rs.getBlob(i) == null ? null : blob(rs.getBlob(i));
+				value = rs.getBlob(i) == null ? "" : blob(rs.getBlob(i));
 				break;
 			case Types.DATE:
 			case Types.TIME:
 			case Types.TIMESTAMP:
-				value = rs.getDate(i) == null ? null : new Date(rs.getTimestamp(i).getTime());
+				value = rs.getDate(i) == null ? "" : new Date(rs.getTimestamp(i).getTime());
 				break;
 			case Types.CHAR:
 			case Types.VARCHAR:

@@ -161,6 +161,20 @@ public interface CommonConstants {
 	int DEFAULT_KEYWORDS_SIZE = 5;
 
 	int DEFAULT_SUMMARY_LENGTH = 200;
-	
+
 	String INDEX_DATE_FORMAT = "yyyyMMddHHmmss";
+
+	String SHOW_DATE_FORMAT = "yyyy年MM月dd日HH:mm:ss";
+
+	String SIMPLE_DATE_FORMAT = "yyyyMMdd";
+
+	String COMMON_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+	int /* Limit image width */ DEFAULT_IMAGES_WIDTH = 800;
+
+	int /* Limit image height */ DEFAULT_IMAGES_HEIGHT = 600;
+
+	String SEARCH_INDEX_ALL = "*:*";
+
+	int DEFAULT_SEARCH_INDEX_NUMBER_HITS = 1000000;
 }

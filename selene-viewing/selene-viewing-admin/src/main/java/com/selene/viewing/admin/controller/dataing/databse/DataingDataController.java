@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.selene.common.HttpStatus;
 import com.selene.common.Operator;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.FieldsConstants;
@@ -37,12 +36,15 @@ import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataTable;
 import com.selene.dataing.model.jdbc.DataingBaseData;
 import com.selene.dataing.model.jdbc.DataingData;
+import com.selene.dataing.model.util.DataingUtil;
 import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.service.ResourceService;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.service.searching.SearchingService;
 import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
+
+import cn.com.lemon.base.DateUtil;
 
 import static cn.com.lemon.base.DateUtil.format;
 import static cn.com.lemon.base.Strings.uuid;
@@ -61,19 +63,87 @@ public class DataingDataController extends BaseController {
 	@Resource
 	private ResourceService resourceService;
 
-	@SuppressWarnings("unused")
+	@RequestMapping(value = "/edit/{tableId}/{dataId}", method = RequestMethod.GET)
+	public String edit(@PathVariable int tableId, @PathVariable int dataId, Model model) {
+		DataingDataTable dataTable = dataService.findTable(tableId);
+		DataingBaseData baseData = dataService.select(tableId, dataId);
+		List<DataingDataField> libraryFieldList = dataService.findFieldsByBaseId(dataTable.getBaseId());
+		DataingData dataVo = new DataingData();
+		dataVo./* ID */setId((Integer) baseData.get(FieldsConstants.ID));
+		dataVo./* Table ID */setTableId(String.valueOf(tableId));
+		dataVo./* Create time */setCreateTime(
+				DateUtil.format((Date) baseData.get(FieldsConstants.CREATE_TIME), CommonConstants.SIMPLE_DATE_FORMAT));
+		dataVo./* Database ID */setBaseId(dataTable.getBaseId());
+		dataVo./* UUID */setUuid((String) baseData.get(FieldsConstants.UUID));
+		/** Current database data fields */
+		StringBuilder sb = new StringBuilder(200);
+		if (libraryFieldList != null && libraryFieldList.size() > 0) {
+			for (DataingDataField dataField : libraryFieldList) {
+				if (dataField.getAccessType() != EAccessType.System || dataField.getCode().equals("Keywords")) {
+					dataVo.putFieldMap(dataField.getCode(),
+							DataUtil.dataTypeString(baseData.get(dataField.getCode()), dataField.getDataType()));
+					sb.append(dataField.getCode()).append(CommonConstants.COMMA_SEPARATOR);
+				}
+			}
+		}
+		if (sb.length() > 0) {
+			sb.deleteCharAt(sb.length() - 1);
+		}
+		dataVo./* Field list */setFieldsString(sb.toString());
+		/** Current database attachs */
+		if (baseData.get(FieldsConstants.ATTACH) != null
+				&& !isNullOrEmpty((String) baseData.get(FieldsConstants.ATTACH))) {
+			String[] attachsName = ((String) baseData.get(FieldsConstants.ATTACH))
+					.split(CommonConstants.COMMA_SEPARATOR);
+			if (attachsName != null && attachsName.length > 0) {
+				List<String> attachsFile = new ArrayList<String>();
+				for (String name : attachsName) {
+					attachsFile.add(name);
+				}
+				model.addAttribute("attachList", attachsFile);
+			}
+		}
+		model.addAttribute("dataVo", dataVo);
+		return "/admin/dataing/data/edit";
+	}
+
+	@RequestMapping("/info/{tableId}/{dataId}")
+	public String info(@PathVariable int tableId, @PathVariable int dataId, Model model) {
+		DataingBaseData data = dataService.select(tableId, dataId);
+		if (data != null) {
+			data.setId(dataId);
+			data.setBaseId(dataService.findTable(tableId).getBaseId());
+			data.setTableId(tableId);
+		}
+		// Process for Attach
+		if (data.get(FieldsConstants.ATTACH) != null && !isNullOrEmpty((String) data.get(FieldsConstants.ATTACH))) {
+			String[] attachsName = ((String) data.get(FieldsConstants.ATTACH)).split(CommonConstants.COMMA_SEPARATOR);
+			if (attachsName != null && attachsName.length > 0) {
+				List<String> attachsFile = new ArrayList<String>();
+				for (String name : attachsName) {
+					attachsFile.add(name);
+				}
+				model.addAttribute("attachList", attachsFile);
+			}
+		}
+		model.addAttribute("data", DataingUtil.data(data));
+		return "/admin/dataing/data/info";
+	}
+
 	@RequestMapping(value = "/search/{libraryId}", method = RequestMethod.POST)
 	@ResponseBody
 	public MappingJacksonValue search(@PathVariable int libraryId, @RequestBody DataTableArray[] dataArray,
 			String callback, HttpServletRequest request) {
 		// Parameter process
 		DataTable dataTable = Containers.table(dataArray);
-		Integer pageSize = dataTable.getiDisplayLength();
 		Integer pageStart = dataTable.getiDisplayStart();
+		Integer pageSize = dataTable.getiDisplayLength();
 		// Data process
-		ListResult<DataingData> dataList = new ListResult<DataingData>(HttpStatus.OK.code(), HttpStatus.OK.message());
-		DataTableResult<DataingData> result = new DataTableResult<>(dataTable.getsEcho(), 0, 0,
-				new ArrayList<DataingData>());
+		ListResult<DataingData> dataList = searchingService.search(null, pageStart, pageSize, libraryId);
+		List<DataingData> list = (dataList.getData() != null && dataList.getData().size() > 0) ? dataList.getData()
+				: new ArrayList<DataingData>();
+		DataTableResult<DataingData> result = new DataTableResult<DataingData>(dataTable.getsEcho(),
+				dataList.getTotal(), dataList.getTotal(), list);
 		MappingJacksonValue mv = new MappingJacksonValue(result);
 		mv.setJsonpFunction(callback);
 		return mv;
@@ -129,9 +199,10 @@ public class DataingDataController extends BaseController {
 		EResult picResult = resourceService.copyDirectoryToDirectory(
 				/* Temporary folder */tmpPicPath,
 				/* Real folder */resourceService.realPic(dataVo.getBaseId(), dataVo.getCreateTime()), true);
-		String content = "";
+		String content = dataVo.getFieldMap().get(FieldsConstants.CONTENT);
+		content = /* Not escapes string */DataUtil.unescape(content);
 		if (picResult == EResult.Success) {
-			content = resourceService.replace(dataVo.getFieldMap().get(FieldsConstants.CONTENT),
+			content = resourceService.replace(content,
 					/* Temporary relative folder */resourceService.tmpRelativePic(dataVo.getUuid()),
 					/* Real relative folder */resourceService.realRelativePic(dataVo.getBaseId(),
 							dataVo.getCreateTime()),
@@ -146,8 +217,7 @@ public class DataingDataController extends BaseController {
 		if (/* If upload document files */docTmpFiles != null && docTmpFiles.size() > 0) {
 			EResult docResult = resourceService.copyDirectoryToDirectory(
 					/* Temporary document folder */tmpDocPath,
-					/* Real document folder */resourceService.realDoc(dataVo.getBaseId(), dataVo.getCreateTime()),
-					false);
+					/* Real document folder */resourceService.realDoc(dataVo.getBaseId(), dataVo.getUuid()), false);
 			if (docResult == EResult.Success) {
 				resourceService./* Delete temporary document folder */deleteFolder(tmpDocPath);
 			}
@@ -188,7 +258,7 @@ public class DataingDataController extends BaseController {
 					baseData.put(FieldsConstants.DOC_TIME, new Date());
 				}
 				List<File> /* Set attach files */ docList = resourceService
-						.files(resourceService.realDoc(dataVo.getBaseId(), dataVo.getCreateTime()));
+						.files(resourceService.realDoc(dataVo.getBaseId(), dataVo.getUuid()));
 				if (docList != null && docList.size() > 0) {
 					baseData.put(FieldsConstants.ATTACH, DataUtil.names(docList));
 				}

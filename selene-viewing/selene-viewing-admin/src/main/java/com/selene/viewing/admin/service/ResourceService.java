@@ -125,9 +125,8 @@ public class ResourceService {
 	 *            The create time format for yyyyMMdd
 	 * @return {@code String}
 	 */
-	public String realDoc(Integer baseId, String createTime) {
-		return realDoc() + "/" + baseId + "/" + createTime.substring(0, 4) + "/"
-				+ Integer.parseInt(createTime.substring(4, 6));
+	public String realDoc(Integer baseId, String uuid) {
+		return realDoc() + "/" + baseId + "/" + uuid;
 	}
 
 	/**

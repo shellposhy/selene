@@ -1,46 +1,39 @@
-<%@page import="com.google.common.base.Strings"%>
-<%@page import="cn.com.cms.framework.base.table.FieldCodes"%>
-<%@page import="cn.com.cms.framework.config.AppConfig"%>
+<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="org.slf4j.Logger"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.context.ApplicationContext"%>
-<%@ page language="java" pageEncoding="utf-8"%>
+<%@page import="com.selene.viewing.admin.service.ResourceService"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.io.*"%>
 <%@ page import="javax.servlet.ServletContext"%>
 <%@ page import="javax.servlet.http.HttpServletRequest"%>
 <%
-	String queryString = request.getQueryString();
-	String[] queryStrings = queryString.split("&");
-	String baseId = queryStrings[0];
-	String uuid = queryStrings[1];
-	String type = "";
-	if (queryStrings.length > 2) {
-		type = queryStrings[2];
-	}
-	String path = "pic";
+	Logger LOG = LoggerFactory.getLogger("Image uploader");
+	String baseId = request.getParameter("baseId");
+	LOG.debug("baseId=" + baseId);
+	
+	ApplicationContext ac = /*Spring bean*/WebApplicationContextUtils
+			.getRequiredWebApplicationContext(request.getSession().getServletContext());
+	ResourceService pathService = (ResourceService) ac.getBean("resourceService");
+	String realPath = /*Real images directory*/pathService.realPic() + "/" + baseId;
+	String rootPath = /*Root directory*/pathService.root();
+
+	List<File> files = /*Find all images files*/ getFiles(realPath, new ArrayList());
 	String imgStr = "";
-	ApplicationContext ac = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-	AppConfig appConfig = (AppConfig) ac.getBean("appConfig");
-	type = !Strings.isNullOrEmpty(type) ? type.substring(type.lastIndexOf("=") + 1) : "";
-	int typeInt = !Strings.isNullOrEmpty(type) ? Integer.parseInt(type) : 1;
-	String realpath = "";
-	if (typeInt == 1) {
-		realpath = appConfig.getAppPathHome() + "/" + path + "/upic/"+ baseId.substring(baseId.lastIndexOf("=") + 1);
-	} else if (typeInt == 2) {
-		realpath = appConfig.getAppPathHome() + "/" + path + "/mpic/"+ baseId.substring(baseId.lastIndexOf("=") + 1);
-	}
-	String rootStr = appConfig.getAppPathHome();
-	int strLength = rootStr.length();
-	List<File> files = getFiles(realpath, new ArrayList());
 	for (File file : files) {
-		imgStr += file.getPath().substring(strLength)+ "ue_separate_ue";
+		imgStr += file.getPath().substring(rootPath.length()) + "ue_separate_ue";
 	}
 	if (imgStr != "") {
 		imgStr = imgStr.substring(0, imgStr.lastIndexOf("ue_separate_ue")).replace(File.separator, "/").trim();
 	}
+	LOG.debug("imgStr=" + imgStr);
+	
 	out.print(imgStr);
 %>
-<%!public List getFiles(String realpath, List files) {
+
+<%!
+	public List getFiles(String realpath, List files) {
 		File realFile = new File(realpath);
 		if (realFile.isDirectory()) {
 			File[] subfiles = realFile.listFiles();
@@ -57,14 +50,8 @@
 		return files;
 	}
 
-	public String getRealPath(HttpServletRequest request, String path) {
-		ServletContext application = request.getSession().getServletContext();
-		String str = application.getRealPath(request.getServletPath());
-		return new File(str).getParent();
-	}
-
 	public String getFileType(String fileName) {
-		String[] fileType = { ".gif", ".png", ".jpg", ".jpeg", ".bmp" };
+		String[] fileType = { ".jpg", ".png", ".jpeg", ".gif", ".bmp", ".webp" };
 		Iterator<String> type = Arrays.asList(fileType).iterator();
 		while (type.hasNext()) {
 			String t = type.next();
@@ -73,4 +60,5 @@
 			}
 		}
 		return "";
-	}%>
+	}
+%>

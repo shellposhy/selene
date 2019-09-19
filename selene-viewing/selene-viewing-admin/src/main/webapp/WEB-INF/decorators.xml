@@ -24,5 +24,7 @@
 		<pattern>/admin/merchants/org/*/edit</pattern>
 		<pattern>/admin/dataing/tag/*/edit</pattern>
 		<pattern>/admin/dataing/library/data/new/*</pattern>
+		<pattern>/admin/dataing/library/data/info/*</pattern>
+		<pattern>/admin/dataing/library/data/edit/*</pattern>
 	</decorator>
 </decorators>

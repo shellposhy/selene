@@ -69,14 +69,13 @@
 			})();
 	window.UEDITOR_CONFIG = {
 		UEDITOR_HOME_URL : URL,
-		imageUrl : URL + "jsp/imageUp.jsp?baseId=" + $("#baseId").val()+ "&uuid=" + $("#uuid").val(),
+		imageUrl : URL + "jsp/imageUp.jsp?uuid=" + $("#uuid").val(),
 		imagePath : appPath + "/",
 		fileUrl : URL + "jsp/fileUp.jsp?baseId=" + $("#baseId").val()+ "&uuid=" + $("#uuid").val() + "&createTime="+ $("#createTime").val(),
 		filePath : URL + "jsp/",
 		catcherUrl : URL + "jsp/getRemoteImage.jsp?baseId="+ $("#baseId").val() + "&uuid=" + $("#uuid").val(),
 		catcherPath : URL + "jsp/",
-		imageManagerUrl : URL + "jsp/imageManager.jsp?baseId="+ $("#baseId").val() + "&uuid=" + $("#uuid").val(),
-		//imageManagerPath : URL + "jsp/",
+		imageManagerUrl : URL + "jsp/imageManager.jsp?baseId="+ $("#baseId").val(),
 		imageManagerPath : "",
 		imageOtherUrl : URL + "jsp/imageOther.jsp?baseId=" + $("#baseId").val()+ "&uuid=" + $("#uuid").val(),
 		imageOtherPath : URL + "jsp/",
@@ -85,11 +84,10 @@
 		snapscreenPath : URL + "jsp/",
 		snapscreenServerPort : location.port,
 		getMovieUrl : URL + "jsp/getMovie.jsp?baseId=" + $("#baseId").val()+ "&uuid=" + $("#uuid").val(),
-		toolbars : [ [ 'source','|', 'undo', 'redo', '|','bold', 'italic', 'underline', 'fontborder', 'strikethrough','superscript', 'subscript',
-		        'removeformat', 'formatmatch','autotypeset', 'pasteplain', '|', 'forecolor','backcolor', 'insertorderedlist', 'insertunorderedlist',
-		        'selectall', 'cleardoc', '|', 'rowspacingtop','rowspacingbottom', 'lineheight', '|', 'customstyle','paragraph', 'fontfamily', 'fontsize', '|','directionalityltr',
-		        'directionalityrtl', 'indent', '|','justifyleft', 'justifycenter', 'justifyright','justifyjustify', '|', 'touppercase', 'tolowercase', '|','link', 'unlink', '|', 'insertimage',
-		        'insertvideo','background', '|', 'horizontal', 'date','time', 'spechars', '|', 'inserttable', 'deletetable','searchreplace' ] ],
+		toolbars : [ ['source', 'pasteplain','|', 'undo', 'redo', '|', 'insertimage','insertvideo', '|','bold', 'italic', 'underline', '|','superscript', 'subscript',
+		        'removeformat', 'formatmatch','autotypeset', '|', 'forecolor', 'insertorderedlist', 'insertunorderedlist','selectall', 'cleardoc', '|', 'customstyle',
+		        'fontfamily', 'fontsize', '|','directionalityltr','directionalityrtl', 'indent', '|','justifyleft', 'justifycenter', 'justifyright','justifyjustify',
+		        '|', 'touppercase', 'tolowercase', '|','link', 'unlink', '|', 'horizontal', 'inserttable', 'deletetable','searchreplace', '|' ] ],
 		initialFrameWidth : "100%",
 		initialFrameHeight : 420};
 })();

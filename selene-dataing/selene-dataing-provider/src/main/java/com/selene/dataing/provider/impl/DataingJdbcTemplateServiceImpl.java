@@ -12,6 +12,7 @@ import com.selene.dataing.model.jdbc.DataingBaseData;
 import com.selene.dataing.model.jdbc.DataingDbData;
 import com.selene.dataing.model.jdbc.DataingTable;
 import com.selene.dataing.model.service.DataingJdbcTemplateService;
+import com.selene.dataing.provider.dao.DataingDataTableMapper;
 import com.selene.dataing.provider.dao.DataingJdbcTemplateDao;
 
 /**
@@ -27,6 +28,8 @@ import com.selene.dataing.provider.dao.DataingJdbcTemplateDao;
 public class DataingJdbcTemplateServiceImpl implements DataingJdbcTemplateService {
 	@Resource
 	private DataingJdbcTemplateDao jdbcTemplateDao;
+	@Resource
+	private DataingDataTableMapper dataTableMapper;
 
 	@Override
 	public int create(DataingTable table) {
@@ -119,6 +122,11 @@ public class DataingJdbcTemplateServiceImpl implements DataingJdbcTemplateServic
 		} catch (Exception e) {
 			return new DataingBaseData();
 		}
+	}
+
+	@Override
+	public DataingBaseData select(Integer tableId, Integer dataId) {
+		return select(dataTableMapper.find(tableId), dataId);
 	}
 
 	@Override

@@ -455,21 +455,14 @@ function loadLibraryData(libId) {
 	var headTitle = [ {
 		"mData" : "title",
 		"fnRender" : function(obj) {
-			var sumImg = '', attach = '';
-			if (obj.aData.img){
-				sumImg = '<div class="sum_img_div"><img class="list_sum_img" src="'+ obj.aData.img + '"/></div>';
-			}
-			if (obj.aData.attach){
-				attach = '<span class="icon icon-blue icon-attachment"></span>';
-			}
-			return		'<h3>' 
-							+ '	<label class="checkbox inline mt0">' 
-							+ '		<input type="checkbox" id="inlineCheckbox' + obj.aData.id + '" name="idStr' + obj.aData.id + '" value="' + obj.aData.id + '_' + obj.aData.tableId + '" style="opacity: 0;">'
-							+ '	</label>'
-							+ '	<a class="data_title edit_pop_link" href="'+ appPath+ '/admin/dataing/library/data/edit/'+ obj.aData.tableId+ '/'+ obj.aData.id+ '" target="_blank">'+ obj.aData.title+ '</a>'
-							+ '	<a class="padmbt btn floatr none edit_pop_link" href = "'+ appPath+ '/admin/dataing/library/data/info/'+ obj.aData.tableId+ '/'+ obj.aData.id+ '" target="_blank"><i class="icon-eye-open" title="稿件预览"></i></a>'
-							+ '</h3>'
-							+ '<p class="summary clearfix" >'+ sumImg+ obj.aData.summary + attach + '</p>';
+			return	'<h3>' + 
+							'	<label class="checkbox inline mt0">' +
+							'		<input type="checkbox" id="inlineCheckbox' + obj.aData.id + '" name="idStr' + obj.aData.id + '" value="' + obj.aData.id + '_' + obj.aData.tableId + '" style="opacity: 0;">'+
+							'	</label>'+
+							'	<a class="data_title edit_pop_link" href="'+ appPath+ '/admin/dataing/library/data/edit/'+ obj.aData.tableId+ '/'+ obj.aData.id+ '" target="_blank">'+ obj.aData.title+ '</a>'+
+							'	<a class="padmbt btn floatr none edit_pop_link" href = "'+ appPath+ '/admin/dataing/library/data/info/'+ obj.aData.tableId+ '/'+ obj.aData.id+ '" target="_blank"><i class="icon-eye-open" title="稿件预览"></i></a>'+
+							'</h3>'+
+							'<p class="summary clearfix" >'+ obj.aData.summary.substring(0,100)+'...</p>';
 		}
 	} ];
 	$('#add_to_dsu').attr('href', appPath+"/admin/dataing/library/data/new/"+libId);

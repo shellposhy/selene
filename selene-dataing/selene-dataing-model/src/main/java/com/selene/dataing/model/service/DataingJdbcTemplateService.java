@@ -36,6 +36,8 @@ public interface DataingJdbcTemplateService {
 
 	public DataingBaseData select(DataingDataTable table, Integer dataId);
 
+	public DataingBaseData select(Integer tableId, Integer dataId);
+
 	public ListResult<DataingBaseData> select(Integer tableId, String sql, Integer first, Integer size);
 
 	public int count(String tableName);

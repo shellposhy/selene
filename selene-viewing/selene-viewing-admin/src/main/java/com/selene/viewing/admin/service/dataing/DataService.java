@@ -104,6 +104,36 @@ public class DataService {
 	}
 
 	/**
+	 * Query {@code DataingBaseData} by {@code Integer} table number and
+	 * {@code Integer} data number
+	 * 
+	 * @param tableId
+	 * @param dataId
+	 * @return {@code DataingBaseData}
+	 */
+	public DataingBaseData select(Integer tableId, Integer dataId) {
+		// Initialize the required services
+		DataingJdbcTemplateService templateService = (DataingJdbcTemplateService) services
+				.get(DataingJdbcTemplateService.class.getName());
+		// Business process
+		return templateService.select(tableId, dataId);
+	}
+
+	/**
+	 * Query {@code DataingDataTable} by {@code Integer} table number
+	 * 
+	 * @param id
+	 * @return {@code DataingDataTable}
+	 */
+	public DataingDataTable findTable(Integer id) {
+		// Initialize the required services
+		DataingDataTableService dataTableService = (DataingDataTableService) services
+				.get(DataingDataTableService.class.getName());
+		// Business process
+		return dataTableService.find(id);
+	}
+
+	/**
 	 * Save data
 	 * 
 	 * @param data

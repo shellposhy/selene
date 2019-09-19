@@ -31,6 +31,7 @@ public class DataingData {
 	private String /* 更新人 */ updater;
 	private String /* 样式 */ style;
 	private Integer /* 次数 */ times;
+	private Integer /* 点赞 */ likeTimes;
 	private String /* 生效日期 */ startTime;
 	private String /* 失效日期 */ endTime;
 	private String /* 人物 */ peoples;
@@ -258,6 +259,14 @@ public class DataingData {
 
 	public void setTimes(Integer times) {
 		this.times = times;
+	}
+
+	public Integer getLikeTimes() {
+		return likeTimes;
+	}
+
+	public void setLikeTimes(Integer likeTimes) {
+		this.likeTimes = likeTimes;
 	}
 
 	public String getStartTime() {

@@ -12,10 +12,12 @@ import com.selene.common.constants.FieldsConstants;
 import com.selene.common.util.DataUtil;
 import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.jdbc.DataingBaseData;
+import com.selene.dataing.model.jdbc.DataingData;
 
 import static cn.com.lemon.base.Strings.text;
-
+import static cn.com.lemon.base.Strings.isNullOrEmpty;
 import static cn.com.lemon.base.DateUtil.format;
+import static cn.com.lemon.base.DateUtil.parse;
 
 /**
  * Dataing module utilities
@@ -27,6 +29,112 @@ import static cn.com.lemon.base.DateUtil.format;
  */
 public final class DataingUtil {
 	private DataingUtil() {
+	}
+
+	/**
+	 * {@code DataingBaseData} transfer {@code DataingData}
+	 * 
+	 * @param doc
+	 * @return {@code DataingData}
+	 */
+	public static DataingData data(DataingBaseData data) {
+		DataingData result = new DataingData();
+		if (data != null) {
+			// Basic properties
+			result.setId((Integer) data.get(FieldsConstants.ID));
+			result.setTableId(String.valueOf(data.get(FieldsConstants.TABLE_ID)));
+			result.setBaseId(data.getBaseId());
+			result.setUuid((String) data.get(FieldsConstants.UUID));
+			result.setStatus(data.getDataStatus().ordinal());
+			result.setDocTime((data.get(FieldsConstants.DOC_TIME) == null) ? ""
+					: format((Date) data.get(FieldsConstants.DOC_TIME), CommonConstants.SHOW_DATE_FORMAT));
+			// Business properties
+			result.setTitle((String) data.get(FieldsConstants.TITLE));
+			result.setIntroTitle(data.get(FieldsConstants.INTRO_TITLE) == null ? ""
+					: (String) data.get(FieldsConstants.INTRO_TITLE));
+			result.setSubTitle(
+					data.get(FieldsConstants.SUB_TITLE) == null ? "" : (String) data.get(FieldsConstants.SUB_TITLE));
+			result.setAuthors(
+					data.get(FieldsConstants.AUTHORS) == null ? "" : (String) data.get(FieldsConstants.AUTHORS));
+			result.setSummary((String) data.get(FieldsConstants.SUMMARY));
+			result.setKeywords((String) data.get(FieldsConstants.KEYWORDS));
+			result.setContent((String) data.get(FieldsConstants.CONTENT));
+			result.setImgs((Integer) data.get(FieldsConstants.IMGS));
+			result.setSource(
+					data.get(FieldsConstants.SOURCE) == null ? "#" : (String) data.get(FieldsConstants.SOURCE));
+			result.setChannelName(data.get(FieldsConstants.CHANNEL_NAME) == null ? ""
+					: (String) data.get(FieldsConstants.CHANNEL_NAME));
+			result.setColum(data.get(FieldsConstants.COLUM) == null ? "" : (String) data.get(FieldsConstants.COLUM));
+			result.setSubject(
+					data.get(FieldsConstants.SUBJECT) == null ? "" : (String) data.get(FieldsConstants.SUBJECT));
+			result.setPageNum(
+					data.get(FieldsConstants.PAGE_NUM) == null ? 0 : (Integer) data.get(FieldsConstants.PAGE_NUM));
+			result.setPageName(
+					data.get(FieldsConstants.PAGE_NAME) == null ? "" : (String) data.get(FieldsConstants.PAGE_NAME));
+			// Auxiliary attributes
+			result.setStyle(data.get(FieldsConstants.STYLE) == null ? "" : (String) data.get(FieldsConstants.STYLE));
+			result.setAttach(data.get(FieldsConstants.ATTACH) == null ? "" : (String) data.get(FieldsConstants.ATTACH));
+			result.setPeoples(
+					data.get(FieldsConstants.PEOPLES) == null ? "" : (String) data.get(FieldsConstants.PEOPLES));
+			result.setPlaces(data.get(FieldsConstants.PLACES) == null ? "" : (String) data.get(FieldsConstants.PLACES));
+			result.setOrgs(data.get(FieldsConstants.ORGS) == null ? "" : (String) data.get(FieldsConstants.ORGS));
+			result.setTimes(data.get(FieldsConstants.TIMES) == null ? 0 : (Integer) data.get(FieldsConstants.TIMES));
+			result.setLikeTimes(
+					data.get(FieldsConstants.LIKE_TIMES) == null ? 0 : (Integer) data.get(FieldsConstants.LIKE_TIMES));
+		}
+		return result;
+	}
+
+	/**
+	 * {@code Document} transfer {@code DataingData}
+	 * 
+	 * @param doc
+	 * @return {@code DataingData}
+	 */
+	public static DataingData data(Document doc) {
+		DataingData result = new DataingData();
+		if (doc != null) {
+			// Basic properties
+			result.setId(Integer.valueOf(doc.get(FieldsConstants.ID)));
+			result.setTableId(doc.get(FieldsConstants.TABLE_ID));
+			result.setBaseId(Integer.valueOf(doc.get(FieldsConstants.BASE_ID)));
+			result.setUuid(doc.get(FieldsConstants.UUID));
+			result.setStatus(Integer.valueOf(doc.get(FieldsConstants.DATA_STATUS)));
+			result.setDocTime(isNullOrEmpty(doc.get(FieldsConstants.DOC_TIME)) ? ""
+					: format(parse(doc.get(FieldsConstants.DOC_TIME), CommonConstants.INDEX_DATE_FORMAT),
+							CommonConstants.SHOW_DATE_FORMAT));
+			// Business properties
+			result.setTitle(doc.get(FieldsConstants.TITLE));
+			result.setIntroTitle(
+					isNullOrEmpty(doc.get(FieldsConstants.INTRO_TITLE)) ? "" : doc.get(FieldsConstants.INTRO_TITLE));
+			result.setSubTitle(
+					isNullOrEmpty(doc.get(FieldsConstants.SUB_TITLE)) ? "" : doc.get(FieldsConstants.SUB_TITLE));
+			result.setAuthors(isNullOrEmpty(doc.get(FieldsConstants.AUTHORS)) ? "" : doc.get(FieldsConstants.AUTHORS));
+			result.setSummary(doc.get(FieldsConstants.SUMMARY));
+			result.setKeywords(doc.get(FieldsConstants.KEYWORDS));
+			result.setContent(doc.get(FieldsConstants.CONTENT));
+			result.setImgs(Integer.valueOf(doc.get(FieldsConstants.IMGS)));
+			result.setSource(isNullOrEmpty(doc.get(FieldsConstants.SOURCE)) ? "#" : doc.get(FieldsConstants.SOURCE));
+			result.setChannelName(
+					isNullOrEmpty(doc.get(FieldsConstants.CHANNEL_NAME)) ? "" : doc.get(FieldsConstants.CHANNEL_NAME));
+			result.setColum(isNullOrEmpty(doc.get(FieldsConstants.COLUM)) ? "" : doc.get(FieldsConstants.COLUM));
+			result.setSubject(isNullOrEmpty(doc.get(FieldsConstants.SUBJECT)) ? "" : doc.get(FieldsConstants.SUBJECT));
+			result.setPageNum(isNullOrEmpty(doc.get(FieldsConstants.PAGE_NUM)) ? 0
+					: Integer.valueOf(doc.get(FieldsConstants.PAGE_NUM)));
+			result.setPageName(
+					isNullOrEmpty(doc.get(FieldsConstants.PAGE_NAME)) ? "" : doc.get(FieldsConstants.PAGE_NAME));
+			// Auxiliary attributes
+			result.setStyle(isNullOrEmpty(doc.get(FieldsConstants.STYLE)) ? "" : doc.get(FieldsConstants.STYLE));
+			result.setAttach(isNullOrEmpty(doc.get(FieldsConstants.ATTACH)) ? "" : doc.get(FieldsConstants.ATTACH));
+			result.setPeoples(isNullOrEmpty(doc.get(FieldsConstants.PEOPLES)) ? "" : doc.get(FieldsConstants.PEOPLES));
+			result.setPlaces(isNullOrEmpty(doc.get(FieldsConstants.PLACES)) ? "" : doc.get(FieldsConstants.PLACES));
+			result.setOrgs(isNullOrEmpty(doc.get(FieldsConstants.ORGS)) ? "" : doc.get(FieldsConstants.ORGS));
+			result.setTimes(isNullOrEmpty(doc.get(FieldsConstants.TIMES)) ? 0
+					: Integer.valueOf(doc.get(FieldsConstants.TIMES)));
+			result.setLikeTimes(isNullOrEmpty(doc.get(FieldsConstants.LIKE_TIMES)) ? 0
+					: Integer.valueOf(doc.get(FieldsConstants.LIKE_TIMES)));
+		}
+		return result;
 	}
 
 	/**
