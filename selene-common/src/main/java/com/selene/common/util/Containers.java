@@ -79,4 +79,22 @@ public final class Containers {
 		}
 		return result;
 	}
+
+	/**
+	 * The utilities for {@code Integer} list to {@code String} list
+	 * 
+	 * @param list
+	 *            source {@code List}
+	 * @return {@link List}
+	 */
+	public static List<Integer> toInt(List<String> list) {
+		if (list == null || list.size() == 0) {
+			return null;
+		}
+		List<Integer> result = new ArrayList<Integer>();
+		for (String value : list) {
+			result.add(Integer.valueOf(value));
+		}
+		return result;
+	}
 }

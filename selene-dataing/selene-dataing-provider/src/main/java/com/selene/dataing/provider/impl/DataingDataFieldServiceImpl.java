@@ -112,4 +112,9 @@ public class DataingDataFieldServiceImpl implements DataingDataFieldService {
 		}
 		return result;
 	}
+
+	@Override
+	public List<DataingDataField> findFieldsInBasesByAccess(Integer type, List<Integer> list, Integer size) {
+		return dataFieldMapper.findFieldsInBasesByAccess(type, list, size);
+	}
 }

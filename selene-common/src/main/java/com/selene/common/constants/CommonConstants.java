@@ -84,6 +84,8 @@ public interface CommonConstants {
 
 	long DEFAULT_TOKEN_LONG_TIMEOUT = 604800;// 7 day
 
+	long DEFAULT_SEARCH_TOKEN = 60 * 60;// 1 hour
+
 	String REMOVE_VALUE_PREFIX = "-";
 
 	String PROPERTIES_CHAR_SEPERATOR = "-";
@@ -177,4 +179,6 @@ public interface CommonConstants {
 	String SEARCH_INDEX_ALL = "*:*";
 
 	int DEFAULT_SEARCH_INDEX_NUMBER_HITS = 1000000;
+
+	String DEFAULT_REMOVE_CHAR = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 }

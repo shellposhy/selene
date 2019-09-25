@@ -119,6 +119,16 @@ public class DataingDatabaseServiceImpl implements DataingDatabaseService {
 	}
 
 	@Override
+	public List<Integer> findDataNodeByIds(List<Integer> list) {
+		return databaseMapper.findDataNodeByIds(list);
+	}
+
+	@Override
+	public String findDataNodeNameByIds(List<Integer> list) {
+		return databaseMapper.findDataNodeNameByIds(list);
+	}
+
+	@Override
 	public int insert(DataingDatabase database) {
 		int result = databaseMapper.insert(database);
 		return result > 0 ? /* Return the database id */database.getId() : result;

@@ -37,10 +37,14 @@ public interface DataingDatabaseService {
 
 	public List<DataingDatabase> findByParentId(String license, ELibraryType type, Integer parentId);
 
+	public String findDataNodeNameByIds(List<Integer> list);
+
+	public List<Integer> findDataNodeByIds(List<Integer> list);
+
 	public int insert(DataingDatabase database);
 
 	public int update(DataingDatabase database);
-	
+
 	public int updateDataUpdateTime(Integer id);
 
 	public int delete(Integer id);

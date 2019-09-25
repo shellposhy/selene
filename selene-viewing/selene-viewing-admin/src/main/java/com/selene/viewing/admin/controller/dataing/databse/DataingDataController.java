@@ -103,6 +103,8 @@ public class DataingDataController extends BaseController {
 				model.addAttribute("attachList", attachsFile);
 			}
 		}
+		model.addAttribute("baseId", dataTable.getBaseId());
+		model.addAttribute("fieldsStr", sb.toString());
 		model.addAttribute("dataVo", dataVo);
 		return "/admin/dataing/data/edit";
 	}
@@ -138,8 +140,21 @@ public class DataingDataController extends BaseController {
 		DataTable dataTable = Containers.table(dataArray);
 		Integer pageStart = dataTable.getiDisplayStart();
 		Integer pageSize = dataTable.getiDisplayLength();
+		String word = dataTable./* Search words */getsSearch();
+		word = DataUtil./* Remove special char and XSS */remove(DataUtil.xss(word));
+		ListResult<DataingData> dataList = null;
+		if (isNullOrEmpty(word)) {
+			dataList = searchingService.search(null, pageStart, pageSize, libraryId);
+		} else {
+			String[] newHightLightFields = /* Highlight the fields */ { FieldsConstants.AUTHORS, FieldsConstants.TITLE,
+					FieldsConstants.SUMMARY };
+			StringBuffer queryString = new StringBuffer();
+			queryString.append("Title:").append(word).append(" OR Summary:").append(word).append(" OR Authors:")
+					.append(word);
+			dataList = searchingService.search(queryString.toString(), newHightLightFields, pageStart, pageSize,
+					libraryId);
+		}
 		// Data process
-		ListResult<DataingData> dataList = searchingService.search(null, pageStart, pageSize, libraryId);
 		List<DataingData> list = (dataList.getData() != null && dataList.getData().size() > 0) ? dataList.getData()
 				: new ArrayList<DataingData>();
 		DataTableResult<DataingData> result = new DataTableResult<DataingData>(dataTable.getsEcho(),
@@ -194,23 +209,24 @@ public class DataingDataController extends BaseController {
 			HttpServletRequest request) {
 		checkNotNull(dataVo.getBaseId(), "Database not null before insert database!");
 		final MerchantsUserVO vo = commonService.user(request);
+		String content = /* Not escapes string */DataUtil.unescape(dataVo.getFieldMap().get(FieldsConstants.CONTENT));
 		/** Copy the image files from the temporary folder to the real path */
 		String tmpPicPath = resourceService.tmpPic(dataVo.getUuid());
-		EResult picResult = resourceService.copyDirectoryToDirectory(
-				/* Temporary folder */tmpPicPath,
-				/* Real folder */resourceService.realPic(dataVo.getBaseId(), dataVo.getCreateTime()), true);
-		String content = dataVo.getFieldMap().get(FieldsConstants.CONTENT);
-		content = /* Not escapes string */DataUtil.unescape(content);
-		if (picResult == EResult.Success) {
-			content = resourceService.replace(content,
-					/* Temporary relative folder */resourceService.tmpRelativePic(dataVo.getUuid()),
-					/* Real relative folder */resourceService.realRelativePic(dataVo.getBaseId(),
-							dataVo.getCreateTime()),
-					true);
-			resourceService./* Delete temporary images folder */deleteFolder(tmpPicPath);
+		List<File> /* If exist upload image files */ picTmpFiles = resourceService.files(tmpPicPath);
+		if (picTmpFiles != null && picTmpFiles.size() > 0) {
+			EResult picResult = resourceService.copyDirectoryToDirectory(
+					/* Temporary folder */tmpPicPath,
+					/* Real folder */resourceService.realPic(dataVo.getBaseId(), dataVo.getCreateTime()), true);
+			if (picResult == EResult.Success) {
+				content = resourceService.replace(content,
+						/* Temporary relative folder */resourceService.tmpRelativePic(dataVo.getUuid()),
+						/* Real relative folder */resourceService.realRelativePic(dataVo.getBaseId(),
+								dataVo.getCreateTime()),
+						true);
+				resourceService./* Delete temporary images folder */deleteFolder(tmpPicPath);
+			}
 		}
 		final String /* Real content */ realContent = content;
-
 		/** Copy the documents from temporary folder to the real path */
 		String tmpDocPath = resourceService.tmpDoc(dataVo.getUuid());
 		List<File> docTmpFiles = resourceService.files(tmpDocPath);
@@ -225,7 +241,9 @@ public class DataingDataController extends BaseController {
 		return super.save(dataVo, result, model, new Operator() {
 			@Override
 			public void operate() {
-				DataingDataTable dataTable = /* Data table */dataService.findDataTableByBaseId(dataVo.getBaseId());
+				DataingDataTable dataTable = /* Data table */(dataVo.getId() != null && dataVo.getId().intValue() > 0)
+						? dataService.findTable(Integer.valueOf(dataVo.getTableId()))
+						: dataService.findDataTableByBaseId(dataVo.getBaseId());
 				DataingBaseData baseData = new DataingBaseData(dataVo.getId(), dataTable.getId(), dataTable.getName(),
 						dataVo.getBaseId(), EDataStatus.Normal, "", "1.0");
 				// Initialization value

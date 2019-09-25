@@ -46,6 +46,10 @@ public interface DataingDatabaseMapper {
 	public List<DataingDatabase> findByParentId(@Param("license") String license, @Param("type") ELibraryType type,
 			@Param("parentId") Integer parentId);
 
+	public String findDataNodeNameByIds(List<Integer> list);
+
+	public List<Integer> findDataNodeByIds(List<Integer> list);
+
 	public int insert(DataingDatabase database);
 
 	public int update(DataingDatabase database);

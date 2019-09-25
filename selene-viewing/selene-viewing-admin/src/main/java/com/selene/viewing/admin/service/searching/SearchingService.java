@@ -77,6 +77,12 @@ public class SearchingService {
 				baseIds);
 	}
 
+	public ListResult<DataingData> search(String queryString, String[] hightLightFields, Integer first, Integer size,
+			Integer... baseIds) {
+		return search(queryString, CommonConstants.DEFAULT_SEARCH_INDEX_NUMBER_HITS, null, hightLightFields, first,
+				size, baseIds);
+	}
+
 	public ListResult<DataingData> search(String queryString, PepperSortField[] sortFields, String[] hightLightFields,
 			Integer first, Integer size, Integer... baseIds) {
 		return search(queryString, CommonConstants.DEFAULT_SEARCH_INDEX_NUMBER_HITS, sortFields, hightLightFields,
@@ -98,7 +104,7 @@ public class SearchingService {
 			sortFields = newSortFields;
 		}
 		String[] newHightLightFields = /* Highlight the fields */ { FieldsConstants.AUTHORS, FieldsConstants.TITLE,
-				FieldsConstants.CONTENT };
+				FieldsConstants.CONTENT, FieldsConstants.SUMMARY };
 		if ((hightLightFields == null || hightLightFields.length == 0) && !isNullOrEmpty(queryString)) {
 			hightLightFields = newHightLightFields;
 		}

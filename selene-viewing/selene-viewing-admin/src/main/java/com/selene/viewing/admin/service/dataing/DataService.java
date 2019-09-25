@@ -24,12 +24,14 @@ import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.FieldsConstants;
 import com.selene.common.constants.ServiceConstants;
+import com.selene.common.constants.util.EAccessType;
 import com.selene.common.constants.util.EDataFieldType;
 import com.selene.common.constants.util.EDataStatus;
 import com.selene.common.constants.util.ELibraryNodeType;
 import com.selene.common.constants.util.ELibraryType;
 import com.selene.common.result.ListResult;
 import com.selene.common.tree.support.LibraryTreeNode;
+import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.tree.DefaultTreeNode.PropertySetter;
 import com.selene.common.util.DataUtil;
 import com.selene.common.util.RedisClient;
@@ -168,6 +170,7 @@ public class DataService {
 				return 1;
 			}
 		} else/* Update data */ {
+			data.put(FieldsConstants.ID, data.getId());
 			List<DataingDataField> updateFields = new ArrayList<DataingDataField>();
 			for (DataingDataField dataField : dataFieldService.findFieldsByBaseId(data.getBaseId())) {
 				if (data.getLowerFieldSet().contains(dataField.getCode().toLowerCase())) {
@@ -669,6 +672,34 @@ public class DataService {
 	}
 
 	/**
+	 * Get database name
+	 * 
+	 * @param list
+	 * @return {@code String}
+	 */
+	public String findDataBaseName(List<Integer> list) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		return databaseService.findDataNodeNameByIds(list);
+	}
+
+	/**
+	 * Get database node
+	 * 
+	 * @param list
+	 * @return {@code List}
+	 */
+	public List<Integer> findDataBaseNodes(List<Integer> list) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		return databaseService.findDataNodeByIds(list);
+	}
+
+	/**
 	 * Query the database list by not child.
 	 * 
 	 * @param license
@@ -698,6 +729,22 @@ public class DataService {
 				.get(DataingDatabaseService.class.getName());
 		// Business process
 		return databaseService.findByNameType(license, Strings.nullToEmpty(word), type);
+	}
+
+	/**
+	 * Get the database {@code DefaultTreeNode} tree.
+	 * 
+	 * @param license
+	 * @param type
+	 * @return {@link DefaultTreeNode}
+	 */
+	public DefaultTreeNode tree(String license, ELibraryType type) {
+		// Initialize the required services
+		DataingDatabaseService databaseService = (DataingDatabaseService) services
+				.get(DataingDatabaseService.class.getName());
+		// Business process
+		List<DataingDatabase> list = databaseService.list(license, Strings.nullToEmpty(null), type);
+		return DefaultTreeNode.parseTree(list);
 	}
 
 	/**
@@ -856,6 +903,21 @@ public class DataService {
 			dataModel.setModelFieldIds(sb.toString());
 		}
 		return dataModel;
+	}
+
+	/**
+	 * Query {@code DataingDataField} by type and database ids
+	 * 
+	 * @param type
+	 * @param list
+	 * @return {@link List}
+	 */
+	public List<DataingDataField> findFieldsInBasesByAccess(EAccessType type, List<Integer> list) {
+		// Initialize the required services
+		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
+				.get(DataingDataFieldService.class.getName());
+		// Business process
+		return dataFieldService.findFieldsInBasesByAccess(type.ordinal(), list, list.size());
 	}
 
 	/**

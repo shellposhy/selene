@@ -23,7 +23,7 @@ import com.selene.common.constants.ServiceConstants;
 import com.selene.common.result.ListResult;
 import com.selene.common.token.login.LoginToken;
 import com.selene.common.tree.DefaultTreeNode;
-import com.selene.common.util.Chineses;
+import com.selene.common.util.Hanyus;
 import com.selene.common.util.RedisClient;
 import com.selene.merchants.model.Merchants;
 import com.selene.merchants.model.MerchantsAction;
@@ -274,7 +274,7 @@ public class UserService {
 			if (/* When install first,make sure license is legal */checkLicense != null && checkLicense.size() > 0) {
 				return 0;
 			}
-			String roleCodeAndOrgCode = Chineses.lower(merchants.getOrgName());
+			String roleCodeAndOrgCode = Hanyus.lower(merchants.getOrgName());
 			MerchantsRole /* First create administrator role */ firstAdminRole = new MerchantsRole(newLicense, "全部权限",
 					roleCodeAndOrgCode, true, true, true, EPageType.SysPage, 0, null, 0, "全部权限", 1, new Date(), 1,
 					new Date());

@@ -185,4 +185,27 @@
 		ORDER BY 
 			f.ID
 	</select>
+	
+	<select id="findFieldsInBasesByAccess" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT  DISTINCT 
+			f.ID,f.Component_ID,f.Name,f.Code,f.Code_Name,f.Data_Type,f.Nosg,f.Leng,f.Prec,f.Mand,f.Uniq,f.Multi_Value,f.Use_Enum,
+			f.Index_Type,f.Index_Store,f.Required,f.Type,f.Order_ID,f.Access_Type,f.For_Display,f.For_Order,f.Memo 
+		FROM 
+			data_field f
+		WHERE 
+			f.ID IN (
+				SELECT 
+					m.Field_ID 
+				FROM 
+					data_base d, data_base_field_map m
+				WHERE 
+					m.Base_ID = d.ID AND f.Access_Type = #{type} AND d.ID IN 
+					<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+						#{item}
+					</foreach> 
+				GROUP BY 
+					m.Field_ID HAVING COUNT(m.Field_ID ) <![CDATA[ >= ]]> #{size}
+				) 
+				AND f.ID NOT IN (4,22,23,35,39,40,41,42,43,44)
+	</select>
 </mapper>

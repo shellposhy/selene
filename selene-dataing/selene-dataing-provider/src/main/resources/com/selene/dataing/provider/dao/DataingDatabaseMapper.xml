@@ -133,6 +133,30 @@
 		WHERE
 			   License=#{license} AND TYPE = #{type} AND Parent_ID=#{parentId}
 	</select>
+	
+	<select id="findDataNodeNameByIds" resultType="java.lang.String">
+		SELECT 
+			GROUP_CONCAT(NAME)  
+		FROM 
+			data_base 
+		WHERE 
+			Node_Type=0 AND ID IN 
+			<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+	  			#{id}
+			</foreach>
+	</select>
+	
+	<select id="findDataNodeByIds" resultType="java.lang.Integer">
+		SELECT 
+			ID
+		FROM 
+			data_base 
+		WHERE 
+			Node_Type=0 AND ID IN 
+			<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+	  			#{id}
+			</foreach>
+	</select>
 
 	<insert id="insert">
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">

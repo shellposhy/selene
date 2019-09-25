@@ -24,6 +24,8 @@ import static com.hankcs.hanlp.summary.TextRankSentence.getSummary;
 import com.pepper.lucene.comparator.base.PepperSortField.FieldType;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.util.EDataType;
+import com.selene.common.constants.util.EDateSearchType;
+import com.selene.common.constants.util.EFieldSearchType;
 
 import cn.com.lemon.base.DateUtil;
 
@@ -44,6 +46,198 @@ import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 public final class DataUtil {
 
 	private DataUtil() {
+	}
+
+	/**
+	 * Search engines query term processing
+	 * 
+	 * @param field
+	 * @param dataType
+	 * @param value
+	 * @param dateSearchType
+	 * @return
+	 */
+	public static String query(EFieldSearchType searchType, String value) {
+		StringBuffer sb = new StringBuffer("");
+		sb.setLength(0);
+		if (!isNullOrEmpty(value)) {
+			value = /* Remove special char and XSS */remove(xss(value));
+			switch (searchType) {
+			case All:
+				sb.append(EFieldSearchType.Title.getCode()).append(":").append(value);
+				sb.append(" OR ").append(EFieldSearchType.Content.getCode()).append(":").append(value);
+				sb.append(" OR ").append(EFieldSearchType.Keywords.getCode()).append(":").append(value);
+				sb.append(" OR ").append(EFieldSearchType.Summary.getCode()).append(":").append(value);
+				sb.append(" OR ").append(EFieldSearchType.Authors.getCode()).append(":").append(value);
+				break;
+			case Title:
+				sb.append(EFieldSearchType.Title.getCode()).append(":").append(value);
+				break;
+			case Content:
+				sb.append(EFieldSearchType.Content.getCode()).append(":").append(value);
+				break;
+			case Keywords:
+				sb.append(EFieldSearchType.Keywords.getCode()).append(":").append(value);
+				break;
+			case Summary:
+				sb.append(EFieldSearchType.Summary.getCode()).append(":").append(value);
+				break;
+			default:
+			case Authors:
+				sb.append(EFieldSearchType.Authors.getCode()).append(":").append(value);
+				break;
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Search engines query term processing
+	 * 
+	 * @param field
+	 * @param dataType
+	 * @param value
+	 * @param dateSearchType
+	 * @return
+	 */
+	public static String query(String field, EDataType dataType, EDateSearchType dateSearchType, String... value) {
+		StringBuffer sb = new StringBuffer("");
+		sb.setLength(0);
+		switch (dataType) {
+		case Date:
+		case Time:
+		case DateTime:
+			sb.append("#long#").append(field).append(":").append("[");
+			switch (dateSearchType) {
+			case Day:
+				sb.append(DateUtil.format(new Date(), "yyyyMMdd") + "000000");
+				sb.append(" TO ");
+				sb.append(DateUtil.format(new Date(), "yyyyMMdd") + "235959");
+				sb.append("]");
+				break;
+			case Month:
+				sb.append(DateUtil.format(new Date(), "yyyyMM") + "01000000");
+				sb.append(" TO ");
+				sb.append(DateUtil.format(new Date(), "yyyyMMdd") + "235959");
+				sb.append("]");
+				break;
+			default:
+			case Range:
+				if (value != null && value.length == 2) {
+					sb.append(DateUtil.format(DateUtil.parse(value[0], CommonConstants.COMMON_DATE_FORMAT),
+							CommonConstants.INDEX_DATE_FORMAT));
+					sb.append(" TO ");
+					sb.append(DateUtil.format(DateUtil.parse(value[1], CommonConstants.COMMON_DATE_FORMAT),
+							CommonConstants.INDEX_DATE_FORMAT));
+					sb.append("]");
+				} else {
+					sb.setLength(0);
+					sb.append("");
+				}
+				break;
+			}
+			break;
+		case Long:
+			if (!isNullOrEmpty(value[0])) {
+				sb.append("#long#").append(field).append(":").append(value[0]);
+			} else {
+				sb.append("");
+			}
+			break;
+		case UUID:
+		case Char:
+		case Varchar:
+		case Bool:
+		case Blob:
+		case MediumBlob:
+			if (!isNullOrEmpty(value[0])) {
+				sb.append(field).append(":").append(value[0]);
+			} else {
+				sb.append("");
+			}
+			break;
+		case Short:
+		case IntAutoIncrement:
+		case Int:
+			if (!isNullOrEmpty(value[0])) {
+				sb.append("#int#").append(field).append(":").append(value[0]);
+			} else {
+				sb.append("");
+			}
+			break;
+		case Float:
+			if (!isNullOrEmpty(value[0])) {
+				sb.append("#float#").append(field).append(":").append(value[0]);
+			} else {
+				sb.append("");
+			}
+			break;
+		default:
+		case Double:
+		case Numeric:
+			if (!isNullOrEmpty(value[0])) {
+				sb.append("#double#").append(field).append(":").append(value[0]);
+			} else {
+				sb.append("");
+			}
+			break;
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Remove XSS characters
+	 * 
+	 * @param content
+	 * @return {@code String}
+	 */
+	public static String xss(String content) {
+		if (isNullOrEmpty(content)) {
+			return "";
+		}
+		Pattern pattern = /* Remove script execution */Pattern.compile(
+				"<[\r\n| | ]*script[\r\n| | ]*>(.*?)</[\r\n| | ]*script[\r\n| | ]*>", Pattern.CASE_INSENSITIVE);
+		content = pattern.matcher(content).replaceAll("");
+		pattern = Pattern./* Remove (src="http://...")e-xpression */compile(
+				"src[\r\n| | ]*=[\r\n| | ]*[\\\"|\\\'](.*?)[\\\"|\\\']",
+				Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+		content = pattern.matcher(content).replaceAll("");
+		pattern = /* Remove(</script>) tag */ Pattern.compile("</[\r\n| | ]*script[\r\n| | ]*>",
+				Pattern.CASE_INSENSITIVE);
+		content = pattern.matcher(content).replaceAll("");
+		pattern = /* Remove(<script>) tag */Pattern.compile("<[\r\n| | ]*script(.*?)>",
+				Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+		content = pattern.matcher(content).replaceAll("");
+		pattern = Pattern./* Remove (eval(...)) expressions */compile("eval\\((.*?)\\)",
+				Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+		content = pattern.matcher(content).replaceAll("");
+		pattern = Pattern./* Remove (e-xpression(...)) expressions */compile("e-xpression\\((.*?)\\)",
+				Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+		content = pattern.matcher(content).replaceAll("");
+		pattern = Pattern./* Remove (javascript:...) expressions */compile("javascript[\r\n| | ]*:[\r\n| | ]*",
+				Pattern.CASE_INSENSITIVE);
+		content = pattern.matcher(content).replaceAll("");
+		pattern = Pattern./* Remove (vbscript:...) expressions */compile("vbscript[\r\n| | ]*:[\r\n| | ]*",
+				Pattern.CASE_INSENSITIVE);
+		content = pattern.matcher(content).replaceAll("");
+		pattern = Pattern./* Remove (onload= )expressions */compile("onload(.*?)=",
+				Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+		content = pattern.matcher(content).replaceAll("");
+		return content;
+	}
+
+	/**
+	 * Remove special characters
+	 * 
+	 * @param content
+	 * @return {@code String}
+	 */
+	public static String remove(String content) {
+		if (isNullOrEmpty(content)) {
+			return "";
+		}
+		return Pattern.compile(CommonConstants.DEFAULT_REMOVE_CHAR, Pattern.CASE_INSENSITIVE).matcher(content)
+				.replaceAll("").trim();
 	}
 
 	/**

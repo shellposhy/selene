@@ -15,7 +15,7 @@ import static cn.com.lemon.base.Strings.isNullOrEmpty;
  * @author shaobo shih
  * @version 1.0
  */
-public final class Chineses {
+public final class Hanyus {
 	private static HanyuPinyinOutputFormat format = null;
 
 	static {
@@ -98,6 +98,6 @@ public final class Chineses {
 		FIRSTUPPER // first upper
 	}
 
-	private Chineses() {
+	private Hanyus() {
 	}
 }

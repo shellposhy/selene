@@ -28,7 +28,7 @@ public interface DataingDataFieldService {
 	public List<DataingDataField> findByCode(String code);
 
 	public List<DataingDataField> findFieldsByBaseId(Integer baseId);
-	
+
 	public List<DataingDataField> findDisplayFieldsByBaseId(Integer baseId);
 
 	public List<DataingDataField> findByRequired(Boolean required);
@@ -40,4 +40,6 @@ public interface DataingDataFieldService {
 	public List<DataingDataField> findFieldsByModelId(Integer modelId);
 
 	public List<DataingDataField> compare(List<DataingDataField> source, List<DataingDataField> target);
+
+	public List<DataingDataField> findFieldsInBasesByAccess(Integer type, List<Integer> list, Integer size);
 }

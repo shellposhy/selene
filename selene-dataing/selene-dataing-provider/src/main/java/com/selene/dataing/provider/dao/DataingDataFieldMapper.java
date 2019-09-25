@@ -43,4 +43,7 @@ public interface DataingDataFieldMapper {
 	public List<DataingDataField> findDisplayFieldsByModelId(@Param("modelId") Integer modelId);
 
 	public List<DataingDataField> findFieldsByModelId(@Param("modelId") Integer modelId);
+
+	public List<DataingDataField> findFieldsInBasesByAccess(@Param("type") Integer type,
+			@Param("list") List<Integer> list, @Param("size") Integer size);
 }
