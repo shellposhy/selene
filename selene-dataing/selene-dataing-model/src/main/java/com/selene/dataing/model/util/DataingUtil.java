@@ -110,7 +110,9 @@ public final class DataingUtil {
 			result.setSubTitle(
 					isNullOrEmpty(doc.get(FieldsConstants.SUB_TITLE)) ? "" : doc.get(FieldsConstants.SUB_TITLE));
 			result.setAuthors(isNullOrEmpty(doc.get(FieldsConstants.AUTHORS)) ? "" : doc.get(FieldsConstants.AUTHORS));
-			result.setSummary(doc.get(FieldsConstants.SUMMARY));
+			result.setSummary(isNullOrEmpty(doc.get(FieldsConstants.SUMMARY))
+					? (isNullOrEmpty(doc.get(FieldsConstants.CONTENT)) ? "" : text(doc.get(FieldsConstants.CONTENT)))
+					: doc.get(FieldsConstants.SUMMARY));
 			result.setKeywords(doc.get(FieldsConstants.KEYWORDS));
 			result.setContent(doc.get(FieldsConstants.CONTENT));
 			result.setImgs(Integer.valueOf(doc.get(FieldsConstants.IMGS)));

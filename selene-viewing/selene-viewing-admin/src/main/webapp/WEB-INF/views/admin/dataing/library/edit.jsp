@@ -13,8 +13,7 @@
 	<div class="box-content">
 		<div id="myTabContent" class="tab-content">
 			<div class="tab-pane active" id="setting">
-				<form:form modelAttribute="library" class="form-horizontal u_group_form" id="db_new_form" 
-										 action="${appPath}/admin/dataing/library/save" method="post" target="_self">
+				<form:form modelAttribute="library" class="form-horizontal u_group_form" id="db_new_form"  action="${appPath}/admin/dataing/library/save" method="post" target="_self">
 					<fieldset>
 						<legend>
 							<span title="" class="icon32 icon-inbox floatl"></span>数据库编辑

@@ -568,7 +568,7 @@ function loadDataField() {
 	if ($("#Article_new_form").length > 0) {
 		$("#Article_new_form").hide();
 		var dataField = $("#fieldsStr").val().split(",");
-		for (var i = 0; i < $("#Article_new_form input").length; i++) {
+		for (var i = 0; i < $("#Article_new_form input,#Article_new_form textarea,#Article_new_form select").length; i++) {
 			var flag = true;
 			for (var j = 0; j < dataField.length; j++) {
 				if ($("#Article_new_form input:eq(" + i + ")").attr("id") == dataField[j]) {
@@ -579,17 +579,35 @@ function loadDataField() {
 					flag = false;
 					break;
 				}
+				if ($("#Article_new_form textarea:eq(" + i + ")").attr("id") == dataField[j]) {
+					flag = false;
+					break;
+				}
 			}
 			if (flag) {
-				if ($("#Article_new_form input:eq(" + i + ")").hasClass("treeSel") || $("#Article_new_form input:eq(" + i + ")").hasClass("treeRadio") || $("#Article_new_form input:eq(" + i + ")").hasClass("ios_toggle")) {
+				if ($("#Article_new_form input:eq(" + i + ")").hasClass("treeSel") || $("#Article_new_form input:eq(" + i + ")").hasClass("treeRadio") || 
+						$("#Article_new_form input:eq(" + i + ")").hasClass("ios_toggle")) {
 					continue;
 				}
+				// input tags 
 				if ($("#Article_new_form input:eq(" + i + ")").attr("id") == "Imgs") {
 					$("#Article_new_form input:eq(" + i + ")").parents(".futu_imgs").addClass("beremove");
 				} else if ($("#Article_new_form input:eq(" + i + ")").attr("id") == "Data_Status") {
 					$("#Article_new_form input:eq(" + i + ")").parents(".control-group").addClass("beremove");
 				} else {
 					$("#Article_new_form input:eq(" + i + ")").parents(".control-group").addClass("beremove");
+				}
+				//textarea tags
+				if($("#Article_new_form textarea:eq(" + i + ")").attr("id")=='contentArea'||$("#Article_new_form textarea:eq(" + i + ")").attr("id")=='undefined'){
+					continue;
+				}else{
+					$("#Article_new_form textarea:eq(" + i + ")").parents(".control-group").addClass("beremove");
+				}
+				//select tags
+				if($("#Article_new_form select:eq(" + i + ")").attr("id")=='undefined'){
+					continue;
+				}else{
+					$("#Article_new_form select:eq(" + i + ")").parents(".control-group").addClass("beremove");
 				}
 			}
 		}

@@ -268,8 +268,10 @@ public class DataingDataController extends BaseController {
 							baseData.put(FieldsConstants.IMGS, imgs.size());
 						}
 					} else {
-						/* Set value */baseData.put(field, DataUtil.dataTypeObject(dataVo.getFieldMap().get(field),
-								fieldMap.get(field).getDataType()));
+						if (fieldMap.get(field) != null) {
+							/* Set value */baseData.put(field, DataUtil.dataTypeObject(dataVo.getFieldMap().get(field),
+									fieldMap.get(field).getDataType()));
+						}
 					}
 				}
 				if (/* Set doc time */baseData.get(FieldsConstants.DOC_TIME) == null) {

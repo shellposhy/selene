@@ -159,8 +159,8 @@
 								<p><button type="button" class="btn" onclick="javascript:$('#Attach').uploadify('upload','*')">上传</button></p>
 								<c:if test="${!empty attachList}">
 									<c:if test="${fn:length(attachList) > 0 }">
-										<c:forEach var="fileName" items="${attachList }">
-											<p><span>${fileName }</span>&nbsp;<a href="javascript:deleteFile('${fileName}')">删除</a></p>
+										<c:forEach var="fileName" items="${attachList }" varStatus="status">
+											<p><span>附件_${status.count }</span>&nbsp;<a class="delete_file" href="#" attr_id="${status.count }" attr_file="${fileName}">删除</a></p>
 										</c:forEach>
 									</c:if>
 								</c:if>
@@ -183,14 +183,38 @@
 			'height' : 20,
 			'width' : 80,
 			'fileTypeDesc':'Doc Files',
-	        'fileTypeExts': '*.pdf;*.ppt;*.pptx;*.pptx;*.doc;*.docx;*.xlsx;*.xls;*.rar;*.rvt;*.dwg;*.rfa;*.nwd',
+	        'fileTypeExts': '*.pdf;*.ppt;*.pptx;*.doc;*.docx;*.xlsx;*.xls',
 			'removeCompleted' : false,
 			'auto' : false,
 			'buttonText' : '选择文件...',
 			'swf' : '${appPath}/admin/js/uploadify.swf',
-			'uploader' : '${appPath}/admin/upload/file?baseId=${dataVo.baseId}&uuid=${dataVo.uuid}&dateTime=${dataVo.createTime}',
+			'uploader' : '${appPath}/admin/dataing/library/data/file/upload?uuid=${dataVo.uuid}',
 			'cancelImg' : '${appPath}/admin/img/uploadify-cancel.png',
 		});
+		
+		//delete file
+		$(".delete_file").die().on('click',function(){
+			var fileName=$(this).attr("attr_file");
+			var fileId=$(this).attr("attr_id");
+			$.ajax({
+				type : "PUT",
+				url : appPath + "/admin/dataing/library/data/file/delete?id=${dataVo.baseId}&uuid=${dataVo.uuid}&fileName="+fileName,
+				dataType : 'json',
+				contentType : 'application/json',
+				beforeSend: function(request) {//beforeSend
+	                request.setRequestHeader("token", token);
+	                request.setRequestHeader("refreshToken",refreshToken);
+	             },
+				success : function(data) {
+					if(data.code==200){
+						noty({"text" : "删除成功！","layout" : "center","type" : "success"});
+						$('p:contains(附件_' + fileId + ')').remove();
+					}else{
+						noty({"text" : "删除失败！","layout" : "center","type" : "error"});
+					}
+				}
+			}); 
+		})
 	});
 </script>
 <script type="text/javascript" 	src="${appPath}/admin/jscript/dataing/library.js"></script>

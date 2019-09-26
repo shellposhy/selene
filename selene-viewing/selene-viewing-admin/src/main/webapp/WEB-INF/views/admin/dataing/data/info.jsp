@@ -25,11 +25,11 @@
 								<h3>
 									<span class='icon icon-blue icon-attachment'></span>附件
 								</h3>
-								<c:forEach var="fileName" items="${attachList }">
+								<c:forEach var="fileName" items="${attachList }" varStatus="status">
 									<p>
 										<span>
-											${fileName}&nbsp;
-											<a href="${appPath }/admin/dataing/library/data/download?uuid=${data.uuid}&baseId=${data.baseId}&fileName=${fileName}">下载</a>
+											附件_${status.count}&nbsp;
+											<a href="${appPath }/admin/dataing/library/data/download?fileName=${fileName}">下载</a>
 										</span>
 									</p>
 								</c:forEach>
@@ -41,6 +41,5 @@
 		</div>
 	</div>
 	</div>
-	<div>
 </body>
 </html>
