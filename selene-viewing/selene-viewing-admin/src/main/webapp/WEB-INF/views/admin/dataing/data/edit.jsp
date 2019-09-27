@@ -175,6 +175,11 @@
 		</form:form>
 	</div>
 </div>
+<script src="${appPath}/admin/js/min/jquery/uploadify/3.1.min.js"></script>
+<!-- ueditor-->
+<script type="text/javascript" src="${appPath}/admin/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" src="${appPath}/admin/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${appPath}/admin/js/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
 	$(function() {
 		if ($('#fieldsStr').val().indexOf('Attach') == -1)
@@ -217,6 +222,6 @@
 		})
 	});
 </script>
-<script type="text/javascript" 	src="${appPath}/admin/jscript/dataing/library.js"></script>
+<script type="text/javascript" 	src="${appPath}/admin/js/min/business/dataing/library.min.js"></script>
 </body>
 </html>

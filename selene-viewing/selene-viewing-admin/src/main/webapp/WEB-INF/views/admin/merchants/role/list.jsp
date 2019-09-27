@@ -36,6 +36,6 @@
 			</tfoot>
 		</table>
 	</div>
-	<script src="${appPath}/admin/jscript/merchants/min/role.js"></script>
+	<script src="${appPath}/admin/js/min/business/merchants/role.min.js"></script>
 	</body>
 </html>

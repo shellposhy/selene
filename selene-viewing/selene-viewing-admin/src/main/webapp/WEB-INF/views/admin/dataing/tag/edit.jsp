@@ -53,6 +53,6 @@
 				</form:form>
 			</div>
 		</div>
-		<script type="text/javascript" 	src="${appPath}/admin/jscript/dataing/tag.js"></script>
+		<script type="text/javascript" 	src="${appPath}/admin/js/min/business/dataing/tag.min.js"></script>
 	</body>
 </html>

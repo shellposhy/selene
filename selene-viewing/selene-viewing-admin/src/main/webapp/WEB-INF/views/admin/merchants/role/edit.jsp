@@ -59,7 +59,7 @@
 						<div class="controls">
 							<span class="btn ml10 allAuthor disabled">完全权限</span>
 							<span class="btn ml10 notAllAuthor ">详细定制</span>
-							<input class="treeSel " type="text" readonly value="" />
+							<input class="treeSel " type="text" readonly value="请选择下拉列表权限" />
 							<form:hidden path="treeSelId" class="treeSelId" name="treeSelId" value="" />
 							<a class="menuBtn btn" href="#">选择</a>
 						</div>
@@ -77,6 +77,6 @@
 				</fieldset>
 			</form:form>
 		</div>
-	<script src="${appPath}/admin/jscript/merchants/min/role.js"></script>
+	<script src="${appPath}/admin/js/min/business/merchants/role.min.js"></script>
 	</body>
 </html>

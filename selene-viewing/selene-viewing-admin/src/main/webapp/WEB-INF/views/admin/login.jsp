@@ -52,18 +52,7 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-			$(function(){
-				$("#login_form").validate({
-					rules : {
-						username : {required : true},
-						password : {required : true}
-					},
-					messages : {
-						username : {required : "账户名不能为空"},
-						password : {required : "密码不能为空"}
-					}
-				});
-			});
+			$(function(){$("#login_form").validate({rules:{username:{required:true},password:{required:true}},messages:{username:{required:"账户名不能为空"},password:{required:"密码不能为空"}}})});
 		</script>
 	</body>
 </html>

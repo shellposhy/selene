@@ -72,6 +72,6 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript" 	src="${appPath}/admin/jscript/dataing/library.js"></script>
+<script type="text/javascript" 	src="${appPath}/admin/js/min/business/dataing/library.min.js"></script>
 </body>
 </html>

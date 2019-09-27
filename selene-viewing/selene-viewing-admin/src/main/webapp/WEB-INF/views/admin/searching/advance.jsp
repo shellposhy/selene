@@ -52,6 +52,6 @@
 				</div>
 			</div>
 		</div>
-		<script src="${appPath}/admin/jscript/searching/min/search.js"></script>
+		<script src="${appPath}/admin/js/min/business/searching/search.min.js"></script>
 	</body>
 </html>

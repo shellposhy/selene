@@ -34,6 +34,7 @@
 		<input type="hidden" id="range" value="${range }">
 		<input type="hidden" id="term" value="${term }">
 		<input type="hidden" id="searchToken" value="${searchToken}" />
-		<script src="${appPath}/admin/jscript/searching/min/search.js"></script>
+		
+		<script src="${appPath}/admin/js/min/business/searching/search.min.js"></script>
 	</body>
 </html>
