@@ -100,7 +100,7 @@ public class MerchantsUserController extends BaseController {
 		user.setOldPassword(user.getUserPassword());
 		model.addAttribute("user", user);
 		model.addAttribute("groupListJson", json(list));
-		return "/admin/merchants/edit";
+		return "/admin/merchants/user/edit";
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)

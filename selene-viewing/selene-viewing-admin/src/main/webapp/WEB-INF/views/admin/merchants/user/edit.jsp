@@ -5,7 +5,7 @@
 	<body>
 		<div id="content" class="span12 ml0">
 			<div class="mt10">
-				<ul class="breadcrumb ind_f_tree" value="71">
+				<ul class="breadcrumb ind_f_tree" value="73">
 					<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
 					<li><a href="${appPath }/admin/user" target="_self">用户管理</a><span class="divider">/</span></li>
 					<li><a href="#">用户编辑</a></li>
@@ -136,6 +136,7 @@
 				</div>
 			</form:form>
 		</div>
-	<script src="${appPath}/admin/js/min/business/merchants/user.min.js"></script>
+		<!-- <script src="${appPath}/admin/js/min/business/merchants/user.min.js"></script> -->
+		<script src="${appPath}/admin/js/original/business/merchants/user.js"></script>
 	</body>
 </html>

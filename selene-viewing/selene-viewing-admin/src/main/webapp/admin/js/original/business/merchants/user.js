@@ -197,9 +197,9 @@ function loadUserRoleOptions() {
 			var groupListJsonO = new Function("return" + groupListJson)();
 			var temOptions = "";
 			for (var i = 0; i < groupListJsonO.length; i++) {
-				tmpOptions += "<option value='" + groupListJsonO[i].id + "'>" + groupListJsonO[i].name + "</option>";
+				temOptions += "<option value='" + groupListJsonO[i].id + "'>" + groupListJsonO[i].name + "</option>";
 			}
-			$("#user_new_form #treeSelId_box").html(tmpOptions);
+			$("#user_new_form #treeSelId_box").html(temOptions);
 		}
 	}
 	var treeSelIds = $("#user_new_form #treeSelId_box").val();
