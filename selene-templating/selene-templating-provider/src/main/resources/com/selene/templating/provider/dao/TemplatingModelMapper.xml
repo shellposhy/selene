@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.selene.templating.provider.dao.TemplatingModelMapper">
+	<resultMap id="resultMap" type="com.selene.templating.model.TemplatingModel">
+		<result property="id" column="ID" />
+		<result property="license" column="License" />
+		<result property="billId" column="Bill_ID" />
+		<result property="modelName" column="Model_Name" />
+		<result property="modelCode" column="Model_Code" />
+		<result property="modelType" column="Model_Type" />
+		<result property="modelPath" column="Model_Path"  />
+		<result property="orderId" column="Order_ID" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="createTime" column="Create_Time" />
+		<result property="updaterId" column="Updater_ID" />
+		<result property="updateTime" column="Update_Time" />
+	</resultMap>
+	
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model 
+		WHERE 
+			ID=#{id}
+	</select>
+
+	<select id="findByLicense" resultMap="resultMap" parameterType="java.lang.String">
+		SELECT 
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model 
+		WHERE 
+			License=#{license}
+	</select>
+	
+	<select id="findByLicenseAndBillId" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model 
+		WHERE 
+			License=#{license} AND Bill_ID=#{billId}
+	</select>
+	
+	<select id="findByLicenseAndType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model 
+		WHERE 
+			License=#{license} AND Model_Type=#{type}
+	</select>
+	
+	<select id="findByPage" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model 
+		WHERE 
+			License=#{license} 
+		LIMIT 
+			#{first},#{size}
+	</select>
+	
+	<select id="count" resultType="int" parameterType="java.lang.String">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			templating_model
+		WHERE 
+			License=#{license} 
+	</select>
+	
+	<select id="findByNameAndPage" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model 
+		WHERE 
+			License=#{license} AND Model_Name like "%"#{name}"%"
+		LIMIT 
+			#{first},#{size}
+	</select>
+	
+	<select id="countByName" resultType="int" parameterType="java.util.Map">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			templating_model
+		WHERE 
+			License=#{license}  AND Model_Name like "%"#{name}"%"
+	</select>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO 
+			templating_model(
+				License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			)
+		VALUES(
+			#{license},#{billId},#{modelName},#{modelCode},#{modelType},#{modelPath},#{orderId},#{creatorId},#{createTime},#{updaterId},#{updateTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE 
+			templating_model
+		<set>
+			<if test="billId != null">Bill_ID = #{billId},</if>
+			<if test="modelName != null">Model_Name = #{modelName},</if>
+			<if test="modelCode != null">Model_Code =#{modelCode},</if>
+			<if test="modelType != null">Model_Type = #{modelType},</if>
+			<if test="modelPath != null">Model_Path =#{modelPath},</if>
+			<if test="orderId != null">Order_ID = #{orderId},</if>
+			<if test="updaterId != null">Updater_ID = #{updaterId},</if>
+			<if test="updateTime != null">Update_Time = #{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM 
+			templating_model 
+		WHERE 
+			ID=#{id}
+	</delete>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.templating.provider.dao.TemplatingModelBillMapper">
+	<resultMap id="resultMap" type="com.selene.templating.model.TemplatingModelBill">
+		<result property="id" column="ID" />
+		<result property="license" column="License"/>
+		<result property="parentId" column="Parent_ID" />
+		<result property="name" column="Bill_Name" />
+		<result property="code" column="Bill_Code" />
+		<result property="orderId" column="Order_ID" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="createTime" column="Create_Time" />
+		<result property="updaterId" column="Updater_ID" />
+		<result property="updateTime" column="Update_Time" />
+	</resultMap>
+
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,License,Parent_ID,Bill_Name,Bill_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model_bill
+		WHERE 
+			ID=#{id}
+	</select>
+
+	<select id="findByParentId" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,License,Parent_ID,Bill_Name,Bill_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model_bill
+		WHERE  
+			License=#{license} AND Parent_ID=#{parentId}
+		ORDER BY
+			ID
+	</select>
+	
+	<select id="findByLicense" resultMap="resultMap" parameterType="java.lang.String">
+		SELECT 
+			ID,License,Parent_ID,Bill_Name,Bill_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_model_bill
+		WHERE 
+			License=#{license} 
+		ORDER BY
+			ID
+	</select>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO 
+			templating_model_bill(
+				License,Parent_ID,Bill_Name,Bill_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			)
+		VALUES(
+			#{license},#{parentId},#{name},#{code},#{orderId},#{creatorId},#{createTime},#{updaterId},#{updateTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE 
+			templating_model_bill 
+		<set>
+			<if test="parentId != null">Parent_ID = #{parentId},</if>
+			<if test="name != null">Bill_Name = #{name},</if>
+			<if test="code != null">Bill_Code =#{code},</if>
+			<if test="orderId != null">Order_ID = #{orderId},</if>
+			<if test="updaterId != null">Updater_ID =#{updaterId},</if>
+			<if test="updateTime != null">Update_Time = #{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM 
+			templating_model_bill
+		WHERE 
+			ID=#{id}
+	</delete>
+</mapper>

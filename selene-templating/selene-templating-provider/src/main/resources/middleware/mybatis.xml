@@ -21,10 +21,10 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:middleware/config/mybatis-config.xml" />
 		<property name="dataSource" ref="dataSource" />
-		<property name="typeAliasesPackage" value="com.selene.dataing.**.model" />
+		<property name="typeAliasesPackage" value="com.selene.templating.**.model" />
 	</bean>
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-		<property name="basePackage" value="com.selene.dataing.provider.**.dao" />
+		<property name="basePackage" value="com.selene.templating.provider.**.dao" />
 	</bean>
 </beans>

@@ -16,5 +16,5 @@ public interface ServiceConstants {
 
 	String TEMPLATING_KEY = "templating";
 
-	String[] BASE_SERVICES = { MERCHANTS_KEY, DATAING_KEY, SEARCHING_KEY };
+	String[] BASE_SERVICES = { MERCHANTS_KEY, DATAING_KEY, SEARCHING_KEY, TEMPLATING_KEY };
 }

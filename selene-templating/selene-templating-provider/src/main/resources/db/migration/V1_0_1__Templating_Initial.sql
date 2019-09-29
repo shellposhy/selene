@@ -51,6 +51,7 @@ alter table templating_item comment '模板配置区表';
 create table templating_model
 (
    ID                   int(11) unsigned not null auto_increment comment '主键',
+   License              char(50) not null comment '许可证',
    Bill_ID              int(11) unsigned not null comment '目录编号',
    Model_Name           char(200) not null comment '模板名称',
    Model_Code           varchar(500) not null comment '模板编码',
@@ -72,6 +73,7 @@ alter table templating_model comment '模板表';
 create table templating_model_bill
 (
    ID                   int(11) unsigned not null auto_increment comment '主键',
+   License              char(50) not null comment '许可证',
    Parent_ID            int(11) unsigned not null comment '上一级编号',
    Bill_Name            char(200) not null comment '目录名称',
    Bill_Code            varchar(500) not null comment '目录编码',
@@ -91,6 +93,7 @@ alter table templating_model_bill comment '模板目录表';
 create table templating_page
 (
    ID                   int(11) unsigned not null auto_increment comment '主键',
+   License              char(50) not null comment '许可证',
    Parent_ID            int(11) unsigned not null comment '上一级编号',
    Page_Model_ID        int unsigned not null comment '页面模板编号',
    Page_Name            char(200) not null comment '页面名称',
