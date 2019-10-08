@@ -8,5 +8,6 @@
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="cn.com.lemon.common.enums.EGender" />
 		<!-- Templating Enum -->
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EModelType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EPageStatus" />
 	</typeHandlers>
 </configuration>

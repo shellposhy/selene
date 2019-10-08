@@ -36,7 +36,7 @@
 			License=#{license}
 	</select>
 	
-	<select id="findByLicenseAndBillId" parameterType="java.util.Map">
+	<select id="findByLicenseAndBillId" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
 			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 

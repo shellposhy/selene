@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.templating.provider.dao.TemplatingPageMapper">
+	<resultMap id="resultMap" type="com.selene.templating.model.TemplatingPage">
+		<result property="id" column="ID" />
+		<result property="license" column="License" />
+		<result property="parentId" column="Parent_ID" />
+		<result property="pageModelId" column="Page_Model_ID" />
+		<result property="name" column="Page_Name" />
+		<result property="code" column="Page_Code" />
+		<result property="pageType" column="Page_Type" />
+		<result property="pageStatus" column="Page_Status" />
+		<result property="pageHtmlPath" column="Page_Html_Path" />
+		<result property="publishTime" column="Publish_Time" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="createTime" column="Create_Time" />
+		<result property="updaterId" column="Updater_ID" />
+		<result property="updateTime" column="Update_Time" />
+	</resultMap>
+
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_page 
+		WHERE 
+			ID=#{id}
+	</select>
+	
+	<select id="findByLicense" resultMap="resultMap" parameterType="java.lang.String">
+		SELECT
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_page 
+		WHERE 
+			License=#{license}
+	</select>
+
+	<select id="findByType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_page 
+		WHERE 
+			License=#{license} AND Page_Type = #{type}
+	</select>
+
+	<select id="findByStatus" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_page 
+		WHERE 
+			License=#{license} AND Page_Status = #{status}
+	</select>
+	
+	<select id="findByTypeAndStatus" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_page 
+		WHERE 
+			License=#{license} AND Page_Type = #{type} AND Page_Status = #{status}
+	</select>
+	
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO
+			templating_page(
+				License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+				Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+			)
+		VALUES(
+			#{license},#{parentId},#{pageModelId},#{name},#{code},#{pageType},#{pageStatus},
+			#{pageHtmlPath},#{publishTime},#{creatorId},#{createTime},#{updaterId},#{updateTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE 
+			templating_page
+		<set>
+			<if test="parentId != null">Parent_ID = #{parentId},</if>
+			<if test="pageModelId != null">Page_Model_ID = #{pageModelId},</if>
+			<if test="name != null">Page_Name =#{name},</if>
+			<if test="code != null">Page_Code = #{code},</if>
+			<if test="pageType != null">Page_Type =#{pageType},</if>
+			<if test="pageStatus != null">Page_Status = #{pageStatus},</if>
+			<if test="pageHtmlPath != null">Page_Html_Path = #{pageHtmlPath},</if>
+			<if test="publishTime != null">Publish_Time = #{publishTime},</if>
+			<if test="updaterId != null">Updater_ID = #{updaterId},</if>
+			<if test="updateTime != null">Update_Time = #{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id} 
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM 
+			templating_page 
+		WHERE 
+			ID=#{id}
+	</delete>
+</mapper>

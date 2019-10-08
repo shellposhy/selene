@@ -47,6 +47,28 @@ public class TemplatingService {
 	}
 
 	/* Templating model process */
+
+	/**
+	 * Find {@code TemplatingModel} by primary key
+	 * 
+	 * @param id
+	 * @return {@code TemplatingModel}
+	 */
+	public TemplatingModel findModelById(Integer id) {
+		// Initialize the required services
+		TemplatingModelService modelService = (TemplatingModelService) services
+				.get(TemplatingModelService.class.getName());
+		// Business process
+		return modelService.find(id);
+	}
+
+	/**
+	 * Query {@code TemplatingModel} by {@code String} and {@code Integer}
+	 * 
+	 * @param license
+	 * @param billId
+	 * @return
+	 */
 	public List<TemplatingModel> findModelByLicenseAndBillId(String license, Integer billId) {
 		// Initialize the required services
 		TemplatingModelService modelService = (TemplatingModelService) services
@@ -56,6 +78,40 @@ public class TemplatingService {
 	}
 
 	/* Templating model bill process */
+	/**
+	 * Save {@code TemplatingModelBill}
+	 * 
+	 * @param modelBill
+	 * @return
+	 */
+	public int saveModelBill(TemplatingModelBill modelBill) {
+		// Initialize the required services
+		TemplatingModelBillService modelBillService = (TemplatingModelBillService) services
+				.get(TemplatingModelBillService.class.getName());
+		// Business process
+		if (modelBill.getId() == null) {
+			int result = modelBillService.insert(modelBill);
+			modelBill.setId(result);
+			return result;
+		} else {
+			return modelBillService.update(modelBill);
+		}
+	}
+
+	/**
+	 * Find {@code TemplatingModelBill} by primary key
+	 * 
+	 * @param id
+	 * @return {@code TemplatingModelBill}
+	 */
+	public TemplatingModelBill findModelBillById(Integer id) {
+		// Initialize the required services
+		TemplatingModelBillService modelBillService = (TemplatingModelBillService) services
+				.get(TemplatingModelBillService.class.getName());
+		// Business process
+		return modelBillService.find(id);
+	}
+
 	/**
 	 * Query all {@code TemplatingModelBill} by {@code String} license
 	 * 

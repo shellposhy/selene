@@ -40,7 +40,8 @@ public class TemplatingModelBillServiceImpl implements TemplatingModelBillServic
 
 	@Override
 	public int insert(TemplatingModelBill modelBill) {
-		return templatingModelBillMapper.insert(modelBill);
+		int result = templatingModelBillMapper.insert(modelBill);
+		return result > 0 ? /* Return bill ID */modelBill.getId() : result;
 	}
 
 	@Override

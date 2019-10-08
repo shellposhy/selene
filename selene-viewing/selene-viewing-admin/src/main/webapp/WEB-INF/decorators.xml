@@ -26,5 +26,6 @@
 		<pattern>/admin/dataing/library/data/new/*</pattern>
 		<pattern>/admin/dataing/library/data/info/*</pattern>
 		<pattern>/admin/dataing/library/data/edit/*</pattern>
+		<pattern>/admin/templating/model/bill/*/edit</pattern>
 	</decorator>
 </decorators>

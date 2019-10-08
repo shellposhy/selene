@@ -5,12 +5,12 @@
 			<div class="breadcrumb_warp">
 				<ul class="breadcrumb ind_f_tree" value="22">
 					<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
-					<li><a href="#">页面发布模板管理</a></li>
+					<li><a href="#">模板管理</a></li>
 				</ul>
 			</div>
 			<div class="box-content">
 				<div class="padlrn span12 action_buttons">
-					<a class="btn btn-small" href="/admin/view/model/directory/new/0" id="addModelBill" target="_self">
+					<a class="btn btn-small" href="${appPath}/admin/templating/model/bill/0/new" id="addModelBill" target="_self">
 						<i class="icon-plus"></i>添加模板目录
 					</a>
 					<div class="input-append floatr">

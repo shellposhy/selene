@@ -15,7 +15,7 @@ public class TemplatingModelBill extends TreeNodeModel<TemplatingModelBill> {
 	private static final long serialVersionUID = -465535204496707275L;
 	private String license;
 	private String code;
-	private String orderId;
+	private Integer orderId;
 
 	public String getLicense() {
 		return license;
@@ -33,11 +33,11 @@ public class TemplatingModelBill extends TreeNodeModel<TemplatingModelBill> {
 		this.code = code;
 	}
 
-	public String getOrderId() {
+	public Integer getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId) {
+	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
 	}
 

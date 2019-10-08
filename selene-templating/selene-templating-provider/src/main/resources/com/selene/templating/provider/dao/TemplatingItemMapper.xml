@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.templating.provider.dao.TemplatingItemMapper">
+	<resultMap id="resultMap" type="com.selene.templating.model.TemplatingItem">
+		<result property="id" column="ID" />
+		<result property="modelId" column="Model_ID" />
+		<result property="itemName" column="Item_Name" />
+		<result property="itemType" column="Item_Type" />
+		<result property="itemContentType" column="Item_Content_Type" />
+		<result property="itemContent" column="Item_Content" />
+		<result property="itemHtml" column="Item_Html" />
+		<result property="lineNumber" column="Line_Number" />
+		<result property="dataNumber" column="Data_Number" />
+	</resultMap>
+
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+		FROM 
+			templating_item 
+		WHERE 
+			ID=#{id}
+	</select>
+
+	<select id="findByModelId" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+		FROM 
+			templating_item 
+		WHERE  
+			Model_ID=#{modelId}
+		ORDER BY
+			ID
+	</select>
+
+	<select id="findByModelIdAndCode" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+		FROM 
+			templating_item 
+		WHERE   
+			Model_ID=#{modelId} AND Item_Name=#{name}
+		LIMIT 
+			1
+	</select>
+
+	<insert id="insert">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO
+			templating_item(
+				Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+			)
+		VALUES(
+			#{modelId},#{itemName},#{itemType},#{itemContentType},#{itemContent},#{itemHtml},#{lineNumber},#{dataNumber}
+		)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO
+			templating_item(
+				Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+			)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				#{item.modelId},#{item.itemName},#{item.itemType},#{item.itemContentType},
+				#{item.itemContent},#{item.itemHtml},#{item.lineNumber},#{item.dataNumber}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update">
+		UPDATE 
+			templating_item 
+		<set>
+			<if test="itemName != null">Item_Name = #{itemName},</if>
+			<if test="itemType != null">Item_Type =#{itemType},</if>
+			<if test="itemContentType != null">Item_Content_Type = #{itemContentType},</if>
+			<if test="itemContent != null">Item_Content =#{itemContent},</if>
+			<if test="itemHtml != null">Item_Html = #{itemHtml},</if>
+			<if test="lineNumber != null">Line_Number = #{lineNumber},</if>
+			<if test="dataNumber != null">Data_Number = #{dataNumber},</if>
+			<if test="modelId != null">Model_ID = #{modelId}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM 
+			templating_item 
+		WHERE 
+			ID=#{id}
+	</delete>
+
+	<delete id="deleteByModelId" parameterType="java.lang.Integer">
+		DELETE FROM 
+			templating_item
+		WHERE 
+			Model_ID=#{modelId}
+	</delete>
+</mapper>

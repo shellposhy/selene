@@ -6,10 +6,31 @@
  */
 $(document).ready(function() {
 	loadPageModelBillTree();
+	loadModelBillEditTree();
+	validateBillForm();
 	//init_files_tree();
 	//initFileMng();
 	//init_directory_edit();
 });
+
+//Load model bill edit tree
+function loadModelBillEditTree(){
+	if ($("#bill_tree")[0]) {
+		$.ajax({
+			type : "POST",
+			url : appPath + "/admin/templating/model/bill/tree",
+			contentType : 'application/json',
+			beforeSend: function(request) {//beforeSend
+	            request.setRequestHeader("token", token);
+	            request.setRequestHeader("refreshToken",refreshToken);
+	         },
+			success : function(data) {
+				treeRadioCom($("#bill_tree .treeNew"), data.data);
+				setTimeout("$('.treeSelId').click()", 800);
+			}
+		});
+	}
+}
 
 //Load page template bill tree
 function loadPageModelBillTree() {
@@ -24,16 +45,38 @@ function loadPageModelBillTree() {
 	         },
 			success : function(data) {
 				if (data.data != null) {
-					menuTreeCom($("#directoryModelTree"), data.data, true,bindBillModelList,
-							appPath+ "/admin/templating/model/bill/",$("#addModelBill"), bindModelBillAddEvent);
+					menuTreeCom($("#directoryModelTree"), data.data, true,bindBillModelList,appPath+ "/admin/templating/model/bill/",null, null, null, null);
 				}
 			}
 		});
 	}
 }
 
+//Before check where model bill check 
+function validateBillForm() {
+	$("#bill_form").validate({
+		rules : {
+			name : {required : true},
+			code : {required : true}
+		},
+		messages : {
+			name : {required : "模板目录名称不能为空！"},
+			code : {required : "模板目录编码不能为空！"}
+		},
+		errorPlacement : function(error, element) {
+			error.insertAfter(element);
+		},
+		submitHandler : function() {
+			form.submit();
+		},
+		onkeyup : false
+	});
+}
+
 //Bind bill model list
 function bindBillModelList(billId) {
+	//Update add model bill href
+	$("#addModelBill").attr("href",appPath+"/admin/templating/model/bill/"+billId+"/new");
 	$.ajax({
 		type : "POST",
 		url : appPath + "/admin/templating/model/find/"+ billId,
@@ -41,9 +84,9 @@ function bindBillModelList(billId) {
 		success : function(data) {
 			var content = "";
 					content += '<li id="add_model">';
-					content += '	<a href="'+ appPath+ "/admin/templating/model/bill/new/"+ billId+ '"><div class="addimg_db"></div></a>';
+					content += '	<a href="'+ appPath+ '/admin/templating/model/'+billId+'/new"><div class="addimg_db"></div></a>';
 					content += '	<div class="actions">';
-					content += '		<a class="lh30 block db_repair mt10" href="'+ appPath + '/admin/templating/model/new/' + billId+ '">添加模板</a>';
+					content += '		<a class="lh30 block db_repair mt10" href="'+ appPath + '/admin/templating/model/'+billId+'/new">添加模板</a>';
 					content +='		</div>';
 					content += '</li>';
 			if(data.code=200&&data.data!=null){
@@ -67,12 +110,6 @@ function bindBillModelList(billId) {
 		}
 	});
 }
-
-//Bind bill add event
-function bindModelBillAddEvent(selid) {
-	window.location.href = appPath+"/admin/templating/model/bill/"+selid+"/new";
-}
-
 
 //扫描模板目录
 function scan(id) {
@@ -102,38 +139,6 @@ function delete_lib(id) {
 	} else{
 		return false;
 	}
-}
-
-// 初始化目录编辑页
-function init_directory_edit() {
-	if ($("#type_tree")[0]) {
-		$.ajax({
-			type : "POST",
-			url : appPath + "/admin/view/model/directory/tree",
-			success : function(data) {
-				treeRadioCom($("#type_tree .treeNew"), data);
-				setTimeout("$('.treeSelId').click()", 800);
-			}
-		});
-	}
-	//表单验证
-	$("#db_new_form").validate({
-		rules : {
-			name : {required : true},
-			code : {required : true}
-		},
-		messages : {
-			name : {required : "模板目录名称不能为空！"},
-			code : {required : "模板目录编码不能为空！"}
-		},
-		errorPlacement : function(error, element) {
-			error.insertAfter(element);
-		},
-		submitHandler : function() {
-			form.submit();
-		},
-		onkeyup : false
-	});
 }
 
 // 初始化化表内容
