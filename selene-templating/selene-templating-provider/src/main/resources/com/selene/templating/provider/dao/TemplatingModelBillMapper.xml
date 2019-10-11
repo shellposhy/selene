@@ -5,8 +5,10 @@
 		<result property="id" column="ID" />
 		<result property="license" column="License"/>
 		<result property="parentId" column="Parent_ID" />
+		<result property="type" column="Bill_Type" />
 		<result property="name" column="Bill_Name" />
 		<result property="code" column="Bill_Code" />
+		<result property="pathCode" column="Path_Code" />
 		<result property="orderId" column="Order_ID" />
 		<result property="creatorId" column="Creator_ID" />
 		<result property="createTime" column="Create_Time" />
@@ -16,7 +18,7 @@
 
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT 
-			ID,License,Parent_ID,Bill_Name,Bill_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Bill_Type,Bill_Name,Bill_Code,Path_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model_bill
 		WHERE 
@@ -25,7 +27,7 @@
 
 	<select id="findByParentId" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
-			ID,License,Parent_ID,Bill_Name,Bill_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Bill_Type,Bill_Name,Bill_Code,Path_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model_bill
 		WHERE  
@@ -36,7 +38,7 @@
 	
 	<select id="findByLicense" resultMap="resultMap" parameterType="java.lang.String">
 		SELECT 
-			ID,License,Parent_ID,Bill_Name,Bill_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Bill_Type,Bill_Name,Bill_Code,Path_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model_bill
 		WHERE 
@@ -51,10 +53,10 @@
 		</selectKey>
 		INSERT INTO 
 			templating_model_bill(
-				License,Parent_ID,Bill_Name,Bill_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+				License,Parent_ID,Bill_Type,Bill_Name,Bill_Code,Path_Code,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 			)
 		VALUES(
-			#{license},#{parentId},#{name},#{code},#{orderId},#{creatorId},#{createTime},#{updaterId},#{updateTime}
+			#{license},#{parentId},#{type},#{name},#{code},#{pathCode},#{orderId},#{creatorId},#{createTime},#{updaterId},#{updateTime}
 		)
 	</insert>
 
@@ -63,8 +65,10 @@
 			templating_model_bill 
 		<set>
 			<if test="parentId != null">Parent_ID = #{parentId},</if>
+			<if test="type != null">Bill_Type = #{type},</if>
 			<if test="name != null">Bill_Name = #{name},</if>
 			<if test="code != null">Bill_Code =#{code},</if>
+			<if test="pathCode != null">Path_Code =#{pathCode},</if>
 			<if test="orderId != null">Order_ID = #{orderId},</if>
 			<if test="updaterId != null">Updater_ID =#{updaterId},</if>
 			<if test="updateTime != null">Update_Time = #{updateTime}</if>

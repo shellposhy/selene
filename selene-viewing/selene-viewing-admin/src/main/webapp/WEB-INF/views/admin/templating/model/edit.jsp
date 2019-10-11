@@ -14,11 +14,13 @@
 			<iframe name="aa" src="" style="display: none"></iframe>
 			<form:form modelAttribute="templatingModel" enctype="multipart/form-data" class="form-horizontal u_group_form" id="pageModelForm"
 				action="${appPath}/admin/templating/model/save" method="post" target="_self">
+				<form:hidden path="id" />
+				<form:hidden path="modelType"/>
+				<form:hidden path="billId"/>
 				<fieldset>
 					<div class="control-group">
 						<label class="control-label" for="modelName">模板名称 </label>
 						<div class="controls">
-							<form:hidden path="id" />
 							<form:input path="modelName" name="modelName" class="typeahead"/>
 							<label class="error"><form:errors path="modelName" cssClass="error" /> </label>
 						</div>
@@ -31,31 +33,10 @@
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label" for="modelType">模板类型</label>
-						<div class="controls">
-							<form:select path="modelType" class="autogrow" name="modelType">
-								<form:options items="${columnTypes}" itemLabel="title" />
-							</form:select>
-							<label class="error"><form:errors path="modelType" cssClass="error" /></label>
-						</div>
-					</div>
-					<div class="control-group" class="tree_sel_box" id="bill_tree">
-						<label class="control-label" for="billId">目录分类</label>
-						<div class="controls">
-							<input class="treeRadio" type="text" readonly value="" />
-							<label class="error"><form:errors path="billId" cssClass="error" /></label>
-							<form:hidden path="billId" class="treeSelId" name="billId" value="" />
-						</div>
-						<div class="menuContent">
-							<ul id="treeSel_1" class="ztree treeNew"></ul>
-							<a class="selOk btn btn-small" href="#"><i class="icon-ok"></i>确定</a>
-						</div>
-					</div>
-					<div class="control-group">
 						<label class="control-label">上传模板 </label>
 						<div class="controls">
 							<form id="pupdate_form" enctype="multipart/form-data">
-								<input name="file" type="file" />
+								<input name="file" type="file" accept="application/zip,application/x-zip,application/x-zip-compressed"/>
 							</form>
 						</div>
 					</div>

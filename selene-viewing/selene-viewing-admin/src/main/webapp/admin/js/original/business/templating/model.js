@@ -11,6 +11,7 @@ $(document).ready(function() {
 	//init_files_tree();
 	//initFileMng();
 	//init_directory_edit();
+	validateModelForm();
 });
 
 //Load model bill edit tree
@@ -57,11 +58,13 @@ function validateBillForm() {
 	$("#bill_form").validate({
 		rules : {
 			name : {required : true},
-			code : {required : true}
+			code : {required : true},
+			type : {required : true}
 		},
 		messages : {
 			name : {required : "模板目录名称不能为空！"},
-			code : {required : "模板目录编码不能为空！"}
+			code :  {required : "模板目录编码不能为空！"},
+			type :  {required : "模板目录类型不能为空！"}
 		},
 		errorPlacement : function(error, element) {
 			error.insertAfter(element);
@@ -89,16 +92,17 @@ function bindBillModelList(billId) {
 					content += '		<a class="lh30 block db_repair mt10" href="'+ appPath + '/admin/templating/model/'+billId+'/new">添加模板</a>';
 					content +='		</div>';
 					content += '</li>';
-			if(data.code=200&&data.data!=null){
+			if(data.code==200&&data.data!=null){
 				for (var i = 0; i < data.data.length; i++){
 					content += "<li id='mdv_"+ data.data[i].id+ "'>";
-					content += "	<a class='addimg_db' href='"+ appPath+"/admin/templating/model/"+ data[i].id+ "/readFiles"+ "' target='_self' >";
+					content += "	<a class='addimg_db' href='"+ appPath+"/admin/templating/model/"+ data.data[i].id+ "/readFiles"+ "' target='_self' >";
 					content += "		<div >";
 					content += "			<img height='80' width='80' src='"+ appPath + "/admin/img/database.png'>";
 					content += "		</div >";
 					content += "	</a>";
-					content += "	<span class='dbname'><i class='dbname'>"+ data.data[i].name + "</i></span>";
-					content += "	<a class='btn btn-small' href='#' id='btnScan' onclick='scan("+ data.data[i].id+ ")' target='_self'><i class='icon-refresh'></i>同步</a>";
+					content += "	<span class='dbname'><i class='dbname'>"+ data.data[i].modelName + "</i></span>";
+					content	+= "	<span class='dbtime'>更新时间<br>"+ new Date(data.data[i].updateTime).format("yyyy-MM-dd hh:mm:ss") +"</span>";
+					//content += "	<a class='btn btn-small' href='#' id='btnScan' onclick='scan("+ data.data[i].id+ ")' target='_self'><i class='icon-refresh'></i>同步</a>";
 					content += "	<div class='actions' >";
 					content += "		<a class='btn btn-small db_edit' href='"+ appPath+ "/admin/templating/model/"+data.data[i].id+"/edit' target='_self'><i class='icon-pencil'></i>修改</a>";
 					content += "		<a class='btn btn-small ml5 db_del' href='#' onclick='delete_lib("+ data.data[i].id+ ")' target='_self'><i class='icon-trash'></i>删除</a>";
@@ -108,6 +112,29 @@ function bindBillModelList(billId) {
 			}
 			$("#modelList").html(content);
 		}
+	});
+}
+
+
+/**Model processing*/
+//Before check where model bill check 
+function validateModelForm() {
+	$("#pageModelForm").validate({
+		rules : {
+			modelName : {required : true},
+			modelCode : {required : true}
+		},
+		messages : {
+			modelName : {required : "模板名称不能为空！"},
+			modelCode :  {required : "模板编码不能为空！"}
+		},
+		errorPlacement : function(error, element) {
+			error.insertAfter(element);
+		},
+		submitHandler : function() {
+			form.submit();
+		},
+		onkeyup : false
 	});
 }
 

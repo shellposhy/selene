@@ -20,4 +20,7 @@ public interface ResourceConstants {
 	// Path for template
 	String /* Custom template base path */ BASE_TEMPLATE_PATH = "/template";
 	String /* Custom temporary template base path */ TEMP_TEMPLATE_PATH = "/tmp/template";
+
+	// Path for static
+	String /* Custom template base path */ BASE_STATIC_PATH = "/static";
 }

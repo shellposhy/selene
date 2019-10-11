@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 	<body>
 		<div id="content" class="span12">
@@ -32,6 +33,17 @@
 									<div class="controls">
 										<form:input path="code" name="code" class="typeahead"  />
 										<label class="error"><form:errors path="code" cssClass="error" /> </label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="type">目录类型</label>
+									<div class="controls">
+										<form:select path="type" class="autogrow" name="type">
+											<c:forEach var="node" items="${typeList}">
+												<form:option value="${node.id}">${node.name }</form:option>
+											</c:forEach>
+										</form:select>
+										<label class="error"><form:errors path="type" cssClass="error" /></label>
 									</div>
 								</div>
 								<div class="control-group backhide" class="tree_sel_box" id="bill_tree">

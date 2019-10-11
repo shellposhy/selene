@@ -13,10 +13,12 @@
 					<a class="btn btn-small" href="${appPath}/admin/templating/model/bill/0/new" id="addModelBill" target="_self">
 						<i class="icon-plus"></i>添加模板目录
 					</a>
+					<!--
 					<div class="input-append floatr">
 						<input id="search_model" size="16" type="text" />
 						<button id="search_model_btn" class="btn" type="button">搜索</button>
 					</div>
+					-->
 				</div>
 				<div class="content_wrap mt30 clearfix">
 					<div class="left_tree">

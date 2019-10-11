@@ -10,6 +10,14 @@ public class Node<I, N> {
 	public I id;
 	public N name;
 
+	public Node() {
+	}
+
+	public Node(I id, N name) {
+		this.id = id;
+		this.name = name;
+	}
+
 	public I getId() {
 		return id;
 	}

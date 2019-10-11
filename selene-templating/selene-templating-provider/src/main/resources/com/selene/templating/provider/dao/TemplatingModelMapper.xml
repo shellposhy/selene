@@ -10,7 +10,7 @@
 		<result property="modelName" column="Model_Name" />
 		<result property="modelCode" column="Model_Code" />
 		<result property="modelType" column="Model_Type" />
-		<result property="modelPath" column="Model_Path"  />
+		<result property="modelFile" column="Model_File"/>
 		<result property="orderId" column="Order_ID" />
 		<result property="creatorId" column="Creator_ID" />
 		<result property="createTime" column="Create_Time" />
@@ -20,7 +20,7 @@
 	
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT 
-			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_File,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model 
 		WHERE 
@@ -29,7 +29,7 @@
 
 	<select id="findByLicense" resultMap="resultMap" parameterType="java.lang.String">
 		SELECT 
-			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_File,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model 
 		WHERE 
@@ -38,7 +38,7 @@
 	
 	<select id="findByLicenseAndBillId" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
-			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_File,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model 
 		WHERE 
@@ -47,7 +47,7 @@
 	
 	<select id="findByLicenseAndType" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
-			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_File,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model 
 		WHERE 
@@ -56,7 +56,7 @@
 	
 	<select id="findByPage" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
-			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_File,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model 
 		WHERE 
@@ -76,7 +76,7 @@
 	
 	<select id="findByNameAndPage" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
-			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_File,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_model 
 		WHERE 
@@ -100,10 +100,10 @@
 		</selectKey>
 		INSERT INTO 
 			templating_model(
-				License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_Path,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
+				License,Bill_ID,Model_Name,Model_Code,Model_Type,Model_File,Order_ID,Creator_ID,Create_Time,Updater_ID,Update_Time
 			)
 		VALUES(
-			#{license},#{billId},#{modelName},#{modelCode},#{modelType},#{modelPath},#{orderId},#{creatorId},#{createTime},#{updaterId},#{updateTime}
+			#{license},#{billId},#{modelName},#{modelCode},#{modelType},#{modelFile},#{orderId},#{creatorId},#{createTime},#{updaterId},#{updateTime}
 		)
 	</insert>
 
@@ -115,7 +115,7 @@
 			<if test="modelName != null">Model_Name = #{modelName},</if>
 			<if test="modelCode != null">Model_Code =#{modelCode},</if>
 			<if test="modelType != null">Model_Type = #{modelType},</if>
-			<if test="modelPath != null">Model_Path =#{modelPath},</if>
+			<if test="modelFile != null">Model_File = #{modelFile},</if>
 			<if test="orderId != null">Order_ID = #{orderId},</if>
 			<if test="updaterId != null">Updater_ID = #{updaterId},</if>
 			<if test="updateTime != null">Update_Time = #{updateTime}</if>

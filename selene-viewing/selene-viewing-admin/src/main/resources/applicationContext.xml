@@ -19,6 +19,12 @@
 
 	<!-- properties -->
 	<context:property-placeholder ignore-unresolvable="true" location="classpath:config.properties" />
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- max upload file size 100MB -->
+		<property name="maxUploadSize" value="104857600"></property>
+		<property name="defaultEncoding" value="UTF-8"></property>
+	</bean>
 
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">

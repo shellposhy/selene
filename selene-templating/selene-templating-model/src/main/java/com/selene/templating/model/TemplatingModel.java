@@ -20,7 +20,7 @@ public class TemplatingModel extends BaseModel {
 	private String modelName;
 	private String modelCode;
 	private EModelType /* For enum */ modelType;
-	private String modelPath;
+	private String modelFile;
 	private Integer orderId;
 
 	public String getLicense() {
@@ -63,12 +63,12 @@ public class TemplatingModel extends BaseModel {
 		this.modelType = modelType;
 	}
 
-	public String getModelPath() {
-		return modelPath;
+	public String getModelFile() {
+		return modelFile;
 	}
 
-	public void setModelPath(String modelPath) {
-		this.modelPath = modelPath;
+	public void setModelFile(String modelFile) {
+		this.modelFile = modelFile;
 	}
 
 	public Integer getOrderId() {

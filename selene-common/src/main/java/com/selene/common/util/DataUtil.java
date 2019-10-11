@@ -517,4 +517,72 @@ public final class DataUtil {
 		}
 		return imgs.size() > 0 ? imgs : null;
 	}
+
+	/**
+	 * Get all css paths for rich text.
+	 * 
+	 * @param content
+	 * @return
+	 */
+	public static List<String> css(String content) {
+		final List<String> cssList = new LinkedList<String>();
+		if (null == content || content.isEmpty()) {
+			return null;
+		}
+		final Reader reader = new StringReader(content);
+		ParserDelegator pd = new ParserDelegator();
+		try {
+			pd.parse(reader, new HTMLEditorKit.ParserCallback() {
+				@Override
+				public void handleSimpleTag(Tag t, MutableAttributeSet a, int pos) {
+					if (Tag.LINK.equals(t)) {
+						cssList.add((String) a.getAttribute(Attribute.HREF));
+					}
+				}
+			}, false);
+		} catch (IOException e) {
+			return null;
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return cssList.size() > 0 ? cssList : null;
+	}
+
+	/**
+	 * Get all Javascript paths for rich text.
+	 * 
+	 * @param content
+	 * @return
+	 */
+	public static List<String> js(String content) {
+		final List<String> jsList = new LinkedList<String>();
+		if (null == content || content.isEmpty()) {
+			return null;
+		}
+		final Reader reader = new StringReader(content);
+		ParserDelegator pd = new ParserDelegator();
+		try {
+			pd.parse(reader, new HTMLEditorKit.ParserCallback() {
+				@Override
+				public void handleSimpleTag(Tag t, MutableAttributeSet a, int pos) {
+					if (Tag.SCRIPT.equals(t)) {
+						jsList.add((String) a.getAttribute(Attribute.SRC));
+					}
+				}
+			}, false);
+		} catch (IOException e) {
+			return null;
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return jsList.size() > 0 ? jsList : null;
+	}
 }

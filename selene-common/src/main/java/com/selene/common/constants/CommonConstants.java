@@ -181,4 +181,14 @@ public interface CommonConstants {
 	int DEFAULT_SEARCH_INDEX_NUMBER_HITS = 1000000;
 
 	String DEFAULT_REMOVE_CHAR = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+
+	Pattern HTML_IMG_SRC = Pattern.compile(
+			"<img\\b[^>]*\\bsrc\\b\\s*=\\s*('|\")?([^'\"\n\r\f>]+(\\.jpg|\\.bmp|\\.eps|\\.gif|\\.mif|\\.miff|\\.png|\\.tif|\\.tiff|\\.svg|\\.wmf|\\.jpe|\\.jpeg|\\.dib|\\.ico|\\.tga|\\.cut|\\.pic)\\b)[^>]*>",
+			Pattern.CASE_INSENSITIVE);
+
+	Pattern HTML_LINK_HREF = Pattern.compile("<link\\b[^>]*\\bhref\\b\\s*=\\s*('|\")?([^'\"\n\r\f>]+(\\.css)\\b)[^>]*>",
+			Pattern.CASE_INSENSITIVE);
+
+	Pattern HTML_SCRIPT_SRC = Pattern.compile(
+			"<script\\b[^>]*\\bsrc\\b\\s*=\\s*('|\")?([^'\"\n\r\f>]+(\\.js)\\b)[^>]*>", Pattern.CASE_INSENSITIVE);
 }

@@ -49,6 +49,26 @@ public class TemplatingService {
 	/* Templating model process */
 
 	/**
+	 * Save {@code TemplatingModel}
+	 * 
+	 * @param modelBill
+	 * @return
+	 */
+	public int saveModel(TemplatingModel model) {
+		// Initialize the required services
+		TemplatingModelService modelService = (TemplatingModelService) services
+				.get(TemplatingModelService.class.getName());
+		// Business process
+		if (model.getId() == null) {
+			int result = modelService.insert(model);
+			model.setId(result);
+			return result;
+		} else {
+			return modelService.update(model);
+		}
+	}
+
+	/**
 	 * Find {@code TemplatingModel} by primary key
 	 * 
 	 * @param id

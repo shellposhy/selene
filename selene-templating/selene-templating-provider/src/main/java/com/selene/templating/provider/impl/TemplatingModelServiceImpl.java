@@ -67,7 +67,8 @@ public class TemplatingModelServiceImpl implements TemplatingModelService {
 
 	@Override
 	public int insert(TemplatingModel model) {
-		return templatingModelMapper.insert(model);
+		int result = templatingModelMapper.insert(model);
+		return result > 0 ? /* Return model ID */model.getId() : result;
 	}
 
 	@Override

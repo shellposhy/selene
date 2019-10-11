@@ -129,6 +129,52 @@ public class ResourceService {
 		return realDoc() + "/" + baseId + "/" + uuid;
 	}
 
+	/* The path for resource template */
+	/**
+	 * Get temporary template path
+	 */
+	public String tmpTemplate() {
+		return root() + ResourceConstants.TEMP_TEMPLATE_PATH;
+	}
+
+	public String tmpTemplate(String path) {
+		return tmpTemplate() + "/" + path;
+	}
+
+	/**
+	 * Get real template path
+	 */
+	public String realTemplate() {
+		return root() + ResourceConstants.BASE_TEMPLATE_PATH;
+	}
+
+	public String realTemplate(String path) {
+		return realTemplate() + "/" + path;
+	}
+
+	/* The path for resource static */
+	/**
+	 * Get real static path
+	 */
+	public String realStatic() {
+		return root() + ResourceConstants.BASE_STATIC_PATH;
+	}
+
+	public String realStatic(String path) {
+		return realStatic() + "/" + path;
+	}
+
+	/**
+	 * Get real relative static path
+	 */
+	public String realRelativeStatic() {
+		return ResourceConstants.BASE_STATIC_PATH;
+	}
+
+	public String realRelativeStatic(String path) {
+		return ResourceConstants.BASE_STATIC_PATH + "/" + path;
+	}
+
 	/**
 	 * Delete folder files and folder
 	 * 
