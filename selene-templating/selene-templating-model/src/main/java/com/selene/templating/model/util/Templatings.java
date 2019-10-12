@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.selene.common.constants.CommonConstants;
+import com.selene.common.tree.FileNode;
 import com.selene.templating.model.constants.EReplaceType;
 
 import cn.com.lemon.base.zip.Zip4Js;
@@ -31,6 +32,36 @@ public final class Templatings {
 	private static final Logger LOG = LoggerFactory.getLogger(Templatings.class.getName());
 
 	private Templatings() {
+	}
+
+	/**
+	 * All files in the active directory
+	 * 
+	 * @param path
+	 * @param result
+	 * @param type
+	 * @return
+	 */
+	public static void template(File path, FileNode result, String ignore) {
+		int start = ignore.endsWith("/") ? ignore.length() - 1 : ignore.length();
+		File[] files = path.listFiles();
+		for (File file : files) {
+			if (!file.getName().endsWith(".zip")) {
+				if (result.getChildren() == null) {
+					result.setChildren(new ArrayList<FileNode>());
+				}
+				FileNode node = new FileNode();
+				node.setName(file.getName());
+				node.setDirectory(file.isDirectory());
+				node.setAbsolutePath(file.getAbsolutePath());
+				LOG.debug("file path=" + file.getAbsolutePath().replace('\\', '/').replace("//", "/"));
+				node.setFilePath(file.getAbsolutePath().replace('\\', '/').replace("//", "/").substring(start));
+				result.getChildren().add(node);
+				if (file.isDirectory()) {
+					template(file, node, ignore);
+				}
+			}
+		}
 	}
 
 	/**

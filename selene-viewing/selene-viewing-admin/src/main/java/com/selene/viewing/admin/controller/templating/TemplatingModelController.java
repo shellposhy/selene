@@ -2,6 +2,7 @@ package com.selene.viewing.admin.controller.templating;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,9 +30,11 @@ import com.selene.common.HttpStatus;
 import com.selene.common.Node;
 import com.selene.common.Operator;
 import com.selene.common.constants.CommonConstants;
+import com.selene.common.datatable.DataTableArray;
 import com.selene.common.result.ListResult;
 import com.selene.common.result.ObjectResult;
 import com.selene.common.tree.DefaultTreeNode;
+import com.selene.common.tree.FileNode;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingModelBill;
 import com.selene.templating.model.constants.EModelType;
@@ -60,6 +65,58 @@ public class TemplatingModelController extends BaseController {
 	}
 
 	/* Model bill processing */
+	@RequestMapping(value = "/{modelId}/template", method = RequestMethod.GET)
+	public String template(@PathVariable("modelId") Integer modelId, Model model) {
+		model.addAttribute("modelId", modelId);
+		return "/admin/templating/model/template";
+	}
+
+	@RequestMapping(value = "/{modelId}/template/file", method = RequestMethod.POST)
+	@ResponseBody
+	public MappingJacksonValue files(@PathVariable("modelId") Integer modelId, String callback) {
+		TemplatingModel templatingModel = templatingService.findModelById(modelId);
+		FileNode result = new FileNode();
+		// File processing
+		String rootPath = resourceService.realStatic(templatingModel.getModelCode());
+		File root = new File(rootPath);
+		String path = resourceService.root().replace('\\', '/').replace("//", "/");
+		if (root.exists()) {
+			result.setName(root.getName());
+			result.setDirectory(root.isDirectory());
+			result.setAbsolutePath(root.getAbsolutePath());
+			result.setFilePath("#");
+			if (/* Recurse all files */root.isDirectory()) {
+				Templatings.template(root, result, path);
+			}
+		}
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		mv.setJsonpFunction(callback);
+		return mv;
+	}
+
+	@RequestMapping(value = "/template/file/read", method = RequestMethod.POST)
+	@ResponseBody
+	public MappingJacksonValue read(@RequestBody DataTableArray value, String callback) {
+		ObjectResult<String> result = new ObjectResult<String>(HttpStatus.OK.code(), HttpStatus.OK.message());
+		String path = value.value;
+		File file = new File(path);
+		if (file.exists() && file.isFile()) {
+			try {
+				result.setData(FileUtils.readFileToString(file, Charset.forName("UTF-8")));
+			} catch (IOException e) {
+				LOG.error("[" + path + "] not exist or read content error!", e);
+				result.setCode(HttpStatus.ERROR.code());
+				result.setMsg("文件不存在或文件读取内容失败！");
+			}
+		} else {
+			result.setCode(HttpStatus.ERROR.code());
+			result.setMsg("文件不存在或文件读取内容失败！");
+		}
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		mv.setJsonpFunction(callback);
+		return mv;
+	}
+
 	@RequestMapping("/{billId}/new")
 	public String modelNew(@PathVariable("billId") Integer billId, Model model) {
 		TemplatingModel templatingModel = new TemplatingModel();
