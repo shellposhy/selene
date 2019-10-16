@@ -103,6 +103,7 @@ create table templating_page
    Page_Name            char(200) not null comment '页面名称',
    Page_Code            char(200) not null comment '页面编码',
    Page_Type            tinyint(2) not null comment '页面类型',
+   Status               tinyint(1) not null comment '上架状态',
    Page_Status          tinyint(2) not null comment '页面发布状态',
    Page_Html_Path       varchar(500) comment '发布页面保存路径',
    Publish_Time         datetime comment '发布时间',

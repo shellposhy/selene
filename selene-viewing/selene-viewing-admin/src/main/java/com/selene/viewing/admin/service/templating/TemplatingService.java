@@ -17,8 +17,11 @@ import com.selene.common.constants.ServiceConstants;
 import com.selene.common.util.RedisClient;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingModelBill;
+import com.selene.templating.model.TemplatingPage;
+import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.service.TemplatingModelBillService;
 import com.selene.templating.model.service.TemplatingModelService;
+import com.selene.templating.model.service.TemplatingPageService;
 
 @Service
 public class TemplatingService {
@@ -44,9 +47,83 @@ public class TemplatingService {
 				client.create(TemplatingModelBillService.class, templatingService));
 		services.put(TemplatingModelService.class.getName(),
 				client.create(TemplatingModelService.class, templatingService));
+		services.put(TemplatingPageService.class.getName(),
+				client.create(TemplatingPageService.class, templatingService));
+	}
+
+	/* Templating page process */
+	/**
+	 * Find {@code TemplatingPage} by id.
+	 * 
+	 * @param id
+	 * @return {@code TemplatingPage}
+	 */
+	public TemplatingPage findPageById(Integer id) {
+		// Initialize the required services
+		TemplatingPageService pageService = (TemplatingPageService) /* Page */services
+				.get(TemplatingPageService.class.getName());
+		// Business process
+		return pageService.find(id);
+	}
+
+	/**
+	 * Find {@code TemplatingPage} by license.
+	 * 
+	 * @param license
+	 * @return {@code List}
+	 */
+	public List<TemplatingPage> findByLicense(String license) {
+		// Initialize the required services
+		TemplatingPageService pageService = (TemplatingPageService) /* Page */services
+				.get(TemplatingPageService.class.getName());
+		// Business process
+		return pageService.findByLicense(license);
+	}
+
+	/**
+	 * Find {@code TemplatingPage} by model id.
+	 * 
+	 * @param license
+	 * @param modelId
+	 * @return {@code List}
+	 */
+	public List<TemplatingPage> findByModelId(String license, Integer modelId) {
+		// Initialize the required services
+		TemplatingPageService pageService = (TemplatingPageService) /* Page */services
+				.get(TemplatingPageService.class.getName());
+		// Business process
+		return pageService.findByModelId(license, modelId);
 	}
 
 	/* Templating model process */
+	/**
+	 * Find {@code TemplatingModel} by license and {@code EModelType} type
+	 * 
+	 * @param license
+	 * @param type
+	 * @return {@code List}
+	 */
+	public List<TemplatingModel> findModelByType(String license, EModelType type) {
+		// Initialize the required services
+		TemplatingModelService modelService = (TemplatingModelService) services
+				.get(TemplatingModelService.class.getName());
+		// Business process
+		return modelService.findByLicenseAndType(license, type);
+	}
+
+	/**
+	 * Delete {@code TemplatingModel}
+	 * 
+	 * @param modelId
+	 * @return
+	 */
+	public int deleteModel(Integer modelId) {
+		// Initialize the required services
+		TemplatingModelService modelService = (TemplatingModelService) services
+				.get(TemplatingModelService.class.getName());
+		// Business process
+		return modelService.delete(modelId);
+	}
 
 	/**
 	 * Save {@code TemplatingModel}

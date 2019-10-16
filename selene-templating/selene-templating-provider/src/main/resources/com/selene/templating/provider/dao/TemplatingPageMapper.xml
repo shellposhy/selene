@@ -10,6 +10,7 @@
 		<result property="name" column="Page_Name" />
 		<result property="code" column="Page_Code" />
 		<result property="pageType" column="Page_Type" />
+		<result property="status" column="Status" />
 		<result property="pageStatus" column="Page_Status" />
 		<result property="pageHtmlPath" column="Page_Html_Path" />
 		<result property="publishTime" column="Publish_Time" />
@@ -21,7 +22,7 @@
 
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
 			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
@@ -31,7 +32,7 @@
 	
 	<select id="findByLicense" resultMap="resultMap" parameterType="java.lang.String">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
 			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
@@ -39,34 +40,44 @@
 			License=#{license}
 	</select>
 
-	<select id="findByType" resultMap="resultMap" parameterType="java.util.Map">
+	<select id="findByModelId" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
 			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
-			License=#{license} AND Page_Type = #{type}
+			License=#{license} AND Page_Model_ID = #{modelId}
+	</select>
+
+	<select id="findByType" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
+			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_page 
+		WHERE 
+			License=#{license} AND Page_Type = #{pageType}
 	</select>
 
 	<select id="findByStatus" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
 			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
-			License=#{license} AND Page_Status = #{status}
+			License=#{license} AND Page_Status = #{pageStatus}
 	</select>
 	
 	<select id="findByTypeAndStatus" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
 			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
-			License=#{license} AND Page_Type = #{type} AND Page_Status = #{status}
+			License=#{license} AND Page_Type = #{pageType} AND Page_Status = #{pageStatus}
 	</select>
 	
 	<insert id="insert">
@@ -75,11 +86,11 @@
 		</selectKey>
 		INSERT INTO
 			templating_page(
-				License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Page_Status,
+				License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
 				Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 			)
 		VALUES(
-			#{license},#{parentId},#{pageModelId},#{name},#{code},#{pageType},#{pageStatus},
+			#{license},#{parentId},#{pageModelId},#{name},#{code},#{pageType},#{status},#{pageStatus},
 			#{pageHtmlPath},#{publishTime},#{creatorId},#{createTime},#{updaterId},#{updateTime}
 		)
 	</insert>
@@ -93,6 +104,7 @@
 			<if test="name != null">Page_Name =#{name},</if>
 			<if test="code != null">Page_Code = #{code},</if>
 			<if test="pageType != null">Page_Type =#{pageType},</if>
+			<if test="status != null">Status = #{status},</if>
 			<if test="pageStatus != null">Page_Status = #{pageStatus},</if>
 			<if test="pageHtmlPath != null">Page_Html_Path = #{pageHtmlPath},</if>
 			<if test="publishTime != null">Publish_Time = #{publishTime},</if>

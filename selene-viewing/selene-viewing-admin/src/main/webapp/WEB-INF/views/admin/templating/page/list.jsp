@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<html>
+	<body>
+		<div id="content" class="span12 tree_separated">
+			<div class="breadcrumb_warp">
+				<ul class="breadcrumb ind_f_tree" value="21">
+					<li><a href="${appPath}/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
+					<li><a href="#">页面管理</a></li>
+				</ul>
+			</div>
+			<div class="box-content">
+				<div class="padlrn span12 action_buttons">
+					<a class="btn btn-small" href="${appPath}/admin/templating/page/0/new" id="addPage" target="_self">
+						<i class="icon-plus"></i>添加发布页面
+					</a>
+				</div>
+				<div class="content_wrap mt30 clearfix">
+					<div class="left_tree">
+						<ul id="pageTree" class="ztree green_tree_line"></ul>
+					</div>
+					<div class="right_con">
+						<ul id="pages" class="show_sel_itme mt10 clearfix">
+							<h3 class='alert alert-info'>请选择左侧目录以发布页面情况</h3>
+						</ul>
+						<div id="page_content" hidden="hidden">
+							<div class="btn-toolbar floatl" id="addbtn">
+								<div class="btn-group">
+									<a class="btn btn-small edit_pop_link" id="add_to_dsu"  href="#" target="_self"><i class="icon-plus"></i> 添加</a>
+								</div>
+							</div>
+							<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered bootstrap-datatable trHoverEdit " id="pageDatas">
+								<thead>
+									<th><label class="checkbox inline"><input type="checkbox" class="selAll" />页面名称</label></th>
+									<th>页面编码</th>
+									<th>页面类型</th>
+									<th>上架状态</th>
+									<th>发布状态</th>
+									<th>发布时间</th>
+									<th>页面预览</th>
+								</thead>
+								<tbody></tbody>
+								<tfoot>
+									<tr><th>页面名称</th></tr>
+									<th>页面编码</th>
+									<th>页面类型</th>
+									<th>上架状态</th>
+									<th>发布状态</th>
+									<th>发布时间</th>
+									<th>页面预览</th>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${appPath}/admin/js/original/business/templating/page.js"></script>
+		<!-- <script src="${appPath}/admin/js/min/business/templating/page.min.js"></script>-->
+	</body>
+</html>

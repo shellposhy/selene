@@ -46,7 +46,6 @@
 				</fieldset>
 			</form:form>
 		</div>
-		<script src="${appPath}/admin/js/original/business/templating/model.js"></script>
-		<!-- <script src="${appPath}/admin/js/min/business/templating/model.min.js"></script>-->
+		<script src="${appPath}/admin/js/min/business/templating/model.min.js"></script>
 	</body>
 </html>

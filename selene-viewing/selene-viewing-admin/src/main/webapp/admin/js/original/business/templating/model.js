@@ -204,10 +204,19 @@ function bindFileNode(nodeId, nodeType, isDir, node) {
 function deleteModel(id) {
 	if (confirm("确定删除?")) {
 		$.ajax({
-			url : thisPath + "delete/" + id,
+			url :  appPath + "/admin/templating/model/"+id+"/delete",
 			type : 'POST',
-			success : function(response) {
-				$('#mdv_' + id).remove();
+			beforeSend: function(request) {//beforeSend
+	            request.setRequestHeader("token", token);
+	            request.setRequestHeader("refreshToken",refreshToken);
+	         },
+			success : function(data) {
+				if(data.code==200){
+					noty({"text" : "删除成功","layout" : "center","type" : "success","animateOpen" : {"opacity" : "show"}});
+					$('#mdv_' + id).remove();
+				}else{
+					noty({"text" : data.msg,"layout" : "center","type" : "error","animateOpen" : {"opacity" : "show"}});
+				}
 			}
 		});
 	} else{

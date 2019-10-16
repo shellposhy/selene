@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.selene.templating.model.TemplatingPage;
+import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.constants.EPageStatus;
 
 /**
@@ -19,12 +20,15 @@ public interface TemplatingPageMapper {
 
 	public List<TemplatingPage> findByLicense(@Param("license") String license);
 
-	public List<TemplatingPage> findByType(@Param("license") String license, @Param("type") Integer type);
+	public List<TemplatingPage> findByModelId(@Param("license") String license, @Param("modelId") Integer modelId);
 
-	public List<TemplatingPage> findByStatus(@Param("license") String license, @Param("status") EPageStatus status);
+	public List<TemplatingPage> findByType(@Param("license") String license, @Param("pageType") EModelType pageType);
 
-	public List<TemplatingPage> findByTypeAndStatus(@Param("license") String license, @Param("type") Integer type,
-			@Param("status") EPageStatus status);
+	public List<TemplatingPage> findByStatus(@Param("license") String license,
+			@Param("pageStatus") EPageStatus pageStatus);
+
+	public List<TemplatingPage> findByTypeAndStatus(@Param("license") String license,
+			@Param("pageType") EModelType pageType, @Param("pageStatus") EPageStatus pageStatus);
 
 	public int insert(TemplatingPage templatingPage);
 

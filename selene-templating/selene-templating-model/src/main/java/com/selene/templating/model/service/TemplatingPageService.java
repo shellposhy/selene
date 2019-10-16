@@ -3,6 +3,7 @@ package com.selene.templating.model.service;
 import java.util.List;
 
 import com.selene.templating.model.TemplatingPage;
+import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.constants.EPageStatus;
 
 /**
@@ -16,11 +17,13 @@ public interface TemplatingPageService {
 
 	public List<TemplatingPage> findByLicense(String license);
 
-	public List<TemplatingPage> findByType(String license, Integer type);
+	public List<TemplatingPage> findByModelId(String license, Integer modelId);
+
+	public List<TemplatingPage> findByType(String license, EModelType pageType);
 
 	public List<TemplatingPage> findByStatus(String license, EPageStatus status);
 
-	public List<TemplatingPage> findByTypeAndStatus(String license, Integer type, EPageStatus status);
+	public List<TemplatingPage> findByTypeAndStatus(String license, EModelType pageType, EPageStatus status);
 
 	public int insert(TemplatingPage templatingPage);
 

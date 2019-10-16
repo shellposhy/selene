@@ -3,6 +3,7 @@ package com.selene.templating.model;
 import java.util.Date;
 
 import com.selene.common.tree.TreeNodeModel;
+import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.constants.EPageStatus;
 
 /**
@@ -19,7 +20,8 @@ public class TemplatingPage extends TreeNodeModel<TemplatingPage> {
 	private String license;
 	private Integer pageModelId;
 	private String code;
-	private Integer pageType;
+	private EModelType pageType;
+	private Boolean status;
 	private EPageStatus pageStatus;
 	private String pageHtmlPath;
 	private Date publishTime;
@@ -48,12 +50,20 @@ public class TemplatingPage extends TreeNodeModel<TemplatingPage> {
 		this.code = code;
 	}
 
-	public Integer getPageType() {
+	public EModelType getPageType() {
 		return pageType;
 	}
 
-	public void setPageType(Integer pageType) {
+	public void setPageType(EModelType pageType) {
 		this.pageType = pageType;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 
 	public EPageStatus getPageStatus() {

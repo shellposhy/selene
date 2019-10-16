@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import com.papaya.common.extension.Rpc;
 import com.selene.templating.model.TemplatingPage;
+import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.constants.EPageStatus;
 import com.selene.templating.model.service.TemplatingPageService;
 import com.selene.templating.provider.dao.TemplatingPageMapper;
@@ -36,8 +37,13 @@ public class TemplatingPageServiceImpl implements TemplatingPageService {
 	}
 
 	@Override
-	public List<TemplatingPage> findByType(String license, Integer type) {
-		return templatingPageMapper.findByType(license, type);
+	public List<TemplatingPage> findByModelId(String license, Integer modelId) {
+		return templatingPageMapper.findByModelId(license, modelId);
+	}
+
+	@Override
+	public List<TemplatingPage> findByType(String license, EModelType pageType) {
+		return templatingPageMapper.findByType(license, pageType);
 	}
 
 	@Override
@@ -46,8 +52,8 @@ public class TemplatingPageServiceImpl implements TemplatingPageService {
 	}
 
 	@Override
-	public List<TemplatingPage> findByTypeAndStatus(String license, Integer type, EPageStatus status) {
-		return templatingPageMapper.findByTypeAndStatus(license, type, status);
+	public List<TemplatingPage> findByTypeAndStatus(String license, EModelType pageType, EPageStatus status) {
+		return templatingPageMapper.findByTypeAndStatus(license, pageType, status);
 	}
 
 	@Override

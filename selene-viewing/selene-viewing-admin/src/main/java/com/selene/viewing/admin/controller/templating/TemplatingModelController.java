@@ -37,6 +37,7 @@ import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.tree.FileNode;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingModelBill;
+import com.selene.templating.model.TemplatingPage;
 import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.constants.EReplaceType;
 import com.selene.viewing.admin.controller.BaseController;
@@ -132,6 +133,31 @@ public class TemplatingModelController extends BaseController {
 		TemplatingModel templatingModel = templatingService.findModelById(id);
 		model.addAttribute("templatingModel", templatingModel);
 		return "/admin/templating/model/edit";
+	}
+
+	@RequestMapping(value = "/{modelId}/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public MappingJacksonValue delete(@PathVariable("modelId") Integer modelId, HttpServletRequest request,
+			String callback) {
+		ObjectResult<String> result = new ObjectResult<String>(HttpStatus.OK.code(), HttpStatus.OK.message());
+		MerchantsUserVO vo = commonService.user(request);
+		List<TemplatingPage> pageList = templatingService.findByModelId(vo.getLicense(), modelId);
+		if (pageList != null && pageList.size() > 0) {
+			result.setCode(HttpStatus.ERROR.code());
+			result.setMsg("该页面模板已被使用，无法删除！");
+		} else {
+			/** Delete template file first */
+			TemplatingModel model = templatingService.findModelById(modelId);
+			resourceService./* Delete static files */deleteFolder(resourceService.realStatic(model.getModelCode()));
+			resourceService./* Delete template files */deleteFolder(resourceService.realTemplate(model.getModelCode()));
+			if (!(templatingService.deleteModel(modelId) > 0)) {
+				result.setCode(HttpStatus.ERROR.code());
+				result.setMsg("该页面模板删除失败，请重新再试！");
+			}
+		}
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		mv.setJsonpFunction(callback);
+		return mv;
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
