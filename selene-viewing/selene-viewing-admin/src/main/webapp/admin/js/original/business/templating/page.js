@@ -6,6 +6,7 @@
  */
 $(document).ready(function() {
 	loadPageTree();
+	loadPageModelData();
 	//init_load_page_list(); 
 	//page_form_validate();
 	//load_page_model("Index");
@@ -35,17 +36,18 @@ function loadPageTree(){
 //bind the page tree click event
 function bindPageNodeEvent(nodeId) {
 	if(nodeId>0){
+		$("#addPage").attr("href",appPath+"/admin/templating/page/"+nodeId+"/new")
+		$("#pages").hide();
 		$('#page_content').show();
 		//load page data
 		var dataTitle=[{
 			"mData" : "name",
 			"fnRender" : function(obj) {
-				return	'<h3>' + 
-								'	<label class="checkbox inline mt0">' +
+				return	'	<label class="checkbox inline mt0">' +
 								'		<input type="checkbox" id="inlineCheckbox' + obj.aData.id + '" name="idStr' + obj.aData.id + '" value="' + obj.aData.id +'" style="opacity: 0;">'+
 								'	</label>'+
-								'	'+obj.aData.name+
-								'</h3>';
+								'<span>'+obj.aData.name+'</span>'+
+								'<button title="页面配置" data-rel="tooltip" class="btn btn-mini editbtn padmbt floatr none"><i class="icon-edit"></i>配置</button>';
 			}
 		},{
 			"mData" : "code"
@@ -103,20 +105,28 @@ function bindPageNodeEvent(nodeId) {
 				}
 			}
 		}];
-		dataTablesCom($('#pageDatas'), "/admin/templating/page/search/" + libId,dataTitle, null, loadDataCallback, true,false,true);
+		dataTablesCom($('#pageDatas'), "/admin/templating/page/search/" + nodeId,dataTitle, null, loadDataCallback, true,true,true);
 	}
 }
 
 //page callback function
 function loadDataCallback(otd) {
 	docReady();
-	trHoverEdit();
+	trHoverEdit(showItemEdit);
+	trHoverModi();
+}
+function showItemEdit() {
+	$(".trHoverEdit tr .editbtn").live("click", function() {
+		var pageId = $(this).parent().find("input[type='checkbox']").val();
+		window.location.href = "page/" + "config/" + pageId;
+	})
 }
 
 //Load page model data
 function loadPageModelData(){
 	$("#pageType").die().on('change',function(){
 		var val=$(this).val();
+		$("#pageModelId").html();
 		if(val!=null&&val!=''){
 			$.ajax({
 				type : "POST",
@@ -133,7 +143,7 @@ function loadPageModelData(){
 						for(var i=0;i<data.data.length;i++){
 							content+="<option value='" + data.data[i].id + "'>" + data.data[i].modelName+ "</option>";
 						}
-						$("#pageModelId").append(content);
+						$("#pageModelId").html(content);
 					}
 				}
 			});

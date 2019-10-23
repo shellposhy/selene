@@ -31,22 +31,13 @@
 							<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered bootstrap-datatable trHoverEdit " id="pageDatas">
 								<thead>
 									<th><label class="checkbox inline"><input type="checkbox" class="selAll" />页面名称</label></th>
-									<th>页面编码</th>
-									<th>页面类型</th>
-									<th>上架状态</th>
-									<th>发布状态</th>
-									<th>发布时间</th>
-									<th>页面预览</th>
+									<th>页面编码</th><th>页面类型</th><th>上架状态</th><th>发布状态</th><th>发布时间</th><th>页面预览</th>
 								</thead>
 								<tbody></tbody>
 								<tfoot>
-									<tr><th>页面名称</th></tr>
-									<th>页面编码</th>
-									<th>页面类型</th>
-									<th>上架状态</th>
-									<th>发布状态</th>
-									<th>发布时间</th>
-									<th>页面预览</th>
+									<tr>
+										<th>页面名称</th><th>页面编码</th><th>页面类型</th><th>上架状态</th><th>发布状态</th><th>发布时间</th><th>页面预览</th>
+									</tr>
 								</tfoot>
 							</table>
 						</div>

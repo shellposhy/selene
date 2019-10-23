@@ -18,7 +18,7 @@ public interface TemplatingItemMapper {
 
 	public List<TemplatingItem> findByModelId(@Param("modelId") Integer modelId);
 
-	public TemplatingItem findByModelIdAndName(@Param("modelId") Integer modelId, @Param("name") String name);
+	public TemplatingItem findByModelIdAndCode(@Param("modelId") Integer modelId, @Param("code") String code);
 
 	public int insert(TemplatingItem templatingItem);
 

@@ -1,6 +1,9 @@
 package com.selene.templating.model;
 
 import com.selene.common.BaseModel;
+import com.selene.templating.model.constants.ECodeListType;
+import com.selene.templating.model.constants.ESymbolPosition;
+import com.selene.templating.model.constants.ESymbolType;
 
 /**
  * <b>Selene templating module<b>
@@ -14,13 +17,18 @@ import com.selene.common.BaseModel;
 public class TemplatingItem extends BaseModel {
 	private static final long serialVersionUID = -7550835401110800082L;
 	private Integer modelId;
+	private String itemCode;
 	private String itemName;
-	private Integer itemType;
-	private Integer itemContentType;
+	private ECodeListType itemType;
+	private String itemMacro;
 	private String itemContent;
-	private String itemHtml;
-	private Integer lineNumber;
-	private Integer dataNumber;
+	private boolean addSymbol;
+	private ESymbolPosition symbolPosition;
+	private ESymbolType symbolType;
+	private Integer lineSize;
+	private Integer lengthSize;
+	private Integer picWidth;
+	private Integer picHeight;
 
 	public Integer getModelId() {
 		return modelId;
@@ -28,6 +36,14 @@ public class TemplatingItem extends BaseModel {
 
 	public void setModelId(Integer modelId) {
 		this.modelId = modelId;
+	}
+
+	public String getItemCode() {
+		return itemCode;
+	}
+
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
 	}
 
 	public String getItemName() {
@@ -38,20 +54,20 @@ public class TemplatingItem extends BaseModel {
 		this.itemName = itemName;
 	}
 
-	public Integer getItemType() {
+	public ECodeListType getItemType() {
 		return itemType;
 	}
 
-	public void setItemType(Integer itemType) {
+	public void setItemType(ECodeListType itemType) {
 		this.itemType = itemType;
 	}
 
-	public Integer getItemContentType() {
-		return itemContentType;
+	public String getItemMacro() {
+		return itemMacro;
 	}
 
-	public void setItemContentType(Integer itemContentType) {
-		this.itemContentType = itemContentType;
+	public void setItemMacro(String itemMacro) {
+		this.itemMacro = itemMacro;
 	}
 
 	public String getItemContent() {
@@ -62,28 +78,60 @@ public class TemplatingItem extends BaseModel {
 		this.itemContent = itemContent;
 	}
 
-	public String getItemHtml() {
-		return itemHtml;
+	public boolean isAddSymbol() {
+		return addSymbol;
 	}
 
-	public void setItemHtml(String itemHtml) {
-		this.itemHtml = itemHtml;
+	public void setAddSymbol(boolean addSymbol) {
+		this.addSymbol = addSymbol;
 	}
 
-	public Integer getLineNumber() {
-		return lineNumber;
+	public ESymbolPosition getSymbolPosition() {
+		return symbolPosition;
 	}
 
-	public void setLineNumber(Integer lineNumber) {
-		this.lineNumber = lineNumber;
+	public void setSymbolPosition(ESymbolPosition symbolPosition) {
+		this.symbolPosition = symbolPosition;
 	}
 
-	public Integer getDataNumber() {
-		return dataNumber;
+	public ESymbolType getSymbolType() {
+		return symbolType;
 	}
 
-	public void setDataNumber(Integer dataNumber) {
-		this.dataNumber = dataNumber;
+	public void setSymbolType(ESymbolType symbolType) {
+		this.symbolType = symbolType;
+	}
+
+	public Integer getLineSize() {
+		return lineSize;
+	}
+
+	public void setLineSize(Integer lineSize) {
+		this.lineSize = lineSize;
+	}
+
+	public Integer getLengthSize() {
+		return lengthSize;
+	}
+
+	public void setLengthSize(Integer lengthSize) {
+		this.lengthSize = lengthSize;
+	}
+
+	public Integer getPicWidth() {
+		return picWidth;
+	}
+
+	public void setPicWidth(Integer picWidth) {
+		this.picWidth = picWidth;
+	}
+
+	public Integer getPicHeight() {
+		return picHeight;
+	}
+
+	public void setPicHeight(Integer picHeight) {
+		this.picHeight = picHeight;
 	}
 
 }

@@ -35,8 +35,8 @@ public class TemplatingItemServiceImpl implements TemplatingItemService {
 	}
 
 	@Override
-	public TemplatingItem findByModelIdAndName(Integer modelId, String name) {
-		return templatingItemMapper.findByModelIdAndName(modelId, name);
+	public TemplatingItem findByModelIdAndCode(Integer modelId, String code) {
+		return templatingItemMapper.findByModelIdAndCode(modelId, code);
 	}
 
 	@Override

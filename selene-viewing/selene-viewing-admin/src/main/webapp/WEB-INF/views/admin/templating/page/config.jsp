@@ -6,7 +6,7 @@
 		<div class="">
 			<ul class="breadcrumb ind_f_tree" value="21">
 				<li><a href="${appPath}/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
-				<li><a href="${appPath}/admin/viewPage" target="_self">页面管理</a><span class="divider">/</span></li>
+				<li><a href="${appPath}/admin/templating/page" target="_self">页面管理</a><span class="divider">/</span></li>
 				<li><a href="#">页面配置</a></li>
 			</ul>
 		</div>
@@ -24,7 +24,8 @@
 		<iframe id="iFramePageConf" name="iFramePageConf" width="100%" onload="iframeFix(this)" frameborder="0" scrolling="auto" 
 			src="${appPath}/admin/view/page/config/preview/${pageId}"></iframe>
 	</div>
-
+	
+	<!-- Paging item -->
 	<div class="modal hide fade form-horizontal areaConfModal" id="areaConfModal">
 		<form:form modelAttribute="viewContent" action="${appPath}/admin/view/page/config/${pageId }/saveItem" id="viewItemForm">
 			<div class="modal-header">
@@ -100,6 +101,7 @@
 			</div>
 		</form:form>
 	</div>
-	<script src="${appPath}/admin/jscript/view/config.js"></script>
+	<script src="${appPath}/admin/js/original/business/templating/config.js"></script>
+	<!-- <script src="${appPath}/admin/js/min/business/templating/config.min.js"></script>-->
 </body>
 </html>

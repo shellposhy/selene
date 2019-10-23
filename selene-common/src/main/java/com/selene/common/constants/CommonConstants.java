@@ -32,6 +32,8 @@ public interface CommonConstants {
 
 	String SPACE_SEPARATOR = " ";
 
+	String EQUAL_SEPARATOR = "=";
+
 	Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
 
 	public final static String PATH_SEPARATOR = "/";
@@ -191,4 +193,11 @@ public interface CommonConstants {
 
 	Pattern HTML_SCRIPT_SRC = Pattern.compile(
 			"<script\\b[^>]*\\bsrc\\b\\s*=\\s*('|\")?([^'\"\n\r\f>]+(\\.js)\\b)[^>]*>", Pattern.CASE_INSENSITIVE);
+
+	Pattern HTML_FTL_SRC = Pattern.compile("<#include\\b\\s*('|\")?([^'\"\n\r\f>]+(\\.ftl)\\b)[^>]*>",
+			Pattern.CASE_INSENSITIVE);
+
+	Pattern HTML_ECODE_TEXT = Pattern.compile("<@.*?>(.*?)</@.*?>|<@.*?/*?>", Pattern.CASE_INSENSITIVE);
+
+	Pattern HTML_ECODE_VALUE = Pattern.compile("\\s+(.*?)=\\S+|\\S+=(.*?)\\s", Pattern.CASE_INSENSITIVE);
 }

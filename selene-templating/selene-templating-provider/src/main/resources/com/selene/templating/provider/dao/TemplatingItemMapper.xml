@@ -5,18 +5,24 @@
 	<resultMap id="resultMap" type="com.selene.templating.model.TemplatingItem">
 		<result property="id" column="ID" />
 		<result property="modelId" column="Model_ID" />
+		<result property="itemCode" column="Item_Code" />
 		<result property="itemName" column="Item_Name" />
 		<result property="itemType" column="Item_Type" />
-		<result property="itemContentType" column="Item_Content_Type" />
+		<result property="itemMacro" column="Item_Macro" />
 		<result property="itemContent" column="Item_Content" />
-		<result property="itemHtml" column="Item_Html" />
-		<result property="lineNumber" column="Line_Number" />
-		<result property="dataNumber" column="Data_Number" />
+		<result property="addSymbol" column="Add_Symbol" />
+		<result property="symbolPosition" column="Symbol_Position" />
+		<result property="symbolType" column="Symbol_Type" />
+		<result property="lineSize" column="Line_Size" />
+		<result property="lengthSize" column="Length_Size" />
+		<result property="picWidth" column="Pic_Width" />
+		<result property="picHeight" column="Pic_Height" />
 	</resultMap>
 
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT 
-			ID,Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+			ID,Model_ID,Item_Code,Item_Name,Item_Type,Item_Macro,Item_Content,Add_Symbol,
+			Symbol_Position,Symbol_Type,Line_Size,Length_Size,Pic_Width,Pic_Height
 		FROM 
 			templating_item 
 		WHERE 
@@ -25,7 +31,8 @@
 
 	<select id="findByModelId" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT 
-			ID,Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+			ID,Model_ID,Item_Code,Item_Name,Item_Type,Item_Macro,Item_Content,Add_Symbol,
+			Symbol_Position,Symbol_Type,Line_Size,Length_Size,Pic_Width,Pic_Height
 		FROM 
 			templating_item 
 		WHERE  
@@ -36,11 +43,12 @@
 
 	<select id="findByModelIdAndCode" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
-			ID,Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+			ID,Model_ID,Item_Code,Item_Name,Item_Type,Item_Macro,Item_Content,Add_Symbol,
+			Symbol_Position,Symbol_Type,Line_Size,Length_Size,Pic_Width,Pic_Height
 		FROM 
 			templating_item 
 		WHERE   
-			Model_ID=#{modelId} AND Item_Name=#{name}
+			Model_ID=#{modelId} AND Item_Code=#{code}
 		LIMIT 
 			1
 	</select>
@@ -51,23 +59,26 @@
 		</selectKey>
 		INSERT INTO
 			templating_item(
-				Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+				Model_ID,Item_Code,Item_Name,Item_Type,Item_Macro,Item_Content,Add_Symbol,
+				Symbol_Position,Symbol_Type,Line_Size,Length_Size,Pic_Width,Pic_Height
 			)
 		VALUES(
-			#{modelId},#{itemName},#{itemType},#{itemContentType},#{itemContent},#{itemHtml},#{lineNumber},#{dataNumber}
+			#{modelId},#{itemCode},#{itemName},#{itemType},#{itemMacro},#{itemContent},#{addSymbol},
+			#{symbolPosition},#{symbolType},#{lineSize},#{lengthSize},#{picWidth},#{picHeight}
 		)
 	</insert>
 	
 	<insert id="batchInsert" parameterType="java.util.List">
 		INSERT INTO
 			templating_item(
-				Model_ID,Item_Name,Item_Type,Item_Content_Type,Item_Content,Item_Html,Line_Number,Data_Number
+				Model_ID,Item_Code,Item_Name,Item_Type,Item_Macro,Item_Content,Add_Symbol,
+				Symbol_Position,Symbol_Type,Line_Size,Length_Size,Pic_Width,Pic_Height
 			)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator=",">
 			(
-				#{item.modelId},#{item.itemName},#{item.itemType},#{item.itemContentType},
-				#{item.itemContent},#{item.itemHtml},#{item.lineNumber},#{item.dataNumber}
+				#{item.modelId},#{item.itemCode},#{item.itemName},#{item.itemType},#{item.itemMacro},#{item.itemContent},#{item.addSymbol},
+				#{item.symbolPosition},#{item.symbolType},#{item.lineSize},#{item.lengthSize},#{item.picWidth},#{item.picHeight}
 			)
 		</foreach>
 	</insert>
@@ -76,13 +87,18 @@
 		UPDATE 
 			templating_item 
 		<set>
+			<if test="itemCode != null">Item_Code = #{itemCode},</if>
 			<if test="itemName != null">Item_Name = #{itemName},</if>
 			<if test="itemType != null">Item_Type =#{itemType},</if>
-			<if test="itemContentType != null">Item_Content_Type = #{itemContentType},</if>
+			<if test="itemMacro != null">Item_Macro =#{itemMacro},</if>
 			<if test="itemContent != null">Item_Content =#{itemContent},</if>
-			<if test="itemHtml != null">Item_Html = #{itemHtml},</if>
-			<if test="lineNumber != null">Line_Number = #{lineNumber},</if>
-			<if test="dataNumber != null">Data_Number = #{dataNumber},</if>
+			<if test="addSymbol != null">Add_Symbol = #{addSymbol},</if>
+			<if test="symbolPosition != null">Symbol_Position = #{symbolPosition},</if>
+			<if test="symbolType != null">Symbol_Type = #{symbolType},</if>
+			<if test="lineSize != null">Line_Size = #{lineSize},</if>
+			<if test="lengthSize != null">Length_Size = #{lengthSize},</if>
+			<if test="picWidth != null">Pic_Width = #{picWidth},</if>
+			<if test="picHeight != null">Pic_Height = #{picHeight},</if>
 			<if test="modelId != null">Model_ID = #{modelId}</if>
 		</set>
 		WHERE 

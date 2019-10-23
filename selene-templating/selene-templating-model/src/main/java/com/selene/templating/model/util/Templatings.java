@@ -114,9 +114,13 @@ public final class Templatings {
 				prefix = "css";
 				break;
 			case JSCRIPT:
-			default:
 				replaceList = regex(content, CommonConstants.HTML_SCRIPT_SRC);
 				prefix = "js";
+				break;
+			case Ftl:
+			default:
+				replaceList = regex(content, CommonConstants.HTML_FTL_SRC);
+				prefix = "ftl";
 				break;
 			}
 			if (replaceList != null && replaceList.size() > 0) {

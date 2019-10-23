@@ -1,5 +1,8 @@
 package com.selene.viewing.admin.service.templating;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +10,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,13 +19,16 @@ import com.nanshan.papaya.rpc.client.Client;
 import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.ServiceConstants;
 import com.selene.common.util.RedisClient;
+import com.selene.templating.model.TemplatingItem;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingModelBill;
 import com.selene.templating.model.TemplatingPage;
 import com.selene.templating.model.constants.EModelType;
+import com.selene.templating.model.service.TemplatingItemService;
 import com.selene.templating.model.service.TemplatingModelBillService;
 import com.selene.templating.model.service.TemplatingModelService;
 import com.selene.templating.model.service.TemplatingPageService;
+import com.selene.templating.model.util.PageConfigers;
 
 @Service
 public class TemplatingService {
@@ -49,9 +56,29 @@ public class TemplatingService {
 				client.create(TemplatingModelService.class, templatingService));
 		services.put(TemplatingPageService.class.getName(),
 				client.create(TemplatingPageService.class, templatingService));
+		services.put(TemplatingItemService.class.getName(),
+				client.create(TemplatingItemService.class, templatingService));
 	}
 
 	/* Templating page process */
+	/**
+	 * Save {@code TemplatingPage}
+	 * 
+	 * @param page
+	 * @return
+	 */
+	public int savePage(TemplatingPage page) {
+		// Initialize the required services
+		TemplatingPageService pageService = (TemplatingPageService) /* Page */services
+				.get(TemplatingPageService.class.getName());
+		// Business process
+		if (page.getId() == null) {
+			return pageService.insert(page);
+		} else {
+			return pageService.update(page);
+		}
+	}
+
 	/**
 	 * Find {@code TemplatingPage} by id.
 	 * 
@@ -96,6 +123,35 @@ public class TemplatingService {
 	}
 
 	/* Templating model process */
+	/**
+	 * Scan the model content and find the configuration area
+	 * 
+	 * @param modelId
+	 * @return int
+	 */
+	public int scanModel(Integer modelId, File template) {
+		// Initialize the required services
+		TemplatingItemService itemService = /**/ (TemplatingItemService) services
+				.get(TemplatingItemService.class.getName());
+		// Business process
+		List<TemplatingItem> oldItemList = itemService.findByModelId(modelId);
+		if (oldItemList != null && oldItemList.size() > 0) {
+			itemService.deleteByModelId(modelId);
+		}
+		if (template.exists() && template.isFile()) {
+			try {
+				String content = FileUtils.readFileToString(template, Charset.forName("UTF-8"));
+				List<TemplatingItem> newItemList = PageConfigers.editable(modelId, content);
+				if (newItemList != null && newItemList.size() > 0) {
+					return itemService.batchInsert(newItemList);
+				}
+			} catch (IOException e) {
+				return 0;
+			}
+		}
+		return 0;
+	}
+
 	/**
 	 * Find {@code TemplatingModel} by license and {@code EModelType} type
 	 * 

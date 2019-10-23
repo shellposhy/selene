@@ -7,7 +7,7 @@ package com.selene.templating.model.constants;
  * @version 1.0
  */
 public enum EReplaceType {
-	IMG("img"), CSS("link"), JSCRIPT("script");
+	IMG("img"), CSS("link"), JSCRIPT("script"), Ftl("ftl");
 
 	private final String title;
 

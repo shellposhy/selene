@@ -103,8 +103,8 @@ function bindBillModelList(billId) {
 					content += "		</div >";
 					content += "	</a>";
 					content += "	<span class='dbname'><i class='dbname'>"+ data.data[i].modelName + "</i></span>";
-					content	+= "	<span class='dbtime'>更新时间<br>"+ new Date(data.data[i].updateTime).format("yyyy-MM-dd hh:mm:ss") +"</span>";
-					//content += "	<a class='btn btn-small' href='#' id='btnScan' onclick='scan("+ data.data[i].id+ ")' target='_self'><i class='icon-refresh'></i>同步</a>";
+					content	+= "	<span class='dbtime'>"+ new Date(data.data[i].updateTime).format("yyyy-MM-dd hh:mm:ss") +"</span>";
+					content += "	<a class='btn btn-small' href='#' id='btnScan' onclick='modelConfigContentScan("+ data.data[i].id+ ")' target='_self'><i class='icon-refresh'></i>配置区域扫描</a>";
 					content += "	<div class='actions' >";
 					content += "		<a class='btn btn-small db_edit' href='"+ appPath+ "/admin/templating/model/"+data.data[i].id+"/edit' target='_self'><i class='icon-pencil'></i>修改</a>";
 					content += "		<a class='btn btn-small ml5 db_del' href='#' onclick='deleteModel("+ data.data[i].id+ ")' target='_self'><i class='icon-trash'></i>删除</a>";
@@ -117,8 +117,34 @@ function bindBillModelList(billId) {
 	});
 }
 
-
 /**Model processing*/
+
+//Scan the model content and find the configuration area
+function modelConfigContentScan(modelId){
+	if(modelId>0){
+		if (confirm("确定扫描模板内容?")){
+			$.ajax({
+				type : "POST",
+				url : appPath + "/admin/templating/model/scan/"+modelId,
+				contentType : 'application/json',
+				beforeSend: function(request) {//beforeSend
+		            request.setRequestHeader("token", token);
+		            request.setRequestHeader("refreshToken",refreshToken);
+		         },
+				success : function(data) {
+					if(data.code==200){
+						noty({"text" : "模板配置内容扫描成功！","layout" : "center","type" : "success","animateOpen" : {"opacity" : "show"}});
+					}else{
+						noty({"text" : data.msg,"layout" : "center","type" : "error","animateOpen" : {"opacity" : "show"}});
+					}
+				}
+			});
+		} else{
+			return false;
+		}
+	}
+}
+
 //Before check where model bill check 
 function validateModelForm() {
 	$("#pageModelForm").validate({

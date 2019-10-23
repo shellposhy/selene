@@ -1,6 +1,7 @@
 package com.selene.viewing.admin.controller.templating;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.selene.common.HttpStatus;
+import com.selene.common.Operator;
 import com.selene.common.datatable.DataTable;
 import com.selene.common.datatable.DataTableArray;
 import com.selene.common.datatable.DataTableResult;
@@ -28,6 +32,7 @@ import com.selene.common.util.Containers;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingPage;
 import com.selene.templating.model.constants.EModelType;
+import com.selene.templating.model.constants.EPageStatus;
 import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.templating.TemplatingService;
@@ -97,5 +102,47 @@ public class TemplatingPageController extends BaseController {
 		MappingJacksonValue mv = new MappingJacksonValue(result);
 		mv.setJsonpFunction(callback);
 		return mv;
+	}
+
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public String save(@Validated final TemplatingPage templatingPage, BindingResult result, final Model model,
+			final HttpServletRequest request) {
+		return super.save(templatingPage, result, model, new Operator() {
+			@Override
+			public void operate() {
+				MerchantsUserVO vo = commonService.user(request);
+				templatingPage.setLicense(vo.getLicense());
+				if (templatingPage.getId() == null) {
+					templatingPage.setCreatorId(vo.getId());
+					templatingPage.setCreateTime(new Date());
+					templatingPage.setStatus(false);
+					templatingPage.setPageStatus(EPageStatus.Unpublish);
+				} else {
+					TemplatingPage historyPage = templatingService.findPageById(templatingPage.getId());
+					templatingPage.setStatus(historyPage.getStatus());
+					templatingPage.setPageStatus(historyPage.getPageStatus());
+					templatingPage.setPageHtmlPath(historyPage.getPageHtmlPath());
+					templatingPage.setPublishTime(historyPage.getPublishTime());
+				}
+				templatingPage.setUpdaterId(vo.getId());
+				templatingPage.setUpdateTime(new Date());
+				templatingService.savePage(templatingPage);
+			}
+
+			@Override
+			public String success() {
+				return "redirect:/admin/templating/page";
+			}
+
+			@Override
+			public String fail() {
+				model.addAttribute("templatingPage", templatingPage);
+				return "/admin/templating/page/edit";
+			}
+
+			@Override
+			public void error() {
+			}
+		});
 	}
 }

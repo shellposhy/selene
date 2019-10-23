@@ -15,7 +15,7 @@ public interface TemplatingItemService {
 
 	public List<TemplatingItem> findByModelId(Integer modelId);
 
-	public TemplatingItem findByModelIdAndName(Integer modelId, String name);
+	public TemplatingItem findByModelIdAndCode(Integer modelId, String code);
 
 	public int insert(TemplatingItem templatingItem);
 

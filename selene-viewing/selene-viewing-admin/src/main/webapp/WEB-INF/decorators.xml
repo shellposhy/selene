@@ -6,7 +6,7 @@
 		<pattern>/admin/login</pattern>
 		<pattern>/admin/logout</pattern>
 		<pattern>/admin/security/check</pattern>
-		<pattern>/admin/view/page/config/preview/*</pattern>
+		<pattern>/admin/templating/page/config/preview/*</pattern>
 		<pattern>/admin/css/**</pattern>
 		<pattern>/admin/js/**</pattern>
 		<pattern>/admin/jscript/**</pattern>

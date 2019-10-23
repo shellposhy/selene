@@ -72,6 +72,24 @@ public class TemplatingModelController extends BaseController {
 		return "/admin/templating/model/template";
 	}
 
+	@RequestMapping(value = "/scan/{modelId}", method = RequestMethod.POST)
+	@ResponseBody
+	public MappingJacksonValue scan(@PathVariable("modelId") Integer modelId, String callback) {
+		ObjectResult<String> result = new ObjectResult<String>();
+		TemplatingModel model = templatingService.findModelById(modelId);
+		String rootPath = resourceService.root();
+		File template = new File(rootPath + model.getModelFile());
+		if (templatingService.scanModel(modelId, template) > 0) {
+			result.setCode(HttpStatus.OK.code());
+		} else {
+			result.setCode(HttpStatus.ERROR.code());
+			result.setMsg("模板配置内容扫描失败！");
+		}
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		mv.setJsonpFunction(callback);
+		return mv;
+	}
+
 	@RequestMapping(value = "/{modelId}/template/file", method = RequestMethod.POST)
 	@ResponseBody
 	public MappingJacksonValue files(@PathVariable("modelId") Integer modelId, String callback) {

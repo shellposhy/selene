@@ -33,13 +33,18 @@ create table templating_item
 (
    ID                   int(11) unsigned not null auto_increment comment '主键',
    Model_ID             int(11) unsigned not null comment '模板编号',
-   Item_Name            char(200) not null comment '配置区编码',
+   Item_Code            char(200) not null comment '配置区编码',
+   Item_Name            char(200) comment '配置区名称',
    Item_Type            tinyint(3) not null comment '配置区类型',
-   Item_Content_Type    tinyint(2) not null comment '配置区内容类型',
-   Item_Content         varchar(500) comment '配置区内容类型',
-   Item_Html            varchar(1000) comment '配置区HTML',
-   Line_Number          int unsigned not null default 10 comment '数据显示行数',
-   Data_Number          int not null default 1 comment '数据显示字数',
+   Item_Macro           varchar(500) not null comment '配置区宏',
+   Item_Content         varchar(2000) comment '配置区内容',
+   Add_Symbol           tinyint(1) comment '是否添加符号',
+   Symbol_Position      tinyint(1) comment '符号位置',
+   Symbol_Type          tinyint(2) comment '符号类型',
+   Line_Size            int unsigned default 5 comment '数据行数',
+   Length_Size          int default 20 comment '数据字数',
+   Pic_Width            int comment '图片宽度',
+   Pic_Height           int comment '图片高度',
    primary key (ID)
 );
 

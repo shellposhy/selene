@@ -9,5 +9,9 @@
 		<!-- Templating Enum -->
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EModelType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EPageStatus" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.ECodeListType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EReplaceType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.ESymbolPosition" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.ESymbolType" />
 	</typeHandlers>
 </configuration>

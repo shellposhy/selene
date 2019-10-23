@@ -6,7 +6,7 @@
 			<div class="mt10">
 				<ul class="breadcrumb ind_f_tree" value="22">
 					<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
-					<li><a href="${appPath }/admin/view/model" target="_self">模板管理</a><span class="divider">/</span></li>
+					<li><a href="${appPath }/admin/templating/model" target="_self">模板管理</a><span class="divider">/</span></li>
 					<li><a href="#">编辑模板</a></li>
 				</ul>
 			</div>

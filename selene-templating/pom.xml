@@ -27,6 +27,10 @@
 			<artifactId>selene-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.htmlparser</groupId>
+			<artifactId>htmlparser</artifactId>
+		</dependency>
 	</dependencies>
 
 	<!-- Properties -->
