@@ -34,9 +34,9 @@ import com.selene.templating.model.TemplatingPage;
 import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.constants.EPageStatus;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.templating.TemplatingService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 @Controller
 @RequestMapping("/admin/templating/page")
@@ -66,8 +66,8 @@ public class TemplatingPageController extends BaseController {
 			HttpServletRequest request) {
 		ListResult<TemplatingModel> result = new ListResult<TemplatingModel>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
-		MerchantsUserVO vo = commonService.user(request);
-		result.setData(templatingService.findModelByType(vo.getLicense(), type));
+		Customer customer = commonService.user(request);
+		result.setData(templatingService.findModelByType(customer.getLicense(), type));
 		MappingJacksonValue mv = new MappingJacksonValue(result);
 		mv.setJsonpFunction(callback);
 		return mv;
@@ -94,8 +94,8 @@ public class TemplatingPageController extends BaseController {
 	public MappingJacksonValue tree(String callback, HttpServletRequest request) {
 		ObjectResult<DefaultTreeNode> result = new ObjectResult<DefaultTreeNode>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
-		MerchantsUserVO vo = commonService.user(request);
-		List<TemplatingPage> list = templatingService.findByLicense(vo.getLicense());
+		Customer customer = commonService.user(request);
+		List<TemplatingPage> list = templatingService.findByLicense(customer.getLicense());
 		DefaultTreeNode treeNode = DefaultTreeNode.parseTree(list);
 		treeNode.setName("根节点");
 		result.setData(treeNode);
@@ -110,10 +110,10 @@ public class TemplatingPageController extends BaseController {
 		return super.save(templatingPage, result, model, new Operator() {
 			@Override
 			public void operate() {
-				MerchantsUserVO vo = commonService.user(request);
-				templatingPage.setLicense(vo.getLicense());
+				Customer customer = commonService.user(request);
+				templatingPage.setLicense(customer.getLicense());
 				if (templatingPage.getId() == null) {
-					templatingPage.setCreatorId(vo.getId());
+					templatingPage.setCreatorId(customer.getId());
 					templatingPage.setCreateTime(new Date());
 					templatingPage.setStatus(false);
 					templatingPage.setPageStatus(EPageStatus.Unpublish);
@@ -124,7 +124,7 @@ public class TemplatingPageController extends BaseController {
 					templatingPage.setPageHtmlPath(historyPage.getPageHtmlPath());
 					templatingPage.setPublishTime(historyPage.getPublishTime());
 				}
-				templatingPage.setUpdaterId(vo.getId());
+				templatingPage.setUpdaterId(customer.getId());
 				templatingPage.setUpdateTime(new Date());
 				templatingService.savePage(templatingPage);
 			}

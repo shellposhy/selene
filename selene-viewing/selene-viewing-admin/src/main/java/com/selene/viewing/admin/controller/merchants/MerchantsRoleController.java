@@ -36,9 +36,9 @@ import com.selene.merchants.model.MerchantsRole;
 import com.selene.merchants.model.enums.EActionUserType;
 import com.selene.merchants.model.enums.EPageType;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.merchants.UserService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 @Controller
 @RequestMapping("/admin/merchants/role")
@@ -57,12 +57,12 @@ public class MerchantsRoleController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue search(@RequestBody DataTableArray[] dataArray, String callback,
 			HttpServletRequest request) {
-		MerchantsUserVO vo = commonService.user(request);
+		Customer customer = commonService.user(request);
 		DataTable dataTable = Containers.table(dataArray);
 		Integer pageSize = dataTable.getiDisplayLength();
 		Integer pageStart = dataTable.getiDisplayStart();
 		ListResult<MerchantsRole> list = userService.findRoleByPage(dataTable.getsSearch(),
-				/* The current user license */vo.getLicense(), pageStart, pageSize);
+				/* The current user license */customer.getLicense(), pageStart, pageSize);
 		DataTableResult<MerchantsRole> result = new DataTableResult<MerchantsRole>(dataTable.getsEcho(),
 				list.getTotal(), list.getTotal(), list.getData());
 		MappingJacksonValue mv = new MappingJacksonValue(result);
@@ -134,18 +134,18 @@ public class MerchantsRoleController extends BaseController {
 		return super.save(merchantsRole, result, model, new Operator() {
 			@Override
 			public void operate() {
-				MerchantsUserVO vo = commonService.user(request);
+				Customer customer = commonService.user(request);
 				if (/* new role */merchantsRole.getId() == null) {
-					merchantsRole.setCreatorId(vo.getId());
+					merchantsRole.setCreatorId(customer.getId());
 					merchantsRole.setCreateTime(new Date());
-					merchantsRole.setLicense(vo.getLicense());
+					merchantsRole.setLicense(customer.getLicense());
 					merchantsRole.setAllDataAuthority(false);
 					merchantsRole.setAllFrontAuthority(false);
 					merchantsRole.setDefaultPageType(EPageType.SysPage);
 					merchantsRole.setDefaultPageId(0);
 					merchantsRole.setDefaultPageUrl(null);
 				}
-				merchantsRole.setUpdaterId(vo.getId());
+				merchantsRole.setUpdaterId(customer.getId());
 				merchantsRole.setUpdateTime(new Date());
 				userService.saveMerchantsRole(merchantsRole);
 			}

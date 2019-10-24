@@ -25,9 +25,9 @@ import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.tree.support.LibraryTreeNode;
 import com.selene.dataing.model.DataingDatabase;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 @Controller
 @RequestMapping("/admin/dataing/directory")
@@ -42,8 +42,8 @@ public class DataingDirectoryController extends BaseController {
 	private MappingJacksonValue tree(String callback, HttpServletRequest request) {
 		ObjectResult<LibraryTreeNode> result = new ObjectResult<LibraryTreeNode>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
-		MerchantsUserVO vo = commonService.user(request);
-		LibraryTreeNode treeNode = dataService.tree(vo.getLicense(), null, ELibraryType.Default);
+		Customer customer = commonService.user(request);
+		LibraryTreeNode treeNode = dataService.tree(customer.getLicense(), null, ELibraryType.Default);
 		result.setData(treeNode);
 		MappingJacksonValue mv = new MappingJacksonValue(result);
 		mv.setJsonpFunction(callback);
@@ -55,8 +55,8 @@ public class DataingDirectoryController extends BaseController {
 	private MappingJacksonValue emptyTree(String callback, HttpServletRequest request) {
 		ObjectResult<DefaultTreeNode> result = new ObjectResult<DefaultTreeNode>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
-		MerchantsUserVO vo = commonService.user(request);
-		List<DataingDatabase> list = dataService.emptyTreeList(vo.getLicense(), ELibraryType.Default);
+		Customer customer = commonService.user(request);
+		List<DataingDatabase> list = dataService.emptyTreeList(customer.getLicense(), ELibraryType.Default);
 		DefaultTreeNode treeNode = DefaultTreeNode.parseTree(list);
 		treeNode.id = 0;
 		treeNode.name = "根目录";
@@ -86,9 +86,9 @@ public class DataingDirectoryController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue delete(@PathVariable Integer id, String callback, HttpServletRequest request) {
 		ObjectResult<String> result = new ObjectResult<String>();
-		MerchantsUserVO vo = commonService.user(request);
+		Customer customer = commonService.user(request);
 		List<DataingDatabase> /* Make sure no subitems in the directory. */ list = dataService
-				.findBaseByParentId(vo.getLicense(), ELibraryType.Default, id);
+				.findBaseByParentId(customer.getLicense(), ELibraryType.Default, id);
 		if (list != null && list.size() > 0) {
 			result.setCode(HttpStatus.ERROR.code());
 			result.setMsg("数据库目录删除前，请确保该目录下没有子目录或数据库！");
@@ -109,20 +109,20 @@ public class DataingDirectoryController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(final DataingDatabase database, BindingResult result, final Model model,
 			final HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		return super.save(database, result, model, new Operator() {
 			@Override
 			public void operate() {
 				if (database.getId() == null) {
 					database.setModelId(0);
 					database.setTables(0);
-					database.setLicense(vo.getLicense());
+					database.setLicense(customer.getLicense());
 					database.setNodeType(ELibraryNodeType.Directory);
 					database.setStatus(EDataStatus.Normal);
-					database.setCreatorId(vo.getId());
+					database.setCreatorId(customer.getId());
 					database.setCreateTime(new Date());
 				}
-				database.setUpdaterId(vo.getId());
+				database.setUpdaterId(customer.getId());
 				database.setUpdateTime(new Date());
 				dataService.saveDirectory(database);
 			}

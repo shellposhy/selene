@@ -70,7 +70,7 @@
 		<!-- Thumbnailator -->
 		<thumbnailator_version>0.4.8</thumbnailator_version>
 		<!-- Freemarker -->
-		<freemarker_version>2.3.18</freemarker_version>
+		<freemarker_version>2.3.21</freemarker_version>
 		<!-- POI -->
 		<poi_version>3.9</poi_version>
 		<!-- Jodd -->

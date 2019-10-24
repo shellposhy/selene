@@ -27,9 +27,9 @@ import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.util.Containers;
 import com.selene.dataing.model.DataingDataTag;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 @Controller
 @RequestMapping("/admin/dataing/tag")
@@ -48,10 +48,10 @@ public class DataingTagController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue search(@RequestBody DataTableArray[] dataArray, String callback,
 			HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		DataTable /* Packaging request parameters */ dataTable = Containers.table(dataArray);
 		String word = dataTable.getsSearch();
-		List<DataingDataTag> list = dataService.findTag(vo.getLicense(), word);
+		List<DataingDataTag> list = dataService.findTag(customer.getLicense(), word);
 		DefaultTreeNode result = DefaultTreeNode.parseTree(list);
 		result.name = "根分类";
 		MappingJacksonValue mv = new MappingJacksonValue(result);
@@ -62,8 +62,8 @@ public class DataingTagController extends BaseController {
 	@RequestMapping(value = "/custom/s", method = RequestMethod.POST)
 	@ResponseBody
 	public MappingJacksonValue tree(String callback, HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
-		List<DataingDataTag> list = dataService.findTagByType(vo.getLicense(), 1);
+		final Customer customer = commonService.user(request);
+		List<DataingDataTag> list = dataService.findTagByType(customer.getLicense(), 1);
 		DefaultTreeNode result = DefaultTreeNode.parseTree(list);
 		result.name = "根分类";
 		MappingJacksonValue mv = new MappingJacksonValue(result);
@@ -90,7 +90,7 @@ public class DataingTagController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue delete(@PathVariable("id") Integer id, String callback, HttpServletRequest request) {
 		ObjectResult<String> result = new ObjectResult<String>();
-		MerchantsUserVO vo = commonService.user(request);
+		Customer customer = commonService.user(request);
 		DataingDataTag dataTag = dataService.findTagById(id);
 		if (dataTag.getType() == 0) {
 			result.setCode(HttpStatus.ERROR.code());
@@ -100,7 +100,7 @@ public class DataingTagController extends BaseController {
 				result.setCode(HttpStatus.ERROR.code());
 				result.setMsg("该数据标签为自定义数据标签根节点，不能删除！");
 			} else {
-				List<DataingDataTag> subTagList = dataService.findSubTag(vo.getLicense(), id);
+				List<DataingDataTag> subTagList = dataService.findSubTag(customer.getLicense(), id);
 				if (subTagList != null && subTagList.size() > 0) {
 					result.setCode(HttpStatus.ERROR.code());
 					result.setMsg("该数据标签下存在子标签，不能删除！");
@@ -122,13 +122,13 @@ public class DataingTagController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(@Validated final DataingDataTag dataTag, BindingResult result, final Model model,
 			HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
-		dataTag.setLicense(vo.getLicense());
+		final Customer customer = commonService.user(request);
+		dataTag.setLicense(customer.getLicense());
 		if (/* New tag */dataTag.getId() == null) {
-			dataTag.setCreatorId(vo.getId());
+			dataTag.setCreatorId(customer.getId());
 			dataTag.setCreateTime(new Date());
 		}
-		dataTag.setUpdaterId(vo.getId());
+		dataTag.setUpdaterId(customer.getId());
 		dataTag.setUpdateTime(new Date());
 		DataingDataTag /* Parent tag */ parentTag = (dataTag.getParentId().intValue() != 0)
 				? dataService.findTagById(dataTag.getParentId()) : null;

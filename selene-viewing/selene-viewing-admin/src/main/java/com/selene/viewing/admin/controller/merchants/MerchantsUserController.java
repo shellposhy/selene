@@ -31,9 +31,9 @@ import com.selene.merchants.model.MerchantsUser;
 import com.selene.merchants.model.enums.EActionUserType;
 import com.selene.merchants.model.enums.EOrgStatus;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.merchants.UserService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.util.Jsons.json;
 import static com.selene.common.util.Containers.toList;
@@ -107,14 +107,14 @@ public class MerchantsUserController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue delete(@RequestBody DataTableArray value, String callback, HttpServletRequest request) {
 		ObjectResult<String> result = new ObjectResult<String>(HttpStatus.OK.code(), "删除成功！");
-		MerchantsUserVO vo = commonService.user(request);
+		Customer customer = commonService.user(request);
 		String[] /* Users need to deleted. */ userIds = split(CommonConstants.COMMA_SEPARATOR, value.value);
 		for (String userId : userIds) {
 			MerchantsUser merchantsUser = userService.find(Integer.valueOf(userId));
 			merchantsUser.setStatus(EOrgStatus.Stop);
 			merchantsUser.setNickName(merchantsUser.getName());
 			merchantsUser.setName(uuid());
-			merchantsUser.setUpdaterId(vo.getId());
+			merchantsUser.setUpdaterId(customer.getId());
 			merchantsUser.setUpdateTime(new Date());
 			userService.deleteUser(merchantsUser);
 		}
@@ -126,19 +126,19 @@ public class MerchantsUserController extends BaseController {
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public String save(@Validated final MerchantsUser user, BindingResult result, final Model model,
 			final HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		return super.save(user, result, model, new Operator() {
 			@Override
 			public void operate() {
 				user.setUpdateTime(new Date());
-				user.setUpdaterId(vo.getId());
+				user.setUpdaterId(customer.getId());
 				user.setUserPassword(md5(user.getUserPassword()));
 				user.setOrderId(1);
 				user.setType(EActionUserType.Admin);
 				user.setIpAddress(ip(request));
 				user.setPic("1");
 				if (user.getId() == null) {
-					user.setCreatorId(vo.getId());
+					user.setCreatorId(customer.getId());
 					user.setCreateTime(new Date());
 				}
 				userService.saveMerchantsUser(user);

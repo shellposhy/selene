@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.util.RedisClient;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
+import com.selene.viewing.admin.framework.vo.Customer;
 
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
 
@@ -19,15 +19,15 @@ public class TokenService {
 	@Resource
 	private RedisClient redisClient;
 
-	public MerchantsUserVO user(HttpServletRequest request) {
+	public Customer user(HttpServletRequest request) {
 		String token = request.getParameter("token");
 		if (isNullOrEmpty(token)) {
 			token = request.getHeader("token");
 		}
 		if (!isNullOrEmpty(token)) {
 			LOG.info("token=" + token);
-			return (MerchantsUserVO) redisClient.get(token);
+			return (Customer) redisClient.get(token);
 		}
-		return (MerchantsUserVO) request.getSession().getAttribute(CommonConstants.LOGIN_SESSION_USER);
+		return (Customer) request.getSession().getAttribute(CommonConstants.LOGIN_SESSION_USER);
 	}
 }

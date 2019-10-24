@@ -5,7 +5,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import com.selene.common.util.RedisClient;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
+import com.selene.viewing.admin.framework.vo.Customer;
 
 public class SpringRedisTest {
 	@SuppressWarnings("unchecked")
@@ -15,7 +15,7 @@ public class SpringRedisTest {
 		RedisClient client = new RedisClient();
 		client.setRedisTemplate(template);
 
-		MerchantsUserVO vo=(MerchantsUserVO)client.get("818ffaf64b830099b914929094951b6c");
+		Customer vo=(Customer)client.get("818ffaf64b830099b914929094951b6c");
 		
 		System.out.println(vo.getActionTree());
 		System.out.println(vo.getLicense());

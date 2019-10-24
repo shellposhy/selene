@@ -25,9 +25,9 @@ import com.selene.common.tree.DefaultTreeNode;
 import com.selene.merchants.model.MerchantsOrg;
 import com.selene.merchants.model.enums.EOrgStatus;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.merchants.UserService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.util.Jsons.json;
 import static cn.com.lemon.base.Strings.join;
@@ -52,8 +52,8 @@ public class MerchantsOrgController extends BaseController {
 	public MappingJacksonValue loadMerchantsOrgTree(String callback, HttpServletRequest request) {
 		ObjectResult<DefaultTreeNode> result = new ObjectResult<DefaultTreeNode>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
-		MerchantsUserVO vo = commonService.user(request);
-		DefaultTreeNode treeNode = userService.findUserOrgTree(vo.getId());
+		Customer customer = commonService.user(request);
+		DefaultTreeNode treeNode = userService.findUserOrgTree(customer.getId());
 		treeNode.name = "根机构";
 		result.setData(treeNode);
 		MappingJacksonValue mv = new MappingJacksonValue(result);
@@ -115,10 +115,10 @@ public class MerchantsOrgController extends BaseController {
 		return super.save(merchantsOrg, result, model, new Operator() {
 			@Override
 			public void operate() {
-				MerchantsUserVO vo = commonService.user(request);
+				Customer customer = commonService.user(request);
 				if (/* new organization */merchantsOrg.getId() == null) {
 					MerchantsOrg parentOrg = userService.findMerchantsOrgById(merchantsOrg.getParentId());
-					merchantsOrg.setCreatorId(vo.getId());
+					merchantsOrg.setCreatorId(customer.getId());
 					merchantsOrg.setCreateTime(new Date());
 					merchantsOrg.setOrderId(1);
 					merchantsOrg.setLicense(/* Not allowed edit */parentOrg.getLicense());
@@ -134,7 +134,7 @@ public class MerchantsOrgController extends BaseController {
 					merchantsOrg.setOrgType(/* Not allowed edit */oldOrg.getOrgType());
 				}
 				merchantsOrg.setStatus(EOrgStatus.Normal);
-				merchantsOrg.setUpdaterId(vo.getId());
+				merchantsOrg.setUpdaterId(customer.getId());
 				merchantsOrg.setUpdateTime(new Date());
 				userService/* save new organization */.saveMerchantsOrg(merchantsOrg);
 			}

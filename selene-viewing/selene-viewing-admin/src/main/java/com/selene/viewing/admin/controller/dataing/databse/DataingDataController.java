@@ -38,11 +38,11 @@ import com.selene.dataing.model.jdbc.DataingBaseData;
 import com.selene.dataing.model.jdbc.DataingData;
 import com.selene.dataing.model.util.DataingUtil;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.ResourceService;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.service.searching.SearchingService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import cn.com.lemon.base.DateUtil;
 
@@ -208,7 +208,7 @@ public class DataingDataController extends BaseController {
 	public String save(@Validated final DataingData dataVo, BindingResult result, final Model model,
 			HttpServletRequest request) {
 		checkNotNull(dataVo.getBaseId(), "Database not null before insert database!");
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		String content = /* Not escapes string */DataUtil.unescape(dataVo.getFieldMap().get(FieldsConstants.CONTENT));
 		/** Copy the image files from the temporary folder to the real path */
 		String tmpPicPath = resourceService.tmpPic(dataVo.getUuid());
@@ -253,11 +253,11 @@ public class DataingDataController extends BaseController {
 						isNullOrEmpty(realContent) ? dataVo.getFieldMap().get(FieldsConstants.CONTENT) : realContent);
 				baseData.put(FieldsConstants.IMGS, 0);
 				baseData.put(FieldsConstants.DATA_STATUS, EDataStatus.Normal.ordinal());
-				baseData.put(FieldsConstants.UPDATER_ID, vo.getId());
+				baseData.put(FieldsConstants.UPDATER_ID, customer.getId());
 				baseData.put(FieldsConstants.UPDATE_TIME, new Date());
 				baseData.put(FieldsConstants.TABLE_ID, dataTable.getId());
 				if (dataVo.getId() == null) {
-					baseData.put(FieldsConstants.CREATOR_ID, vo.getId());
+					baseData.put(FieldsConstants.CREATOR_ID, customer.getId());
 					baseData.put(FieldsConstants.CREATE_TIME, new Date());
 				}
 				Map<String, DataingDataField> fieldMap = dataService.findFieldMapByBaseId(dataVo.getBaseId());

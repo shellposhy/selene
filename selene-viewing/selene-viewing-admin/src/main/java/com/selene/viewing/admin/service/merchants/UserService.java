@@ -46,7 +46,7 @@ import com.selene.merchants.model.service.MerchantsRoleActionService;
 import com.selene.merchants.model.service.MerchantsRoleService;
 import com.selene.merchants.model.service.MerchantsUserRoleService;
 import com.selene.merchants.model.service.MerchantsUserService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
+import com.selene.viewing.admin.framework.vo.Customer;
 
 import cn.com.lemon.common.enums.EGender;
 
@@ -644,9 +644,9 @@ public class UserService {
 	 * 
 	 * @param userVO
 	 *            {@code MerchantsUserVO}
-	 * @return {@link MerchantsUserVO}
+	 * @return {@link Customer}
 	 */
-	public MerchantsUserVO findMenuTreeByUser(MerchantsUserVO userVO) {
+	public Customer findMenuTreeByUser(Customer userVO) {
 		// Initialize the required services
 		MerchantsActionService actionService = (MerchantsActionService) services
 				.get(MerchantsActionService.class.getName());

@@ -32,9 +32,9 @@ import com.selene.common.util.Containers;
 import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.DataingDataModel;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 @Controller
 @RequestMapping("/admin/dataing/model")
@@ -54,11 +54,11 @@ public class DataingModelController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue search(@RequestBody DataTableArray[] dataArray, String callback,
 			HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		DataTable /* Packaging request parameters */ dataTable = Containers.table(dataArray);
 		Integer pageSize = dataTable.getiDisplayLength();
 		Integer pageStart = dataTable.getiDisplayStart();
-		ListResult<DataingDataModel> list = dataService.findModelByPage(vo.getLicense(), dataTable.getsSearch(),
+		ListResult<DataingDataModel> list = dataService.findModelByPage(customer.getLicense(), dataTable.getsSearch(),
 				pageStart, pageSize);
 		DataTableResult<DataingDataModel> result = new DataTableResult<DataingDataModel>(dataTable.getsEcho(),
 				list.getTotal(), list.getTotal(), list.getData());
@@ -90,12 +90,12 @@ public class DataingModelController extends BaseController {
 	@ResponseBody
 	public MappingJacksonValue delete(@RequestBody DataTableArray value, String callback, HttpServletRequest request) {
 		ObjectResult<String> result = new ObjectResult<String>();
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		String[] /* Models need to deleted. */ modelIds = split(CommonConstants.COMMA_SEPARATOR, value.value);
 		boolean isHasDatabase = false;
 		for (String modelId : modelIds) {
 			if (/* Make sure the model is not in use before deleting it. */dataService
-					.checkPreDeleteModel(vo.getLicense(), Integer.valueOf(modelId))) {
+					.checkPreDeleteModel(customer.getLicense(), Integer.valueOf(modelId))) {
 				isHasDatabase = true;
 				break;
 			}
@@ -117,17 +117,17 @@ public class DataingModelController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(@Validated final DataingDataModel dataModel, BindingResult result, final Model model,
 			final HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		return super.save(dataModel, result, model, new Operator() {
 			@Override
 			public void operate() {
 				if (dataModel.getId() == null) {
 					dataModel/* Default not system */.setForSystem(false);
-					dataModel.setLicense(vo.getLicense());
-					dataModel.setCreatorId(vo.getId());
+					dataModel.setLicense(customer.getLicense());
+					dataModel.setCreatorId(customer.getId());
 					dataModel.setCreateTime(new Date());
 				}
-				dataModel.setUpdaterId(vo.getId());
+				dataModel.setUpdaterId(customer.getId());
 				dataModel.setUpdateTime(new Date());
 				dataService.saveDataModel(dataModel);
 			}

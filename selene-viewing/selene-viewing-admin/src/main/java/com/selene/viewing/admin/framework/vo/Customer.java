@@ -1,4 +1,4 @@
-package com.selene.viewing.admin.vo.merchants;
+package com.selene.viewing.admin.framework.vo;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import com.selene.merchants.model.MerchantsUser;
  * @author shaobo shih
  * @version 1.0
  */
-public class MerchantsUserVO {
+public class Customer {
 	// base info
 	private Integer id;
 	private Integer type;
@@ -36,10 +36,10 @@ public class MerchantsUserVO {
 	private String token;
 	private String refreshToken;
 
-	public MerchantsUserVO() {
+	public Customer() {
 	}
 
-	public MerchantsUserVO(MerchantsUser merchantsUser) {
+	public Customer(MerchantsUser merchantsUser) {
 		if (merchantsUser != null) {
 			this.id = merchantsUser.getId();
 			this.type = merchantsUser.getType().ordinal();

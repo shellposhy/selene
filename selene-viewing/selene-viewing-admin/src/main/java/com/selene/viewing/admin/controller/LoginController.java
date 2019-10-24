@@ -18,9 +18,9 @@ import com.selene.common.util.RedisClient;
 import com.selene.merchants.model.Merchants;
 import com.selene.merchants.model.MerchantsLoginToken;
 import com.selene.merchants.model.MerchantsUser;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.service.merchants.UserService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
 
 import static cn.com.lemon.base.Strings.md5;
 
@@ -86,31 +86,31 @@ public class LoginController extends BaseController {
 		if (null == merchantsUser) {
 			return "/admin/login";
 		}
-		MerchantsUserVO vo = new MerchantsUserVO(merchantsUser);
+		Customer customer = new Customer(merchantsUser);
 		// action process
-		userService.findMenuTreeByUser(vo);
-		vo.setLicense(userService.findLicenseByUserId(merchantsUser.getId()));
+		userService.findMenuTreeByUser(customer);
+		customer.setLicense(userService.findLicenseByUserId(merchantsUser.getId()));
 		// token process
-		MerchantsLoginToken loginToken = userService.token(vo.getId(), vo.getLicense(), true, true);
-		vo.setLoginTime(loginToken.getLoginTime());
-		vo.setRedisKey(loginToken.getRedisKey());
-		vo.setToken(loginToken.getToken());
-		vo.setRefreshToken(loginToken.getRefreshToken());
+		MerchantsLoginToken loginToken = userService.token(customer.getId(), customer.getLicense(), true, true);
+		customer.setLoginTime(loginToken.getLoginTime());
+		customer.setRedisKey(loginToken.getRedisKey());
+		customer.setToken(loginToken.getToken());
+		customer.setRefreshToken(loginToken.getRefreshToken());
 		// redis process
-		redisClient.set(vo.getToken(), vo, CommonConstants.DEFAULT_TOKEN_TIMEOUT);
-		redisClient.set(vo.getRefreshToken(), vo, CommonConstants.DEFAULT_TOKEN_LONG_TIMEOUT);
+		redisClient.set(customer.getToken(), customer, CommonConstants.DEFAULT_TOKEN_TIMEOUT);
+		redisClient.set(customer.getRefreshToken(), customer, CommonConstants.DEFAULT_TOKEN_LONG_TIMEOUT);
 		// session
-		request.getSession().setAttribute("jsonActionTree", vo.getActionTree());
-		request.getSession().setAttribute(CommonConstants.LOGIN_SESSION_USER, vo);
+		request.getSession().setAttribute("jsonActionTree", customer.getActionTree());
+		request.getSession().setAttribute(CommonConstants.LOGIN_SESSION_USER, customer);
 		return "redirect:/admin/index";
 	}
 
 	@RequestMapping("/index")
 	public String index(HttpServletRequest request) {
 		LOG.debug("Selene view admin index");
-		MerchantsUserVO currentUser = (MerchantsUserVO) request.getSession()
+		Customer customer = (Customer) request.getSession()
 				.getAttribute(CommonConstants.LOGIN_SESSION_USER);
-		if (null == currentUser) {
+		if (null == customer) {
 			return "/admin/login";
 		} else {
 			return "/admin/index";

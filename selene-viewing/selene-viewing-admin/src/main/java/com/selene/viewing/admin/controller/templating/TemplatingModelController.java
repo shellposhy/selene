@@ -41,11 +41,10 @@ import com.selene.templating.model.TemplatingPage;
 import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.constants.EReplaceType;
 import com.selene.viewing.admin.controller.BaseController;
+import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.ResourceService;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.templating.TemplatingService;
-import com.selene.viewing.admin.vo.merchants.MerchantsUserVO;
-
 import com.selene.templating.model.util.Templatings;
 
 @Controller
@@ -158,8 +157,8 @@ public class TemplatingModelController extends BaseController {
 	public MappingJacksonValue delete(@PathVariable("modelId") Integer modelId, HttpServletRequest request,
 			String callback) {
 		ObjectResult<String> result = new ObjectResult<String>(HttpStatus.OK.code(), HttpStatus.OK.message());
-		MerchantsUserVO vo = commonService.user(request);
-		List<TemplatingPage> pageList = templatingService.findByModelId(vo.getLicense(), modelId);
+		Customer customer = commonService.user(request);
+		List<TemplatingPage> pageList = templatingService.findByModelId(customer.getLicense(), modelId);
 		if (pageList != null && pageList.size() > 0) {
 			result.setCode(HttpStatus.ERROR.code());
 			result.setMsg("该页面模板已被使用，无法删除！");
@@ -181,11 +180,11 @@ public class TemplatingModelController extends BaseController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(@Validated final TemplatingModel templatingModel, final @RequestParam("file") MultipartFile file,
 			BindingResult result, final Model model, HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		return super.save(templatingModel, result, model, new Operator() {
 			@Override
 			public void operate() {
-				templatingModel.setLicense(vo.getLicense());
+				templatingModel.setLicense(customer.getLicense());
 				/** Upload template zip file processing */
 				String filename = file.getOriginalFilename();
 				String modelCode = templatingModel.getModelCode();
@@ -248,10 +247,10 @@ public class TemplatingModelController extends BaseController {
 					templatingModel.setModelFile(sb.toString().replace('\\', '/').replace("//", "/"));
 				}
 				if (templatingModel.getId() == null) {
-					templatingModel.setCreatorId(vo.getId());
+					templatingModel.setCreatorId(customer.getId());
 					templatingModel.setCreateTime(new Date());
 				}
-				templatingModel.setUpdaterId(vo.getId());
+				templatingModel.setUpdaterId(customer.getId());
 				templatingModel.setUpdateTime(new Date());
 				if (!(templatingService.saveModel(templatingModel) > 0)) {
 					fail();
@@ -281,8 +280,8 @@ public class TemplatingModelController extends BaseController {
 			HttpServletRequest request) {
 		ListResult<TemplatingModel> result = new ListResult<TemplatingModel>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
-		MerchantsUserVO vo = commonService.user(request);
-		List<TemplatingModel> modelList = templatingService.findModelByLicenseAndBillId(vo.getLicense(), billId);
+		Customer customer = commonService.user(request);
+		List<TemplatingModel> modelList = templatingService.findModelByLicenseAndBillId(customer.getLicense(), billId);
 		if (null != modelList && modelList.size() > 0) {
 			result.setTotal(modelList.size());
 			result.setData(modelList);
@@ -342,7 +341,7 @@ public class TemplatingModelController extends BaseController {
 	@RequestMapping(value = "/bill/save", method = RequestMethod.POST)
 	public String billSave(@Validated final TemplatingModelBill modelBill, BindingResult result, final Model model,
 			final HttpServletRequest request) {
-		final MerchantsUserVO vo = commonService.user(request);
+		final Customer customer = commonService.user(request);
 		return super.save(modelBill, result, model, new Operator() {
 			@Override
 			public void operate() {
@@ -354,14 +353,14 @@ public class TemplatingModelController extends BaseController {
 					modelBill.setPathCode(parent.getPathCode() + modelBill.getCode() + "/");
 				}
 				if (modelBill.getId() == null) {
-					modelBill.setLicense(vo.getLicense());
+					modelBill.setLicense(customer.getLicense());
 					modelBill.setOrderId(1);
-					modelBill.setCreatorId(vo.getId());
+					modelBill.setCreatorId(customer.getId());
 					modelBill.setCreateTime(new Date());
-					modelBill.setUpdaterId(vo.getId());
+					modelBill.setUpdaterId(customer.getId());
 					modelBill.setUpdateTime(new Date());
 				} else {
-					modelBill.setUpdaterId(vo.getId());
+					modelBill.setUpdaterId(customer.getId());
 					modelBill.setUpdateTime(new Date());
 				}
 				templatingService./* Save bill */saveModelBill(modelBill);
@@ -389,8 +388,8 @@ public class TemplatingModelController extends BaseController {
 	public MappingJacksonValue tree(String callback, HttpServletRequest request) {
 		ObjectResult<DefaultTreeNode> result = new ObjectResult<DefaultTreeNode>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
-		MerchantsUserVO vo = commonService.user(request);
-		DefaultTreeNode tree = DefaultTreeNode.parseTree(templatingService.findModelBillByLicense(vo.getLicense()));
+		Customer customer = commonService.user(request);
+		DefaultTreeNode tree = DefaultTreeNode.parseTree(templatingService.findModelBillByLicense(customer.getLicense()));
 		tree.setName("模板根目录");
 		result.setData(tree);
 		MappingJacksonValue mv = new MappingJacksonValue(result);
