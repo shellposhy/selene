@@ -15,8 +15,9 @@
 	<mvc:resources mapping="/admin/css/**" location="/admin/css/" />
 	<mvc:resources mapping="/admin/js/**" location="/admin/js/" />
 	<mvc:resources mapping="/admin/jscript/**" location="/admin/jscript/" />
-	<mvc:resources mapping="/admin/system/library/data/**/*.jpg" location="/pic/upic/" />
+	<mvc:resources mapping="/admin/dataing/**/*.jpg" location="/pic/upic/" />
 	<mvc:resources mapping="/static/**" location="/static/" />
+	<mvc:resources mapping="/page/**" location="/page/"/>
 	<context:component-scan base-package="com.selene.viewing.admin"></context:component-scan>
 	<mvc:annotation-driven />
 
@@ -35,9 +36,9 @@
 		<property name="cacheSeconds" value="0" />
 	</bean>
 	
-		<!-- freemarker configuration -->
+	<!-- freemarker configuration -->
 	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-		<property name="templateLoaderPath" value="/static" />
+		<property name="templateLoaderPath" value="/WEB-INF/template/" />
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="freemarkerSettings">
 			<props>

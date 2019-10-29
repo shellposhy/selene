@@ -24,4 +24,12 @@ public interface ResourceConstants {
 	// Path for static
 	String /* Custom template base name */ BASE_STATIC_NAME = "static";
 	String /* Custom template base path */ BASE_STATIC_PATH = "/static";
+
+	// Path for page
+	String /* Custom template base name */ BASE_PAGE_NAME = "page";
+	String /* Custom template base path */ BASE_PAGE_PATH = "/page";
+	
+	// Path for ftl
+	String /* Custom template base name */ BASE_FTL_NAME = "ftl";
+	String /* Custom template base path */ BASE_FTL_PATH = "/ftl";
 }

@@ -9,6 +9,7 @@ import org.apache.lucene.document.NumericField;
 
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.FieldsConstants;
+import com.selene.common.page.Article;
 import com.selene.common.util.DataUtil;
 import com.selene.dataing.model.DataingDataField;
 import com.selene.dataing.model.jdbc.DataingBaseData;
@@ -29,6 +30,35 @@ import static cn.com.lemon.base.DateUtil.parse;
  */
 public final class DataingUtil {
 	private DataingUtil() {
+	}
+
+	/**
+	 * {@code DataingData} transfer {@code Article}
+	 * 
+	 * @param data
+	 * @return {@code Article}
+	 */
+	public static Article data(DataingData data) {
+		if (data != null) {
+			Article article = new Article();
+			article.setId(data.getId());
+			article.setTableId(Integer.valueOf(data.getTableId()));
+			article.setIntroTitle(data.getIntroTitle());
+			article.setTitle(data.getTitle());
+			article.setSubTitle(data.getSubTitle());
+			article.setPageNum(data.getPageNum());
+			article.setPageName(data.getPageName());
+			article.setChannelName(data.getChannelName());
+			article.setKeywords(data.getKeywords());
+			article.setSummary(data.getSummary());
+			article.setPubTime(data.getDocTime());
+			article.setTimes(data.getTimes());
+			article.setSource(data.getSource());
+			article.setLikeTimes(data.getLikeTimes());
+			article.setAttach(data.getAttach());
+			return article;
+		}
+		return null;
 	}
 
 	/**

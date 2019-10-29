@@ -1,44 +1,22 @@
 /**
- * 页面模板配置管理通用脚本
+ * The script for template page config.
  * 
- * @author shishb
+ * @author shaobo shih
  * @version 1.0
  */
-function initColumn() {
-	$.ajax({
-		url : appPath + "/admin/column/tree",
-		success : function(data) {
-			treeRadioCom($("#itemContentSrc .treeNew"), data.children, true);
-			setTimeout("$('itemContentSrc.treeSel').click()", 800);
-		}
-	});
-}
-
-$("#filter_witch").change(function() {
-	if($("#filter_witch").attr("checked")){
-		$("#filter_tr").show();
-		$("#switch_value").val("Normal");
-	}else{
-		$("#filter_tr").hide();
-		$("#filterCondition").val("");
-		$("#switch_value").val("Stop");
-	}
-});
-
-//使得iframe全部高度内容出现并绑定页面初始化事件
-function iframeFix(obj) { 
+//After the iframe loads the page, the binding page initializes the event.
+function iframeFix(obj) {
 	var hbody = $(iFramePageConf.document).find("#container").height();
 	if(null==hbody||hbody==''||typeof(hbody) == "undefined"){
-		//如果默认height没有设置则默认值为1000
+		//default height 1000px
 		hbody=1000;
 	}
 	obj.height = hbody;
 	var bodyObj = $(iFramePageConf.document).find("body");
-	// 绑定iframe中的编辑配置按钮
 	PageConfBuind(bodyObj);
 }
 
-// 显示可配置区域的"配置"按钮
+// Displays the "ecode" button for the configurable area
 function PageConfBuind(bodyObj) {
 	bodyObj.find("[ecode]").hover(function() {
 		var tWidth = $(this).outerWidth(), theight = $(this).outerHeight() - 1;
@@ -53,61 +31,124 @@ function PageConfBuind(bodyObj) {
 		}
 	});
 
-	// 绑定编辑按钮弹出配置浮出框
 	$('#areaConfModal').on('show', function() {});
 	$('#areaConfModal').on('hidden', function() {
-		// 弹出层隐藏时候清空选择框
+		// Clean content
 		$("#itemContentDb input").each(function() {
 			$(this).val("");
 		});
+		$("#itemContentDb textarea").each(function() {
+			$(this).val("");
+		});
 	});
+	
+	// "ecode" button for the configurable area,load click event
 	bodyObj.find("[ecode]").find(".editable_btn").live("click",function(e) {
 		stopDefault(e);
 		$('#areaConfModal').modal('show');
-		$("#curItemId").val($(this).parents("[ecode]").attr("ecode"));
-		// 保存配置表单验证
-		itemSaveFormV();
-		initContentHtml($("#curItemId").val());
-		// 弹出层出现时候加载选择框来源数据
-		initData();
+		$("#itemCode").val($(this).parents("[ecode]").attr("ecode"));
+		// validate form
+		itemFormValidate();
+		//Load initialization data
+		$.ajax({
+			url : appPath + "/admin/templating/page/config/" + $("#pageId").val() + "/"+ $("#itemCode").val(),
+			cache:false,
+			beforeSend: function(request) {//beforeSend
+	            request.setRequestHeader("token", token);
+	            request.setRequestHeader("refreshToken",refreshToken);
+	         },
+			success : function(data) {
+				if(data.code==200){
+					if(null != data.key){
+						$("#id").val(data.key.id);
+						$("#contentName").val(data.key.contentName);
+						$("#contentSummary").val(data.key.contentSummary);
+						$("#filterDir").val(data.key.filterDir);
+						var filterDirValue=data.key.filterDir;
+						//Load filter type
+						if(filterDirValue!=null&&filterDirValue!=''){
+							$.ajax({
+								url : appPath + "/admin/templating/page/config/filter/"+ filterDirValue,
+								cache:false,
+								beforeSend: function(request) {//beforeSend
+						            request.setRequestHeader("token", token);
+						            request.setRequestHeader("refreshToken",refreshToken);
+						         },
+								success : function(data) {
+									if(data.code==200&&data.total>0){
+										var optionContent="";
+										for (var i = 0; i < data.data.length; i++){
+											optionContent +='<option value ="'+data.data[i].id+'">'+data.data[i].name+'</option>';
+										}
+										$("#filterType").html(optionContent);
+									}
+								}
+							});
+						}
+						$("#filterType").val(data.key.filterType);
+						$("#filterValue").val(data.key.filterValue);
+						$(".treeSelId").val(data.key.baseId);
+					}else{
+						$("#contentName").val("");
+						$("#contentSummary").val("");
+						$("#filterDir").val("");
+						var filterDirValue="Basic";
+						$.ajax({
+							url : appPath + "/admin/templating/page/config/filter/"+ filterDirValue,
+							cache:false,
+							beforeSend: function(request) {//beforeSend
+					            request.setRequestHeader("token", token);
+					            request.setRequestHeader("refreshToken",refreshToken);
+					         },
+							success : function(data) {
+								if(data.code==200&&data.total>0){
+									var optionContent="";
+									for (var i = 0; i < data.data.length; i++){
+										optionContent +='<option value ="'+data.data[i].id+'">'+data.data[i].name+'</option>';
+									}
+									$("#filterType").html(optionContent);
+								}
+							}
+						});
+						$("#filterType").val("");
+						$("#filterValue").val("");
+						$(".treeSelId").val("");
+					}
+					//Bind (filterDir) change event
+					$("#filterDir").on("change",function(){
+						$.ajax({
+							url : appPath + "/admin/templating/page/config/filter/"+ $("#filterDir").val(),
+							cache:false,
+							beforeSend: function(request) {//beforeSend
+					            request.setRequestHeader("token", token);
+					            request.setRequestHeader("refreshToken",refreshToken);
+					         },
+							success : function(data) {
+								if(data.code==200&&data.total>0){
+									var optionContent="";
+									for (var i = 0; i < data.data.length; i++){
+										optionContent +='<option value ="'+data.data[i].id+'">'+data.data[i].name+'</option>';
+									}
+									$("#filterType").html(optionContent);
+								}
+							}
+						});
+					})
+					//Other event
+					filterSwitch();
+					treeRadioCom($("#itemContentSrc .treeNew"), data.value.children,true);
+					setTimeout("$('.treeSelId').click()", 800);
+				}
+			}
+		});
 	});
 
 	$("#btn_save").click(function() {
 		$("#viewItemForm").submit();
 	});
-
 }
 
-// 加载内容来源树
-function initData() {
-	var url = appPath + "/admin/view/content/" + $("#pageId").val() + "/"+ $("#curItemId").val();
-	$.ajax({
-		url : url,
-		cache:false,
-		success : function(data) {
-			if(null != data.content){
-				$("#name").val(data.content.name);
-				$(".treeSelId").val(data.content.content);
-				$("#filterCondition").val(data.content.filterCondition);
-				$("#nameLinkType").val(data.content.nameLinkType);
-				$("#nameLink").val(data.content.nameLink);
-			}else{
-				$("#name").val("");
-				$(".treeSelId").val(0);
-				$("#filterCondition").val("");
-				$("#nameLinkType").val("NormalListLink");
-				$("#nameLink").val("");
-			}
-			intiLinkType();
-			filterSwitch();
-			treeRadioCom($("#itemContentSrc .treeNew"), data.root.children,true);
-			setTimeout("$('.treeSelId').click()", 800);
-		}
-	});
-}
-
-
-//用户编辑 状态开关
+//Loading data condition
 function filterSwitch() {
 	if ($("#filterCondition").val() != "") {
 		$("#filter_witch").attr("checked", true);
@@ -115,53 +156,31 @@ function filterSwitch() {
 	}
 	$("#filter_witch").change();
 }
-
-function intiLinkType(){
-	if("UserLink" == $("#nameLinkType").val()){
-		$("#nameLinkType_opt_0").attr("checked");
-		$("#nameLinkType_opt_0").parent().attr("class", "checked");
-		$("#nameLinkType_opt_2").removeAttr("checked");
-		$("#nameLinkType_opt_2").parent().removeAttr("class");
-		linkTypeChange();
-	}
-}
-
-function linkTypeChange(){
-	if($(".nameLinkType_opt:checked").val()== "UserLink"){
-		$("#link_tr").show();
-		$("#nameLinkType").val("UserLink");
+$("#filter_witch").change(function() {
+	if($("#filter_witch").attr("checked")){
+		$("#filter_dir").show();
+		$("#filter_type").show();
+		$("#filter_value").show();
+		$("#switch_value").val("Normal");
 	}else{
-		$("#link_tr").hide();
-		$("#nameLinkType").val($(".nameLinkType_opt:checked").val());
-		$("#nameLink").val("");
+		$("#filter_dir").hide();
+		$("#filter_type").hide();
+		$("#filter_value").hide();
+		$("#switch_value").val("Stop");
 	}
-}
+});
 
-// 加载内容来源树
-function initContentHtml(code) {
-	var itemCode = $("#curItemId").val();
-	var pageId = $("#pageId").val();
-	$.ajax({
-		url : appPath + "/admin/view/model/contentHtml/" + pageId + "?itemCode="+ itemCode,
-		success : function(data) {
-			$('#contentHtml').val(data);
-		}
-	});
-}
-
-// 保存配置表单验证
-function itemSaveFormV() {
+// Form check
+function itemFormValidate() {
 	$("#viewItemForm").validate({
 		ignore : [],
 		rules : {
-			contentDBId : {
-				required : true
-			}
+			baseId : {required : true},
+			contentName:{required : true}
 		},
 		messages : {
-			contentDBId : {
-				required : "请选择来源"
-			}
+			baseId : {required : "请选择配置区域数据来源！"},
+			contentName:{required : "区域配置标题不能为空！"}
 		},
 		errorPlacement : function(error, element) {
 			error.insertAfter(element);

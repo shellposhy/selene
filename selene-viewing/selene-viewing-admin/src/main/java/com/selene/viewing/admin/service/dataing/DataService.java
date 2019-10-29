@@ -106,6 +106,19 @@ public class DataService {
 	}
 
 	/**
+	 * Find image path
+	 * 
+	 * @param tableId
+	 * @param dataId
+	 * @return {@code String}
+	 */
+	public String image(Integer tableId, Integer dataId) {
+		DataingBaseData data = select(tableId, dataId);
+		List<String> imgList = DataUtil.imgs(data.get(FieldsConstants.CONTENT).toString());
+		return imgList != null && imgList.size() > 0 ? imgList.get(0).replace('\\', '/').replace("//", "/") : "#";
+	}
+
+	/**
 	 * Query {@code DataingBaseData} by {@code Integer} table number and
 	 * {@code Integer} data number
 	 * 

@@ -175,6 +175,29 @@ public class ResourceService {
 		return ResourceConstants.BASE_STATIC_PATH + "/" + path;
 	}
 
+	/* The path for resource page */
+	/**
+	 * Get real page path
+	 */
+	public String realPage() {
+		return root() + ResourceConstants.BASE_PAGE_PATH;
+	}
+
+	public String realPage(String path) {
+		return realPage() + "/" + path;
+	}
+
+	/**
+	 * Get real relative static path
+	 */
+	public String realRelativePage() {
+		return ResourceConstants.BASE_PAGE_PATH;
+	}
+
+	public String realRelativePage(String path) {
+		return ResourceConstants.BASE_PAGE_PATH + "/" + path;
+	}
+
 	/**
 	 * Delete folder files and folder
 	 * 

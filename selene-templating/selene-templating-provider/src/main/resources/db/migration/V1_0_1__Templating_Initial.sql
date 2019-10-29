@@ -15,12 +15,20 @@ create table templating_content
 (
    ID                   int(11) unsigned not null auto_increment comment '主键',
    Page_ID              int(11) unsigned not null comment '页面编号',
-   Item_ID              int(11) unsigned not null comment '配置区编码',
-   Content_Name         char(200) not null comment '内容标签名称',
-   Content_Type         tinyint(2) not null comment '内容类型',
-   Base_ID              int(11) unsigned not null comment '内容来源库ID',
-   Filter_Condition     varchar(1000) comment '过滤条件',
-   List_Format          varchar(500) comment '列表格式',
+   Item_ID              int(11) unsigned not null comment '配置区ID',
+   Content_Thumb        varchar(200) comment '配置区缩略图',
+   Content_Name         char(200) not null comment '配置区名称',
+   Content_Summary      varchar(500) comment '配置区摘要',
+   Content_Type         tinyint(2) not null comment '配置区内容类型',
+   Base_ID              int(11) unsigned not null comment '配置区数据来源库ID',
+   Filter_Dir           tinyint(2) comment '过滤条件分类',
+   Filter_Type          tinyint(3) comment '过滤条件类型',
+   Filter_Value         char(200) comment '过滤条件值',
+   Filter_Condition     varchar(1000) comment '配置区过滤条件',
+   Creator_ID           int(11) not null comment '创建',
+   Create_Time          datetime not null comment '创建时间',
+   Updater_ID           int(11) not null comment '更新',
+   Update_Time          datetime not null comment '更新时间',
    primary key (ID)
 );
 

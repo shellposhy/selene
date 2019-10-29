@@ -30,6 +30,7 @@ import com.selene.common.HttpStatus;
 import com.selene.common.Node;
 import com.selene.common.Operator;
 import com.selene.common.constants.CommonConstants;
+import com.selene.common.constants.ResourceConstants;
 import com.selene.common.datatable.DataTableArray;
 import com.selene.common.result.ListResult;
 import com.selene.common.result.ObjectResult;
@@ -45,6 +46,7 @@ import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.ResourceService;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.templating.TemplatingService;
+
 import com.selene.templating.model.util.Templatings;
 
 @Controller
@@ -77,12 +79,40 @@ public class TemplatingModelController extends BaseController {
 		ObjectResult<String> result = new ObjectResult<String>();
 		TemplatingModel model = templatingService.findModelById(modelId);
 		String rootPath = resourceService.root();
-		File template = new File(rootPath + model.getModelFile());
-		if (templatingService.scanModel(modelId, template) > 0) {
-			result.setCode(HttpStatus.OK.code());
+		String fileName = model.getModelFile();
+		File template = new File(rootPath + fileName);
+		if (template.exists() && template.isFile()) {
+			/** Copy original template to WEB-INF/template */
+			String classesPath = TemplatingModelController.class.getResource("/").getPath();
+			String targetPath = classesPath.substring(0, classesPath.indexOf("WEB-INF")) + "WEB-INF"
+					+ ResourceConstants.BASE_TEMPLATE_PATH;
+			String newFileName = fileName.replace('\\', '/').replace("//", "/");
+			File destDir = new File(targetPath + newFileName.substring(0, newFileName.lastIndexOf("/")));
+			try {
+				FileUtils.copyFileToDirectory(template, destDir);
+				/** Copy original ftl/** to WEB-INF/template//ftl */
+				String ftlPath = template.getParentFile().getAbsolutePath().replace('\\', '/').replace("//", "/")
+						+ ResourceConstants.BASE_FTL_PATH;
+				File ftlPathDir = new File(ftlPath);
+				if (ftlPathDir.exists() && ftlPathDir.isDirectory()) {
+					File newFtlDir = new File(targetPath + newFileName.substring(0, newFileName.lastIndexOf("/"))
+							+ ResourceConstants.BASE_FTL_PATH);
+					FileUtils.copyDirectory(ftlPathDir, newFtlDir);
+				}
+				/** Scan template files */
+				if (templatingService.scanModel(modelId, template) > 0) {
+					result.setCode(HttpStatus.OK.code());
+				} else {
+					result.setCode(HttpStatus.ERROR.code());
+					result.setMsg("模板配置内容扫描失败！");
+				}
+			} catch (IOException e) {
+				result.setCode(HttpStatus.ERROR.code());
+				result.setMsg("复制模板文件错误！");
+			}
 		} else {
 			result.setCode(HttpStatus.ERROR.code());
-			result.setMsg("模板配置内容扫描失败！");
+			result.setMsg("扫描模板文件不存在，请检测是否已上传模板文件！");
 		}
 		MappingJacksonValue mv = new MappingJacksonValue(result);
 		mv.setJsonpFunction(callback);
@@ -389,7 +419,8 @@ public class TemplatingModelController extends BaseController {
 		ObjectResult<DefaultTreeNode> result = new ObjectResult<DefaultTreeNode>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
 		Customer customer = commonService.user(request);
-		DefaultTreeNode tree = DefaultTreeNode.parseTree(templatingService.findModelBillByLicense(customer.getLicense()));
+		DefaultTreeNode tree = DefaultTreeNode
+				.parseTree(templatingService.findModelBillByLicense(customer.getLicense()));
 		tree.setName("模板根目录");
 		result.setData(tree);
 		MappingJacksonValue mv = new MappingJacksonValue(result);

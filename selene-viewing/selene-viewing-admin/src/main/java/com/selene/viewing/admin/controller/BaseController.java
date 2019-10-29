@@ -77,6 +77,16 @@ public class BaseController {
 			model.addAttribute(obj);
 			operator.error();
 			return operator.fail();
+		} catch (Exception e) {
+			e.printStackTrace();
+			String errMsg = e.getMessage();
+			String fieldName = errMsg.substring(errMsg.indexOf("'") + 1, errMsg.lastIndexOf("'")).toLowerCase();
+			errMsg = obj.getClass().getSimpleName() + "." + fieldName;
+			errMsg = appContext.getMessage(errMsg, null, Locale.getDefault());
+			result.rejectValue(fieldName, "field.integrity", new String[] { errMsg }, "数据长度超过限制，或有空值");
+			model.addAttribute(obj);
+			operator.error();
+			return operator.fail();
 		}
 		return operator.success();
 	}

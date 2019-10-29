@@ -13,5 +13,7 @@
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EReplaceType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.ESymbolPosition" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.ESymbolType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EFilterDir" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EFilterType" />
 	</typeHandlers>
 </configuration>

@@ -17,18 +17,33 @@ import org.springframework.stereotype.Service;
 
 import com.nanshan.papaya.rpc.client.Client;
 import com.selene.common.config.service.ServiceConfiger;
+import com.selene.common.constants.CommonConstants;
+import com.selene.common.constants.FieldsConstants;
 import com.selene.common.constants.ServiceConstants;
+import com.selene.common.page.Article;
+import com.selene.common.page.ListArticle;
+import com.selene.common.result.ListResult;
 import com.selene.common.util.RedisClient;
+import com.selene.dataing.model.DataingDatabase;
+import com.selene.dataing.model.jdbc.DataingData;
+import com.selene.dataing.model.util.DataingUtil;
+import com.selene.templating.model.TemplatingContent;
 import com.selene.templating.model.TemplatingItem;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingModelBill;
 import com.selene.templating.model.TemplatingPage;
 import com.selene.templating.model.constants.EModelType;
+import com.selene.templating.model.service.TemplatingContentService;
 import com.selene.templating.model.service.TemplatingItemService;
 import com.selene.templating.model.service.TemplatingModelBillService;
 import com.selene.templating.model.service.TemplatingModelService;
 import com.selene.templating.model.service.TemplatingPageService;
 import com.selene.templating.model.util.PageConfigers;
+import com.selene.viewing.admin.service.ResourceService;
+import com.selene.viewing.admin.service.dataing.DataService;
+import com.selene.viewing.admin.service.searching.SearchingService;
+
+import static cn.com.lemon.base.Strings.isNullOrEmpty;
 
 @Service
 public class TemplatingService {
@@ -39,6 +54,12 @@ public class TemplatingService {
 	private Client client;
 	@Resource
 	private RedisClient redisClient;
+	@Resource
+	private SearchingService searchingService;
+	@Resource
+	private DataService dataService;
+	@Resource
+	private ResourceService resourceService;
 
 	@PostConstruct
 	@SuppressWarnings("static-access")
@@ -58,9 +79,147 @@ public class TemplatingService {
 				client.create(TemplatingPageService.class, templatingService));
 		services.put(TemplatingItemService.class.getName(),
 				client.create(TemplatingItemService.class, templatingService));
+		services.put(TemplatingContentService.class.getName(),
+				client.create(TemplatingContentService.class, templatingService));
 	}
 
-	/* Templating page process */
+	/* ======Templating content process====== */
+	/**
+	 * Find {@code TemplatingContent} by page number and item number.
+	 * 
+	 * @param pageId
+	 * @param itemId
+	 * @return {@code TemplatingItem}
+	 */
+	public TemplatingContent findContentByPageIdAndItemId(Integer pageId, Integer itemId) {
+		// Initialize the required services
+		TemplatingContentService contentService = (TemplatingContentService) services
+				.get(TemplatingContentService.class.getName());
+		// Business process
+		return contentService.findByPageIdAndItemId(pageId, itemId);
+	}
+
+	/* ======Templating item process====== */
+	/**
+	 * Package data list content
+	 * 
+	 * @param pageId
+	 * @param itemId
+	 * @return {@link List}
+	 */
+	public ListArticle packagePageData(Integer pageId, Integer itemId) {
+		ListArticle result = new ListArticle();
+		// Initialize the required services
+		TemplatingContentService contentService = (TemplatingContentService) services
+				.get(TemplatingContentService.class.getName());
+		TemplatingItemService itemService = /**/ (TemplatingItemService) services
+				.get(TemplatingItemService.class.getName());
+		// Business process
+		TemplatingContent content = contentService.findByPageIdAndItemId(pageId, itemId);
+		TemplatingPage page = findPageById(pageId);
+		if (content != null) {
+			DataingDatabase database = content.getBaseId() != null ? dataService.findDatabase(content.getBaseId())
+					: null;
+			/** Init article list header */
+			result.setTitle(isNullOrEmpty(content.getContentName()) ? "" : content.getContentName());
+			result.setImg(isNullOrEmpty(content.getContentThumb()) ? "" : content.getContentThumb());
+			result.setSummary(isNullOrEmpty(content.getContentSummary()) ? "" : content.getContentSummary());
+			switch (page.getPageType()) {
+			case Site:
+			case Home:
+			case Subject:
+				if (database != null) {
+					String filePath = resourceService.realRelativePage(database.getPathCode());
+					filePath = filePath.replace('\\', '/').replace("//", "/");
+					result.setHref(filePath.endsWith("/") ? filePath + CommonConstants.DEFAULT_FREEMARKER_INDEX_HTML
+							: filePath + "/" + CommonConstants.DEFAULT_FREEMARKER_INDEX_HTML);
+				} else {
+					result.setHref("#");
+				}
+				break;
+			case List:
+				result.setHref("#");
+				break;
+			case Detail:
+			default:
+				result.setHref("#");
+				break;
+			}
+			/** Init article data list */
+			/** Find data on searching index */
+			if (database != null) {
+				String queryString = null != content.getFilterCondition() ? content.getFilterCondition()
+						: CommonConstants.SEARCH_INDEX_ALL;
+				TemplatingItem item = itemService.find(itemId);
+				int start = 0;
+				int size = item.getLineSize();
+				Integer[] baseIds = { database.getId() };
+				ListResult<DataingData> listResult = null;
+				switch (item.getItemType()) {
+				case Default:
+					listResult = searchingService.search(queryString, start, size, baseIds);
+					if (listResult != null && listResult.getData() != null && listResult.getData().size() > 0) {
+						for (DataingData data : listResult.getData()) {
+							Article article = DataingUtil.data(data);
+							result.addArticle(article);
+						}
+					}
+					break;
+				case Image:
+				case Mixed:
+					queryString = isNullOrEmpty(queryString) ? "NOT (#int#" + FieldsConstants.IMGS + ":0)"
+							: "(" + queryString + ") NOT (#int#" + FieldsConstants.IMGS + ":0)";
+					listResult = searchingService.search(queryString, start, size, baseIds);
+					if (listResult != null && listResult.getData() != null && listResult.getData().size() > 0) {
+						for (DataingData data : listResult.getData()) {
+							Article article = DataingUtil.data(data);
+							result.addArticle(article);
+							article.setImg(dataService.image(Integer.valueOf(data.getTableId()), data.getId()));
+						}
+					}
+					break;
+				case Catalog:
+				case Banner:
+				case Ad:
+				case Video:
+				default:
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Find {@code TemplatingItem} by model number and code.
+	 * 
+	 * @param modelId
+	 * @param code
+	 * @return {@code TemplatingItem}
+	 */
+	public TemplatingItem findItemByModelIdAndCode(Integer modelId, String code) {
+		// Initialize the required services
+		TemplatingItemService itemService = (TemplatingItemService) /* Page */services
+				.get(TemplatingItemService.class.getName());
+		// Business process
+		return itemService.findByModelIdAndCode(modelId, code);
+	}
+
+	/**
+	 * Find {@code TemplatingItem} by id.
+	 * 
+	 * @param id
+	 * @return {@code List}
+	 */
+	public List<TemplatingItem> findModelItems(Integer modelId) {
+		// Initialize the required services
+		TemplatingItemService itemService = (TemplatingItemService) /* Page */services
+				.get(TemplatingItemService.class.getName());
+		// Business process
+		return itemService.findByModelId(modelId);
+	}
+
+	/* ======Templating page process====== */
 	/**
 	 * Save {@code TemplatingPage}
 	 * 
@@ -122,7 +281,7 @@ public class TemplatingService {
 		return pageService.findByModelId(license, modelId);
 	}
 
-	/* Templating model process */
+	/* ======Templating model process====== */
 	/**
 	 * Scan the model content and find the configuration area
 	 * 
@@ -230,7 +389,7 @@ public class TemplatingService {
 		return modelService.findByLicenseAndBillId(license, billId);
 	}
 
-	/* Templating model bill process */
+	/* ======Templating model bill process====== */
 	/**
 	 * Save {@code TemplatingModelBill}
 	 * 

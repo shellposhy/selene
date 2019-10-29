@@ -200,4 +200,6 @@ public interface CommonConstants {
 	Pattern HTML_ECODE_TEXT = Pattern.compile("<@.*?>(.*?)</@.*?>|<@.*?/*?>", Pattern.CASE_INSENSITIVE);
 
 	Pattern HTML_ECODE_VALUE = Pattern.compile("\\s+(.*?)=\\S+|\\S+=(.*?)\\s", Pattern.CASE_INSENSITIVE);
+
+	String DEFAULT_FREEMARKER_INDEX_HTML = "index.html";
 }

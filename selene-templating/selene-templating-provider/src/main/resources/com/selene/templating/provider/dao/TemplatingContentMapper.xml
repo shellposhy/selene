@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selene.templating.provider.dao.TemplatingContentMapper">
+	<resultMap id="resultMap" type="com.selene.templating.model.TemplatingContent">
+		<result property="id" column="ID" />
+		<result property="pageId" column="Page_ID" />
+		<result property="itemId" column="Item_ID" />
+		<result property="contentThumb" column="Content_Thumb"/>
+		<result property="contentName" column="Content_Name" />
+		<result property="contentSummary" column="Content_Summary"/>
+		<result property="contentType" column="Content_Type" />
+		<result property="baseId" column="Base_ID" />
+		<result property="filterDir" column="Filter_Dir" />
+		<result property="filterType" column="Filter_Type" />
+		<result property="filterValue" column="Filter_Value" />
+		<result property="filterCondition" column="Filter_Condition" />
+		<result property="creatorId" column="Creator_ID" />
+		<result property="createTime" column="Create_Time" />
+		<result property="updaterId" column="Updater_ID" />
+		<result property="updateTime" column="Update_Time" />
+	</resultMap>
+
+	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Dir,
+			Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_content 
+		WHERE 
+			ID=#{id}
+	</select>
+	
+	<select id="findByPageId" resultMap="resultMap" parameterType="java.lang.Integer">
+		SELECT 
+			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Dir,
+			Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_content 
+		WHERE  
+			Page_ID=#{pageId}
+	</select>
+
+	<select id="findByPageIdAndItemId" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT 
+			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Dir,
+			Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_content 
+		WHERE  
+			Page_ID=#{pageId} AND Item_ID=#{itemId}
+	</select>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO
+			templating_content(
+				Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Dir,
+				Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
+			)
+		VALUES(
+			#{pageId},#{itemId},#{contentThumb},#{contentName},#{contentSummary},#{contentType},#{baseId},#{filterDir},
+			#{filterType},#{filterValue},#{filterCondition},#{creatorId},#{createTime},#{updaterId},#{updateTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE 
+			templating_content 
+		<set>
+			<if test="pageId != null">Page_ID = #{pageId},</if>
+			<if test="itemId != null">Item_ID = #{itemId},</if>
+			<if test="contentThumb != null">Content_Thumb = #{contentThumb},</if>
+			<if test="contentName != null">Content_Name =#{contentName},</if>
+			<if test="contentSummary != null">Content_Summary =#{contentSummary},</if>
+			<if test="contentType != null">Content_Type =#{contentType},</if>
+			<if test="baseId != null">Base_ID = #{baseId},</if>
+			<if test="filterDir != null">Filter_Dir = #{filterDir},</if>
+			<if test="filterType != null">Filter_Type = #{filterType},</if>
+			<if test="filterValue != null">Filter_Value = #{filterValue},</if>
+			<if test="filterCondition != null">Filter_Condition = #{filterCondition},</if>
+			<if test="updaterId != null">Updater_ID = #{updaterId},</if>
+			<if test="updateTime != null">Update_Time = #{updateTime}</if>
+		</set>
+		WHERE 
+			ID=#{id}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM 
+			templating_content 
+		WHERE 
+			ID=#{id}
+	</delete>
+
+	<delete id="deleteByPageId" parameterType="java.lang.Integer">
+		DELETE FROM 
+			templating_content 
+		WHERE 
+			Page_ID=#{pageId}
+	</delete>
+	
+	<delete id="deleteByPageIdAndItemId" parameterType="java.util.Map">
+		DELETE FROM 
+			templating_content 
+		WHERE 
+			Page_ID=#{pageId} AND Item_ID=#{itemId}
+	</delete>
+</mapper>
