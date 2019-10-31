@@ -7,11 +7,8 @@
 $(document).ready(function() {
 	loadPageTree();
 	loadPageModelData();
-	//init_load_page_list(); 
-	//page_form_validate();
-	//load_page_model("Index");
+	pageFormValidate();
 });
-
 
 //Load pages tree
 function loadPageTree(){
@@ -151,3 +148,33 @@ function loadPageModelData(){
 	});
 }
 
+//Page form prevalidate
+function pageFormValidate() {
+	$("#pageForm").validate({
+		rules : {
+			name : {required : true},
+			code : {
+				required : true,
+				seleneExtLetter:true
+			},
+			pageType : {required : true},
+			pageModelId : {required : true}
+		},
+		messages : {
+			name : {required : "页面名称不能为空！"},
+			code : {
+				required : "页面编码不能为空！",
+				seleneExtLetter:"页面编码只能输入字母，不区分大小写！"
+			},
+			pageType : {required : "页面类型不能为空！"},
+			pageModelId : {required : "页面模板不能为空！"}
+		},
+		errorPlacement : function(error, element) {
+			error.insertAfter(element);
+		},
+		submitHandler : function() {
+			form.submit();
+		},
+		onkeyup : false
+	});
+}

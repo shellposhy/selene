@@ -15,5 +15,6 @@
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.ESymbolType" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EFilterDir" />
 		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EFilterType" />
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.selene.templating.model.constants.EFilterStatus" />
 	</typeHandlers>
 </configuration>

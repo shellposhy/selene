@@ -22,6 +22,7 @@ import com.selene.common.constants.CommonConstants;
 import com.selene.templating.model.TemplatingItem;
 import com.selene.templating.model.constants.ECodeAttribute;
 import com.selene.templating.model.constants.ECodeListType;
+import com.selene.templating.model.constants.EFilterType;
 import com.selene.templating.model.constants.ESymbolPosition;
 import com.selene.templating.model.constants.ESymbolType;
 
@@ -41,13 +42,60 @@ public final class PageConfigers {
 	}
 
 	/**
+	 * When the page is configured, process the data filter query conditions.
+	 * <p>
+	 * If there are multiple keywords, keywords separated by space.
+	 * 
+	 * @param filterType
+	 * @param filterValue
+	 * @return {@code String}
+	 */
+	public synchronized static String condition(EFilterType filterType, String filterValue) {
+		BUFFER.setLength(0);
+		if (isNullOrEmpty(filterValue.trim())) {
+			return null;
+		}
+		String[] values = filterValue.trim().split(CommonConstants.SPACE_SEPARATOR);
+		if (values != null && values.length > 0) {
+			String fieldStr = filterType.getField();
+			String[] fields = fieldStr.split(CommonConstants.COMMA_SEPARATOR);
+			if (fields != null && fields.length > 0) {
+				for (int a = 0; a < fields.length; a++) {
+					if (a == 0) {
+						BUFFER.append("(");
+						for (int i = 0; i < values.length; i++) {
+							if (i == 0) {
+								BUFFER.append(fields[a]).append(":").append(values[i]);
+							} else {
+								BUFFER.append(" OR ").append(fields[a]).append(":").append(values[i]);
+							}
+						}
+						BUFFER.append(")");
+					} else {
+						BUFFER.append(" AND (");
+						for (int i = 0; i < values.length; i++) {
+							if (i == 0) {
+								BUFFER.append(fields[a]).append(":").append(values[i]);
+							} else {
+								BUFFER.append(" OR ").append(fields[a]).append(":").append(values[i]);
+							}
+						}
+						BUFFER.append(")");
+					}
+				}
+			}
+		}
+		return BUFFER.toString();
+	}
+
+	/**
 	 * Scan template configurable area
 	 * 
 	 * @param modelId
 	 * @param content
 	 * @return {@link List}
 	 */
-	public static List<TemplatingItem> editable(Integer modelId, String content) {
+	public synchronized static List<TemplatingItem> editable(Integer modelId, String content) {
 		List<TemplatingItem> result = null;
 		if (modelId != null && !isNullOrEmpty(content)) {
 			try {
@@ -155,7 +203,7 @@ public final class PageConfigers {
 			if (!isNullOrEmpty(value)) {
 				String[] values = value.split(CommonConstants.EQUAL_SEPARATOR);
 				if (value.length() > 1) {
-					result.put(values[0].trim(), values[1].trim());
+					result.put(values[0].trim(), values[1].trim().replaceAll("[\\pP‘’“”]", ""));
 				}
 			}
 		}

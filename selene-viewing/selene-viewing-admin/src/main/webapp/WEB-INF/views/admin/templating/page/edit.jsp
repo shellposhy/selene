@@ -59,21 +59,6 @@
 				</fieldset>
 			</form:form>
 		</div>
-		
-		<!-- modal -->
-		<div class="modal hide fade form-horizontal" id="editModal">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">×</button>
-				<h3>开始配置</h3>
-			</div>
-			<div class="modal-body">
-				<p>您现在是否需要对该页面进行内容配置？</p>
-			</div>
-			<div class="modal-footer">
-				<a href="#" id="edit_ok" class="btn btn-primary">是</a>
-				<a href="#" id="close_ok" class="btn" data-dismiss="modal">否</a>
-			</div>
-		</div>
 		<script src="${appPath}/admin/js/original/business/templating/page.js"></script>
 			<!-- <script src="${appPath}/admin/js/min/business/templating/page.min.js"></script>-->
 	</body>

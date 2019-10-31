@@ -63,6 +63,7 @@ function PageConfBuind(bodyObj) {
 						$("#id").val(data.key.id);
 						$("#contentName").val(data.key.contentName);
 						$("#contentSummary").val(data.key.contentSummary);
+						$("#switch_value").val(data.key.filterStatus);
 						$("#filterDir").val(data.key.filterDir);
 						var filterDirValue=data.key.filterDir;
 						//Load filter type
@@ -91,6 +92,7 @@ function PageConfBuind(bodyObj) {
 					}else{
 						$("#contentName").val("");
 						$("#contentSummary").val("");
+						$("#switch_value").val("Stop");
 						$("#filterDir").val("");
 						var filterDirValue="Basic";
 						$.ajax({
@@ -150,25 +152,26 @@ function PageConfBuind(bodyObj) {
 
 //Loading data condition
 function filterSwitch() {
-	if ($("#filterCondition").val() != "") {
+	//Initialization
+	if ($("#switch_value").val()== "Normal") {
 		$("#filter_witch").attr("checked", true);
 		$("#filter_witch").parent().attr("class", "checked");
 	}
-	$("#filter_witch").change();
+	//Bind change event
+	$("#filter_witch").change(function() {
+		if($("#filter_witch").attr("checked")){
+			$("#filter_dir").show();
+			$("#filter_type").show();
+			$("#filter_value").show();
+			$("#switch_value").val("Normal");
+		}else{
+			$("#filter_dir").hide();
+			$("#filter_type").hide();
+			$("#filter_value").hide();
+			$("#switch_value").val("Stop");
+		}
+	});
 }
-$("#filter_witch").change(function() {
-	if($("#filter_witch").attr("checked")){
-		$("#filter_dir").show();
-		$("#filter_type").show();
-		$("#filter_value").show();
-		$("#switch_value").val("Normal");
-	}else{
-		$("#filter_dir").hide();
-		$("#filter_type").hide();
-		$("#filter_value").hide();
-		$("#switch_value").val("Stop");
-	}
-});
 
 // Form check
 function itemFormValidate() {

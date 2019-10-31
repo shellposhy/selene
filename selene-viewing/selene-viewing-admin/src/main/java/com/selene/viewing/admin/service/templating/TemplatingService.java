@@ -1,8 +1,9 @@
 package com.selene.viewing.admin.service.templating;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import com.selene.templating.model.TemplatingItem;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingModelBill;
 import com.selene.templating.model.TemplatingPage;
+import com.selene.templating.model.constants.EFilterStatus;
 import com.selene.templating.model.constants.EModelType;
 import com.selene.templating.model.service.TemplatingContentService;
 import com.selene.templating.model.service.TemplatingItemService;
@@ -84,6 +86,25 @@ public class TemplatingService {
 	}
 
 	/* ======Templating content process====== */
+
+	/**
+	 * Save {@code TemplatingContent}
+	 * 
+	 * @param content
+	 * @return
+	 */
+	public int saveContent(TemplatingContent content) {
+		// Initialize the required services
+		TemplatingContentService contentService = (TemplatingContentService) services
+				.get(TemplatingContentService.class.getName());
+		// Business process
+		if (content.getId() != null) {
+			return contentService.update(content);
+		} else {
+			return contentService.insert(content);
+		}
+	}
+
 	/**
 	 * Find {@code TemplatingContent} by page number and item number.
 	 * 
@@ -148,8 +169,9 @@ public class TemplatingService {
 			/** Init article data list */
 			/** Find data on searching index */
 			if (database != null) {
-				String queryString = null != content.getFilterCondition() ? content.getFilterCondition()
-						: CommonConstants.SEARCH_INDEX_ALL;
+				String queryString = ((null != content.getFilterCondition()
+						&& content.getFilterStatus() == EFilterStatus.Normal) ? content.getFilterCondition()
+								: CommonConstants.SEARCH_INDEX_ALL);
 				TemplatingItem item = itemService.find(itemId);
 				int start = 0;
 				int size = item.getLineSize();
@@ -288,23 +310,50 @@ public class TemplatingService {
 	 * @param modelId
 	 * @return int
 	 */
-	public int scanModel(Integer modelId, File template) {
+	public synchronized int scanModel(Integer modelId, File template) {
 		// Initialize the required services
 		TemplatingItemService itemService = /**/ (TemplatingItemService) services
 				.get(TemplatingItemService.class.getName());
+		TemplatingContentService contentService = (TemplatingContentService) services
+				.get(TemplatingContentService.class.getName());
 		// Business process
-		List<TemplatingItem> oldItemList = itemService.findByModelId(modelId);
-		if (oldItemList != null && oldItemList.size() > 0) {
-			itemService.deleteByModelId(modelId);
-		}
 		if (template.exists() && template.isFile()) {
 			try {
 				String content = FileUtils.readFileToString(template, Charset.forName("UTF-8"));
 				List<TemplatingItem> newItemList = PageConfigers.editable(modelId, content);
+				List<TemplatingItem> oldItemList = itemService.findByModelId(modelId);
+				List<Integer> updateItemId = new ArrayList<Integer>();
+				// Update old item or insert new item
 				if (newItemList != null && newItemList.size() > 0) {
-					return itemService.batchInsert(newItemList);
+					for (TemplatingItem item : newItemList) {
+						if (!isNullOrEmpty(item.getItemCode())) {
+							TemplatingItem oldItem = itemService.findByModelIdAndCode(modelId, item.getItemCode());
+							if (oldItem != null && oldItem.getId() != null) {
+								updateItemId.add(oldItem.getId());
+								item.setId(oldItem.getId());
+								itemService.update(item);
+							} else {
+								itemService.insert(item);
+							}
+						}
+					}
 				}
-			} catch (IOException e) {
+				// Delete old not used item
+				if (
+				/* Exist history scan */ (oldItemList != null && oldItemList.size() > 0) && updateItemId.size() > 0) {
+					Integer[] updatedItems = updateItemId.toArray(new Integer[updateItemId.size()]);
+					Arrays.sort(updatedItems);
+					for (TemplatingItem delItem : oldItemList) {
+						Integer delItemId = delItem.getId();
+						if (/* Not find,Need delete */Arrays.binarySearch(updatedItems, delItemId) < 0) {
+							if (/* Delete old item */itemService.delete(delItemId) > 0) {
+								contentService.deleteByItemId(delItemId);
+							}
+						}
+					}
+				}
+				return 1;
+			} catch (Exception e) {
 				return 0;
 			}
 		}

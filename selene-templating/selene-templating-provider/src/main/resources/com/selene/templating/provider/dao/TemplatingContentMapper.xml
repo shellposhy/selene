@@ -11,6 +11,7 @@
 		<result property="contentSummary" column="Content_Summary"/>
 		<result property="contentType" column="Content_Type" />
 		<result property="baseId" column="Base_ID" />
+		<result property="filterStatus" column="Filter_Status" />
 		<result property="filterDir" column="Filter_Dir" />
 		<result property="filterType" column="Filter_Type" />
 		<result property="filterValue" column="Filter_Value" />
@@ -23,8 +24,8 @@
 
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT 
-			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Dir,
-			Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Status,
+			Filter_Dir,Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_content 
 		WHERE 
@@ -33,8 +34,8 @@
 	
 	<select id="findByPageId" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT 
-			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Dir,
-			Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Status,
+			Filter_Dir,Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_content 
 		WHERE  
@@ -43,8 +44,8 @@
 
 	<select id="findByPageIdAndItemId" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT 
-			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Dir,
-			Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Status,
+			Filter_Dir,Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_content 
 		WHERE  
@@ -57,12 +58,12 @@
 		</selectKey>
 		INSERT INTO
 			templating_content(
-				Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Dir,
-				Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
+				Page_ID,Item_ID,Content_Thumb,Content_Name,Content_Summary,Content_Type,Base_ID,Filter_Status,
+				Filter_Dir,Filter_Type,Filter_Value,Filter_Condition,Creator_ID,Create_Time,Updater_ID,Update_Time
 			)
 		VALUES(
-			#{pageId},#{itemId},#{contentThumb},#{contentName},#{contentSummary},#{contentType},#{baseId},#{filterDir},
-			#{filterType},#{filterValue},#{filterCondition},#{creatorId},#{createTime},#{updaterId},#{updateTime}
+			#{pageId},#{itemId},#{contentThumb},#{contentName},#{contentSummary},#{contentType},#{baseId},#{filterStatus},
+			#{filterDir},#{filterType},#{filterValue},#{filterCondition},#{creatorId},#{createTime},#{updaterId},#{updateTime}
 		)
 	</insert>
 
@@ -77,6 +78,7 @@
 			<if test="contentSummary != null">Content_Summary =#{contentSummary},</if>
 			<if test="contentType != null">Content_Type =#{contentType},</if>
 			<if test="baseId != null">Base_ID = #{baseId},</if>
+			<if test="filterStatus != null">Filter_Status = #{filterStatus},</if>
 			<if test="filterDir != null">Filter_Dir = #{filterDir},</if>
 			<if test="filterType != null">Filter_Type = #{filterType},</if>
 			<if test="filterValue != null">Filter_Value = #{filterValue},</if>
@@ -100,6 +102,13 @@
 			templating_content 
 		WHERE 
 			Page_ID=#{pageId}
+	</delete>
+	
+	<delete id="deleteByItemId" parameterType="java.lang.Integer">
+		DELETE FROM 
+			templating_content 
+		WHERE 
+			Item_ID=#{itemId}
 	</delete>
 	
 	<delete id="deleteByPageIdAndItemId" parameterType="java.util.Map">

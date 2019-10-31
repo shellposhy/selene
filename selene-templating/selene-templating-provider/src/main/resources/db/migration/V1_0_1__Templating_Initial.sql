@@ -21,6 +21,7 @@ create table templating_content
    Content_Summary      varchar(500) comment '配置区摘要',
    Content_Type         tinyint(2) not null comment '配置区内容类型',
    Base_ID              int(11) unsigned not null comment '配置区数据来源库ID',
+   Filter_Status        tinyint(1) not null comment '是否过滤数据',
    Filter_Dir           tinyint(2) comment '过滤条件分类',
    Filter_Type          tinyint(3) comment '过滤条件类型',
    Filter_Value         char(200) comment '过滤条件值',

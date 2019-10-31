@@ -51,7 +51,8 @@ public final class DataingUtil {
 			article.setChannelName(data.getChannelName());
 			article.setKeywords(data.getKeywords());
 			article.setSummary(data.getSummary());
-			article.setPubTime(data.getDocTime());
+			article.setPubTime(data.getDocSimpleTime());
+			article.setDocTime(data.getDocTime());
 			article.setTimes(data.getTimes());
 			article.setSource(data.getSource());
 			article.setLikeTimes(data.getLikeTimes());
@@ -78,6 +79,8 @@ public final class DataingUtil {
 			result.setStatus(data.getDataStatus().ordinal());
 			result.setDocTime((data.get(FieldsConstants.DOC_TIME) == null) ? ""
 					: format((Date) data.get(FieldsConstants.DOC_TIME), CommonConstants.SHOW_DATE_FORMAT));
+			result.setDocSimpleTime((data.get(FieldsConstants.DOC_TIME) == null) ? ""
+					: format((Date) data.get(FieldsConstants.DOC_TIME), CommonConstants.SIMPLE_DATE_FORMAT));
 			// Business properties
 			result.setTitle((String) data.get(FieldsConstants.TITLE));
 			result.setIntroTitle(data.get(FieldsConstants.INTRO_TITLE) == null ? ""
@@ -133,6 +136,9 @@ public final class DataingUtil {
 			result.setDocTime(isNullOrEmpty(doc.get(FieldsConstants.DOC_TIME)) ? ""
 					: format(parse(doc.get(FieldsConstants.DOC_TIME), CommonConstants.INDEX_DATE_FORMAT),
 							CommonConstants.SHOW_DATE_FORMAT));
+			result.setDocSimpleTime(isNullOrEmpty(doc.get(FieldsConstants.DOC_TIME)) ? ""
+					: format(parse(doc.get(FieldsConstants.DOC_TIME), CommonConstants.INDEX_DATE_FORMAT),
+							CommonConstants.SIMPLE_DATE_FORMAT));
 			// Business properties
 			result.setTitle(doc.get(FieldsConstants.TITLE));
 			result.setIntroTitle(

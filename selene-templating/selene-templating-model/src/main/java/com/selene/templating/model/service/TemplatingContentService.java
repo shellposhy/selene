@@ -25,5 +25,7 @@ public interface TemplatingContentService {
 
 	public int deleteByPageId(Integer pageId);
 
+	public int deleteByItemId(Integer itemId);
+
 	public int deleteByPageIdAndItemId(Integer pageId, Integer itemId);
 }

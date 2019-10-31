@@ -19,6 +19,7 @@ public class Article {
 	private String tag = "";
 	private String img = "";
 	private String summary = "";
+	private String docTime = "";
 	private String pubTime = "";
 	private String content = "";
 	private Integer times = 0;
@@ -124,6 +125,14 @@ public class Article {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	public String getDocTime() {
+		return docTime;
+	}
+
+	public void setDocTime(String docTime) {
+		this.docTime = docTime;
 	}
 
 	public String getPubTime() {

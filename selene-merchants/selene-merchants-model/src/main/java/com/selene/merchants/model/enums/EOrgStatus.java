@@ -7,7 +7,7 @@ package com.selene.merchants.model.enums;
  * @version 1.0
  */
 public enum EOrgStatus {
-	Stop("通用"), Normal("正常");
+	Stop("停用"), Normal("正常");
 
 	private final String title;
 

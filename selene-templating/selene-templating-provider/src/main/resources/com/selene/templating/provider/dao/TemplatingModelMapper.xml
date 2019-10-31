@@ -51,7 +51,14 @@
 		FROM 
 			templating_model 
 		WHERE 
-			License=#{license} AND Model_Type=#{type}
+			License=#{license} AND Model_Type=#{type} AND ID NOT IN(
+				SELECT 
+					Page_Model_ID 
+				FROM 
+					templating_page 
+				WHERE 
+					Page_Type=#{type}
+			)
 	</select>
 	
 	<select id="findByPage" resultMap="resultMap" parameterType="java.util.Map">

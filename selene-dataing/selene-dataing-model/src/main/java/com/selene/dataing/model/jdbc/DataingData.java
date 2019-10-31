@@ -14,6 +14,7 @@ public class DataingData {
 	private String /* 副标题 */ subTitle;
 	private String /* 作者 */ authors;
 	private String /* 文档时间 */ docTime;
+	private String /* 文档时间 */ docSimpleTime;
 	private int /* 图片数量 */ imgs;
 	private String /* 关键词 */ keywords;
 	private String /* 摘要 */ summary;
@@ -123,6 +124,14 @@ public class DataingData {
 
 	public void setDocTime(String docTime) {
 		this.docTime = docTime;
+	}
+
+	public String getDocSimpleTime() {
+		return docSimpleTime;
+	}
+
+	public void setDocSimpleTime(String docSimpleTime) {
+		this.docSimpleTime = docSimpleTime;
 	}
 
 	public int getImgs() {

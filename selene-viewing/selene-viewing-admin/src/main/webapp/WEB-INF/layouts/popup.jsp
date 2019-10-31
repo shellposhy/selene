@@ -53,6 +53,7 @@
 		<!-- Top plugins -->
 		<script type="text/javascript" src="${appPath}/admin/js/min/plugin/date.min.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/min/plugin/excanvas.min.js"></script>
+		<script type="text/javascript" src="${appPath}/admin/js/min/plugin/validate.ext.min.js"></script>
 		
 		<!-- Global parameters -->
 		<script type="text/javascript">

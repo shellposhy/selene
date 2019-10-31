@@ -2,6 +2,7 @@ package com.selene.templating.model;
 
 import com.selene.common.BaseModel;
 import com.selene.templating.model.constants.EFilterDir;
+import com.selene.templating.model.constants.EFilterStatus;
 import com.selene.templating.model.constants.EFilterType;
 
 /**
@@ -22,6 +23,7 @@ public class TemplatingContent extends BaseModel {
 	private String contentSummary;
 	private Integer contentType;
 	private Integer baseId;
+	private EFilterStatus filterStatus;
 	private EFilterDir filterDir;
 	private EFilterType filterType;
 	private String filterValue;
@@ -83,6 +85,14 @@ public class TemplatingContent extends BaseModel {
 
 	public void setBaseId(Integer baseId) {
 		this.baseId = baseId;
+	}
+
+	public EFilterStatus getFilterStatus() {
+		return filterStatus;
+	}
+
+	public void setFilterStatus(EFilterStatus filterStatus) {
+		this.filterStatus = filterStatus;
 	}
 
 	public EFilterDir getFilterDir() {

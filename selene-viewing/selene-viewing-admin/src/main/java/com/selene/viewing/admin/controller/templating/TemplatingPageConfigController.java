@@ -1,6 +1,7 @@
 package com.selene.viewing.admin.controller.templating;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -31,12 +32,16 @@ import com.selene.templating.model.TemplatingItem;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingPage;
 import com.selene.templating.model.constants.EFilterDir;
+import com.selene.templating.model.constants.EFilterStatus;
 import com.selene.templating.model.constants.EFilterType;
 import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.service.templating.TemplatingService;
+
+import static cn.com.lemon.base.Strings.isNullOrEmpty;
+import static com.selene.templating.model.util.PageConfigers.condition;
 
 @Controller
 @RequestMapping("/admin/templating/page/config")
@@ -123,10 +128,41 @@ public class TemplatingPageConfigController extends BaseController {
 	@RequestMapping(value = "/{pageId}/save", method = RequestMethod.POST)
 	public String save(@PathVariable final int pageId, @Validated final TemplatingContent templatingContent,
 			BindingResult result, final Model model, HttpServletRequest request) {
+		final Customer customer = commonService.user(request);
+		TemplatingPage page = templatingService.findPageById(pageId);
+		final TemplatingItem item = templatingService.findItemByModelIdAndCode(page.getPageModelId(),
+				templatingContent.getItemCode());
 		return super.save(templatingContent, result, model, new Operator() {
 			@Override
 			public void operate() {
-
+				templatingContent.setItemId(item.getId());
+				templatingContent.setContentType(item.getItemType().ordinal());
+				// Process filter for search index
+				if (!isNullOrEmpty(templatingContent.getFilterValue())
+						&& templatingContent.getFilterStatus() == EFilterStatus.Normal) {
+					/* If null, set default EFilterDir.Basic */
+					templatingContent.setFilterDir(templatingContent.getFilterDir() != null
+							? templatingContent.getFilterDir() : EFilterDir.Basic);
+					/* If null, set default EFilterType.Title */
+					templatingContent.setFilterType(templatingContent.getFilterType() != null
+							? templatingContent.getFilterType() : EFilterType.Title);
+					templatingContent.setFilterCondition(
+							condition(templatingContent.getFilterType(), templatingContent.getFilterValue()));
+				} else {
+					templatingContent.setFilterStatus(EFilterStatus.Stop);
+					templatingContent.setFilterType(null);
+					templatingContent.setFilterDir(null);
+					templatingContent.setFilterValue(null);
+					templatingContent.setFilterCondition(null);
+				}
+				// Save or update
+				if (templatingContent.getId() == null) {
+					templatingContent.setCreatorId(customer.getId());
+					templatingContent.setCreateTime(new Date());
+				}
+				templatingContent.setUpdaterId(customer.getId());
+				templatingContent.setUpdateTime(new Date());
+				templatingService.saveContent(templatingContent);
 			}
 
 			@Override

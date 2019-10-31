@@ -62,7 +62,10 @@
 					</tr>
 					<tr>
 						<td><label class="control-label">过滤条件筛选：</label></td>
-						<td><input type="hidden" id="switch_value" /><input type="checkbox" class="checkbox" id="filter_witch" /></td>
+						<td>
+								<form:hidden path="filterStatus" id="switch_value"/>
+								<input type="checkbox" class="checkbox" id="filter_witch" />
+						</td>
 					</tr>
 					<tr id="filter_dir" style="display: none">
 						<td><label class="control-label">过滤条件分类：</label></td>

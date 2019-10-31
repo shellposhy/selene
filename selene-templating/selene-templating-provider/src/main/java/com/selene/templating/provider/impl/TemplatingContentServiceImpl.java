@@ -60,6 +60,11 @@ public class TemplatingContentServiceImpl implements TemplatingContentService {
 	}
 
 	@Override
+	public int deleteByItemId(Integer itemId) {
+		return templatingContentMapper.deleteByItemId(itemId);
+	}
+
+	@Override
 	public int deleteByPageIdAndItemId(Integer pageId, Integer itemId) {
 		return templatingContentMapper.deleteByPageIdAndItemId(pageId, itemId);
 	}

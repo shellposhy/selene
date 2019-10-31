@@ -29,5 +29,7 @@ public interface TemplatingContentMapper {
 
 	public int deleteByPageId(@Param("pageId") Integer pageId);
 
+	public int deleteByItemId(@Param("itemId") Integer itemId);
+
 	public int deleteByPageIdAndItemId(@Param("pageId") Integer pageId, @Param("itemId") Integer itemId);
 }
