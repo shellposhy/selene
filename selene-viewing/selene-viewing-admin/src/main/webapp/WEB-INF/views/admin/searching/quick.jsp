@@ -4,7 +4,7 @@
 	<body>
 		<div id="content" class="span12">
 			<div class="mt10">
-				<ul class="breadcrumb ind_f_tree" value="51">
+				<ul class="breadcrumb ind_f_tree" value="31">
 					<li><a href="${appPath}/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
 					<li><a href="#">快捷查询</a></li>
 				</ul>

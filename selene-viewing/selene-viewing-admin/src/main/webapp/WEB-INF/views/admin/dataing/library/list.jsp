@@ -3,7 +3,7 @@
 	<body>
 		<div id="content" class="span12 tree_separated">
 			<div class="breadcrumb_warp">
-				<ul class="breadcrumb ind_f_tree" value="62">
+				<ul class="breadcrumb ind_f_tree" value="42">
 					<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
 					<li><a href="#">系统数据库</a><span	class="divider">/</span><a href="#" id="colname"></a></li>
 				</ul>

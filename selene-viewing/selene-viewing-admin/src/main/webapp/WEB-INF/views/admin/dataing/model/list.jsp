@@ -4,7 +4,7 @@
 	<body>
 		<div id="content" class="">
 			<div class="mt10">
-				<ul class="breadcrumb ind_f_tree" value="61">
+				<ul class="breadcrumb ind_f_tree" value="41">
 					<li><a href="${appPath}/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
 					<li><a href="#">数据模型</a></li>
 				</ul>

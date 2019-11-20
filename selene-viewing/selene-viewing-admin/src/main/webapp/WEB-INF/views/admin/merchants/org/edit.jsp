@@ -4,7 +4,7 @@
 <body>
 <div id="content" class="span12 ml0">
 	<div class="mt10">
-		<ul class="breadcrumb ind_f_tree" value="72">
+		<ul class="breadcrumb ind_f_tree" value="52">
 			<li><a href="${appPath }/admin" target="_self">${appName}</a><span class="divider">/</span></li>
 			<li><a href="#">商户机构</a><span class="divider">/</span></li>
 			<li><a href="#">编辑</a></li>

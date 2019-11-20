@@ -6,7 +6,7 @@
 <body>
 	<div id="content">
 		<div class="mt10">
-			<ul class="breadcrumb ind_f_tree" id="info_page_src" value="62">
+			<ul class="breadcrumb ind_f_tree" id="info_page_src" value="42">
 				<li><a href="${appPath }/admin">${appName}</a> <span class="divider">/</span></li>
 				<li><a href="#">稿件预览</a></li>
 			</ul>

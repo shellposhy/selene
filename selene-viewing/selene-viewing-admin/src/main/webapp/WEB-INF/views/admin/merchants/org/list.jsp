@@ -4,7 +4,7 @@
 		<div id="content">
 			<!-- breadcrumb -->
 			<div class="breadcrumb_warp">
-				<ul class="breadcrumb ind_f_tree" value="72">
+				<ul class="breadcrumb ind_f_tree" value="52">
 					<li><a href="${appPath }/admin" target="_self">${appName}</a> <span class="divider">/</span></li>
 					<li><a href="#">所有用户</a>
 					</li>

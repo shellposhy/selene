@@ -188,7 +188,7 @@ public class SearchingController extends BaseController {
 		}
 		List<Integer> list = toInt(Arrays.asList(range.split(CommonConstants.COMMA_SEPARATOR)));
 		/** Page parameter */
-		model.addAttribute("jspPageId", type == 0 ? 51 : 52);
+		model.addAttribute("jspPageId", type == 0 ? 31 : 32);
 		model.addAttribute("rangeName", dataService.findDataBaseName(list));
 		/** Search parameter */
 		model.addAttribute("type", type);
