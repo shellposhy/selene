@@ -90,6 +90,13 @@ public class TemplatingModelController extends BaseController {
 			File destDir = new File(targetPath + newFileName.substring(0, newFileName.lastIndexOf("/")));
 			try {
 				FileUtils.copyFileToDirectory(template, destDir);
+				/** Copy template file to publish freemaker files */
+				String pubFileName = template.getName().substring(0, template.getName().lastIndexOf("."))
+						+ CommonConstants.DEFAULT_FREEMARKER_PUBLISH_PREFIX
+						+ template.getName().substring(template.getName().lastIndexOf("."));
+				String pubPath = template.getParentFile().getAbsolutePath().replace("//", "/");
+				File pubFile = new File(pubPath + "/" + pubFileName);
+				FileUtils.copyFileToDirectory(pubFile, destDir);
 				/** Copy original ftl/** to WEB-INF/template//ftl */
 				String ftlPath = template.getParentFile().getAbsolutePath().replace('\\', '/').replace("//", "/")
 						+ ResourceConstants.BASE_FTL_PATH;
@@ -258,11 +265,21 @@ public class TemplatingModelController extends BaseController {
 							sb.setLength(0);
 							for (/* Html files */File file : htmlFileList) {
 								String path = file.getParentFile().getAbsolutePath();
+								/* For publish freemaker template */
+								String pubFileName = Templatings.publish(file.getName());
+								File pubFile = new File(path + "/" + pubFileName);
+								FileUtils.copyFile(file, pubFile);
+								/** create freemaker preview html files */
 								sb.append(Templatings.path(file.getAbsolutePath(), rootPath))
 										.append(CommonConstants.COMMA_SEPARATOR);
-								/* path=D:/resource/selene/static/../.. */
 								for (EReplaceType type : EReplaceType.values()) {
 									Templatings.replace(file, type, Templatings.path(path, rootPath));
+								}
+								/** create freemaker publish html files */
+								for (EReplaceType type : EReplaceType.values()) {
+									if (type != EReplaceType.Ftl) {
+										Templatings.replace(pubFile, type, Templatings.path(path, rootPath));
+									}
 								}
 							}
 						}

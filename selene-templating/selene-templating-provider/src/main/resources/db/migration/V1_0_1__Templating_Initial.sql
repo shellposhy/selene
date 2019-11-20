@@ -116,6 +116,7 @@ create table templating_page
    Page_Model_ID        int unsigned not null comment '页面模板编号',
    Page_Name            char(200) not null comment '页面名称',
    Page_Code            char(200) not null comment '页面编码',
+   Page_Path_Code       varchar(1000) not null comment '页面路径编码',
    Page_Type            tinyint(2) not null comment '页面类型',
    Status               tinyint(1) not null comment '上架状态',
    Page_Status          tinyint(2) not null comment '页面发布状态',

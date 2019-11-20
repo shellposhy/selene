@@ -11,7 +11,7 @@
 			<div class="box-content">
 				<div class="padlrn span12 action_buttons">
 					<a class="btn btn-small" href="${appPath}/admin/templating/page/0/new" id="addPage" target="_self">
-						<i class="icon-plus"></i>添加发布页面
+						<i class="icon-plus"></i>添加布发页面
 					</a>
 				</div>
 				<div class="content_wrap mt30 clearfix">
@@ -25,7 +25,7 @@
 						<div id="page_content" hidden="hidden">
 							<div class="btn-toolbar floatl" id="addbtn">
 								<div class="btn-group">
-									<a class="btn btn-small edit_pop_link" id="add_to_dsu"  href="#" target="_self"><i class="icon-plus"></i> 添加</a>
+									<a class="btn btn-small" id="indexPublish"><i class="icon-plus"></i> 首页发布</a>
 								</div>
 							</div>
 							<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered bootstrap-datatable trHoverEdit " id="pageDatas">
@@ -43,6 +43,21 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<!-- Notice -->
+		<div class="modal hide fade form-horizontal" id="noticeModal">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h3>确定发布</h3>
+			</div>
+			<div class="modal-body">
+				<p>您确定要发布这些页面吗？发布时间比较耗时，请耐心等待！</p>
+			</div>
+			<div class="modal-footer">
+				<span class="loading floatl none"></span>
+				<a href="#" class="btn btn-primary">发布</a>
+				<a href="#" class="btn" data-dismiss="modal">取消</a>
 			</div>
 		</div>
 		<script src="${appPath}/admin/js/original/business/templating/page.js"></script>

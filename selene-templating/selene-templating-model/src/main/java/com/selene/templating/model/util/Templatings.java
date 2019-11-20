@@ -35,6 +35,23 @@ public final class Templatings {
 	}
 
 	/**
+	 * File path processing
+	 * <p>
+	 * change {@code a.html} to {@code a_publish.html}
+	 * 
+	 * @param oldFileName
+	 * @return {@code String}
+	 */
+	public static String publish(String oldFileName) {
+		if (isNullOrEmpty(oldFileName)) {
+			return null;
+		}
+		return oldFileName.substring(0, oldFileName.lastIndexOf("."))
+				+ CommonConstants.DEFAULT_FREEMARKER_PUBLISH_PREFIX
+				+ oldFileName.substring(oldFileName.lastIndexOf("."));
+	}
+
+	/**
 	 * All files in the active directory
 	 * 
 	 * @param path

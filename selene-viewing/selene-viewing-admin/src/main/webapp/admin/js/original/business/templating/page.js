@@ -111,12 +111,59 @@ function loadDataCallback(otd) {
 	docReady();
 	trHoverEdit(showItemEdit);
 	trHoverModi();
+	indexPublish(otd);
 }
 function showItemEdit() {
 	$(".trHoverEdit tr .editbtn").live("click", function() {
 		var pageId = $(this).parent().find("input[type='checkbox']").val();
 		window.location.href = "page/" + "config/" + pageId;
 	})
+}
+function indexPublish(otd){
+	$("#indexPublish").live("click",function(){
+		if ($(this).parent().parent().nextAll(".dataTables_wrapper").find("tbody input[type='checkbox']").length > 0){
+			var count = 0;
+			var idsVal = new Array();
+			$(this).parent().parent().nextAll(".dataTables_wrapper").find("tbody input[type='checkbox']").each(function() {
+				if ($(this).attr("checked")&& $(this).val() != null&& $(this).val().length > 0) {
+					idsVal.push($(this).val());
+					count++;
+				}
+			});
+			var sData = idsVal.join(",");
+			if(count>0){
+				$('#noticeModal').modal('show');
+				$("#noticeModal").find('.btn-primary').click(function() {
+					var btnPrimary = $(this);
+					btnPrimary.attr("disabled", true).siblings(".loading").show();
+					var spData = {name : "ids",value : sData};
+					$.ajax({
+						type : 'POST',
+						contentType : "application/json",
+						url : appPath + "/admin/templating/page/publish",
+						data : JSON.stringify(spData),
+						beforeSend: function(request) {//beforeSend
+			                request.setRequestHeader("token", token);
+			                request.setRequestHeader("refreshToken",refreshToken);
+			             },
+						success : function(resp) {
+							btnPrimary.attr("disabled", false).siblings(".loading").hide();
+							otd.fnDraw();
+							setTimeout("isCheckboxStyle();",300);
+							$('#noticeModal').modal('hide');
+							noty({"text" : "发布成功","layout" : "center","type" : "alert","animateOpen" : {"opacity" : "show"}});
+						},
+						error : function(data) {
+							btnPrimary.attr("disabled", false).siblings(".loading").hide();
+							noty({"text" : "操作失败，请重试","layout" : "center","type" : "error"});
+						}
+					});
+				});
+			} else {
+				noty({"text" : "请选择要发布的页面","layout" : "center","type" : "error"});
+			}
+		}
+	});
 }
 
 //Load page model data

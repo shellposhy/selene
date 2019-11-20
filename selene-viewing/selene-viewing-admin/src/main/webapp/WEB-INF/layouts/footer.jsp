@@ -35,7 +35,7 @@
 		&copy; <a href="${appPath}/index.html" target="_blank">${appName }</a> 2019
 	</p>
 	<p class="pull-right" style="padding-right: 10px;line-height: 50px;">
-		技术支持: <a href="#">中国社会扶贫网</a>
+		技术支持: <a href="#">南山智慧谷(北京)科技有限公司</a>
 	</p>
 	<a id="back-to-top" href="#"></a>
 </div>

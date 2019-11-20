@@ -17,6 +17,7 @@ public class ListResult<T> extends Result {
 	private int pageCount = 0;// all page count
 	private int pageNo = 1;// current page number
 	private List<T> data;// current data list
+	private int dataSize = 0;
 
 	public ListResult() {
 	}
@@ -68,5 +69,13 @@ public class ListResult<T> extends Result {
 
 	public void setData(List<T> data) {
 		this.data = data;
+	}
+
+	public int getDataSize() {
+		return dataSize;
+	}
+
+	public void setDataSize(int dataSize) {
+		this.dataSize = dataSize;
 	}
 }

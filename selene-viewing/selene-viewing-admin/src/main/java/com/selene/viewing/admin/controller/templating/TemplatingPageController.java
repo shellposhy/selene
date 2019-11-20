@@ -1,5 +1,7 @@
 package com.selene.viewing.admin.controller.templating;
 
+import static cn.com.lemon.base.Strings.split;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.selene.common.HttpStatus;
 import com.selene.common.Operator;
+import com.selene.common.constants.CommonConstants;
 import com.selene.common.datatable.DataTable;
 import com.selene.common.datatable.DataTableArray;
 import com.selene.common.datatable.DataTableResult;
@@ -36,7 +39,10 @@ import com.selene.templating.model.constants.EPageStatus;
 import com.selene.viewing.admin.controller.BaseController;
 import com.selene.viewing.admin.framework.vo.Customer;
 import com.selene.viewing.admin.service.TokenService;
+import com.selene.viewing.admin.service.templating.TemplatingPublishService;
 import com.selene.viewing.admin.service.templating.TemplatingService;
+
+import cn.com.lemon.base.Strings;
 
 @Controller
 @RequestMapping("/admin/templating/page")
@@ -45,11 +51,32 @@ public class TemplatingPageController extends BaseController {
 	@Resource
 	private TemplatingService templatingService;
 	@Resource
+	private TemplatingPublishService publishService;
+	@Resource
 	private TokenService commonService;
 
 	@RequestMapping
 	public String list() {
 		return "/admin/templating/page/list";
+	}
+
+	@RequestMapping(value = "/publish", method = RequestMethod.POST)
+	@ResponseBody
+	public MappingJacksonValue publish(@RequestBody DataTableArray value, String callback, HttpServletRequest request) {
+		ObjectResult<String> result = new ObjectResult<String>();
+		String[] /* Index pages need to published. */ pageIds = split(CommonConstants.COMMA_SEPARATOR, value.value);
+		if (pageIds != null && pageIds.length > 0) {
+			for (String pageId : pageIds) {
+				TemplatingPage page = templatingService.findPageById(Integer.valueOf(pageId));
+				if (/* Only home page publishing */page.getPageType() == EModelType.Home
+						|| page.getPageType() == EModelType.Site || page.getPageType() == EModelType.Subject) {
+					publishService.home(Integer.valueOf(pageId));
+				}
+			}
+		}
+		MappingJacksonValue mv = new MappingJacksonValue(result);
+		mv.setJsonpFunction(callback);
+		return mv;
 	}
 
 	@RequestMapping("/{parentId}/new")
@@ -111,6 +138,12 @@ public class TemplatingPageController extends BaseController {
 			@Override
 			public void operate() {
 				Customer customer = commonService.user(request);
+				TemplatingPage parentPage = templatingService.findPageById(templatingPage.getParentId());
+				if (parentPage != null && !Strings.isNullOrEmpty(parentPage.getPathCode())) {
+					templatingPage.setPathCode(parentPage.getPathCode() + templatingPage.getCode() + "/");
+				} else {
+					templatingPage.setPathCode("/" + templatingPage.getCode() + "/");
+				}
 				templatingPage.setLicense(customer.getLicense());
 				if (templatingPage.getId() == null) {
 					templatingPage.setCreatorId(customer.getId());

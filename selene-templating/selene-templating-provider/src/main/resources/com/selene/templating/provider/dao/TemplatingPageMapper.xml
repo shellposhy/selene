@@ -9,6 +9,7 @@
 		<result property="pageModelId" column="Page_Model_ID" />
 		<result property="name" column="Page_Name" />
 		<result property="code" column="Page_Code" />
+		<result property="pathCode" column="Page_Path_Code" />
 		<result property="pageType" column="Page_Type" />
 		<result property="status" column="Status" />
 		<result property="pageStatus" column="Page_Status" />
@@ -22,8 +23,8 @@
 
 	<select id="find" resultMap="resultMap" parameterType="java.lang.Integer">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
-			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Path_Code,Page_Type,Status,
+			Page_Status,Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
@@ -32,8 +33,8 @@
 	
 	<select id="findByLicense" resultMap="resultMap" parameterType="java.lang.String">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
-			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Path_Code,Page_Type,Status,
+			Page_Status,Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
@@ -42,8 +43,8 @@
 
 	<select id="findByModelId" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
-			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Path_Code,Page_Type,Status,
+			Page_Status,Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
@@ -52,8 +53,8 @@
 
 	<select id="findByType" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
-			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Path_Code,Page_Type,Status,
+			Page_Status,Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
@@ -62,8 +63,8 @@
 
 	<select id="findByStatus" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
-			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Path_Code,Page_Type,Status,
+			Page_Status,Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
@@ -72,8 +73,8 @@
 	
 	<select id="findByTypeAndStatus" resultMap="resultMap" parameterType="java.util.Map">
 		SELECT
-			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
-			Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Path_Code,Page_Type,Status,
+			Page_Status,Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 		FROM 
 			templating_page 
 		WHERE 
@@ -86,12 +87,12 @@
 		</selectKey>
 		INSERT INTO
 			templating_page(
-				License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Type,Status,Page_Status,
-				Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+				License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Path_Code,Page_Type,Status,
+				Page_Status,Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
 			)
 		VALUES(
-			#{license},#{parentId},#{pageModelId},#{name},#{code},#{pageType},#{status},#{pageStatus},
-			#{pageHtmlPath},#{publishTime},#{creatorId},#{createTime},#{updaterId},#{updateTime}
+			#{license},#{parentId},#{pageModelId},#{name},#{code},#{pathCode},#{pageType},#{status},
+			#{pageStatus},#{pageHtmlPath},#{publishTime},#{creatorId},#{createTime},#{updaterId},#{updateTime}
 		)
 	</insert>
 
@@ -103,6 +104,7 @@
 			<if test="pageModelId != null">Page_Model_ID = #{pageModelId},</if>
 			<if test="name != null">Page_Name =#{name},</if>
 			<if test="code != null">Page_Code = #{code},</if>
+			<if test="pathCode != null">Page_Path_Code = #{pathCode},</if>
 			<if test="pageType != null">Page_Type =#{pageType},</if>
 			<if test="status != null">Status = #{status},</if>
 			<if test="pageStatus != null">Page_Status = #{pageStatus},</if>

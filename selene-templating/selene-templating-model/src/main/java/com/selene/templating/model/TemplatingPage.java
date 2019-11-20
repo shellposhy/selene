@@ -20,6 +20,7 @@ public class TemplatingPage extends TreeNodeModel<TemplatingPage> {
 	private String license;
 	private Integer pageModelId;
 	private String code;
+	private String pathCode;
 	private EModelType pageType;
 	private Boolean status;
 	private EPageStatus pageStatus;
@@ -48,6 +49,14 @@ public class TemplatingPage extends TreeNodeModel<TemplatingPage> {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getPathCode() {
+		return pathCode;
+	}
+
+	public void setPathCode(String pathCode) {
+		this.pathCode = pathCode;
 	}
 
 	public EModelType getPageType() {
