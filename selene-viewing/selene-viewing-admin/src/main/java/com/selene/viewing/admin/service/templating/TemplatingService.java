@@ -24,6 +24,7 @@ import com.selene.common.constants.ServiceConstants;
 import com.selene.common.page.Article;
 import com.selene.common.page.ListArticle;
 import com.selene.common.result.ListResult;
+import com.selene.common.tree.support.PageTreeNode;
 import com.selene.common.util.RedisClient;
 import com.selene.dataing.model.DataingDatabase;
 import com.selene.dataing.model.jdbc.DataingData;
@@ -44,6 +45,7 @@ import com.selene.templating.model.util.PageConfigers;
 import com.selene.viewing.admin.service.ResourceService;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.service.searching.SearchingService;
+import com.selene.common.tree.DefaultTreeNode.PropertySetter;
 
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
 
@@ -272,6 +274,24 @@ public class TemplatingService {
 				.get(TemplatingPageService.class.getName());
 		// Business process
 		return pageService.find(id);
+	}
+
+	/**
+	 * Find {@code TemplatingPage} tree by license.
+	 * 
+	 * @param license
+	 * @return {@code List}
+	 */
+	public PageTreeNode pageTree(String license) {
+		List<TemplatingPage> list = findByLicense(license);
+		return PageTreeNode.parseTree(PageTreeNode.class, list, new PropertySetter<PageTreeNode, TemplatingPage>() {
+			@Override
+			public void setProperty(PageTreeNode node, TemplatingPage entity) {
+				if (entity != null) {
+					node.setPageType(entity.getPageType().ordinal());
+				}
+			}
+		});
 	}
 
 	/**

@@ -33,7 +33,18 @@ function loadPageTree(){
 //bind the page tree click event
 function bindPageNodeEvent(nodeId) {
 	if(nodeId>0){
-		$("#addPage").attr("href",appPath+"/admin/templating/page/"+nodeId+"/new")
+		var treeObject = $.fn.zTree.getZTreeObj("pageTree");
+		var treeNode = treeObject.getNodeByParam("id", nodeId, null);
+		var nodeType=treeNode.pageType;
+		if(/*Current node is list or detail template*/nodeType==3||nodeType==4){
+			//$("#indexPublish").attr("disabled",true);
+			$("#indexPublish").hide();
+			$("#indexPublish").attr("disabled",true);
+		}else{
+			$("#indexPublish").show();
+			$("#indexPublish").attr("disabled",false);
+		}
+		$("#addPage").attr("href",appPath+"/admin/templating/page/"+nodeId+"/new");
 		$("#pages").hide();
 		$('#page_content').show();
 		//load page data
@@ -112,6 +123,8 @@ function loadDataCallback(otd) {
 	trHoverEdit(showItemEdit);
 	trHoverModi();
 	indexPublish(otd);
+	pagePutOn(otd);
+	pagePutOff(otd);
 }
 function showItemEdit() {
 	$(".trHoverEdit tr .editbtn").live("click", function() {
@@ -119,8 +132,55 @@ function showItemEdit() {
 		window.location.href = "page/" + "config/" + pageId;
 	})
 }
+
+//Page put on
+function pagePutOn(otd){
+	$("#pageUp").die().live("click",function(){
+		if ($(this).parent().parent().nextAll(".dataTables_wrapper").find("tbody input[type='checkbox']").length > 0){
+			var count = 0;
+			var idsVal = new Array();
+			$(this).parent().parent().nextAll(".dataTables_wrapper").find("tbody input[type='checkbox']").each(function() {
+				if ($(this).attr("checked")&& $(this).val() != null&& $(this).val().length > 0) {
+					idsVal.push($(this).val());
+					count++;
+				}
+			});
+			var sData = idsVal.join(",");
+			if(count>0){
+				//Processing
+			} else {
+				noty({"text" : "请选择要上架的页面","layout" : "center","type" : "error"});
+			}
+		}
+	});
+}
+
+//Page put off
+function pagePutOff(otd){
+	$("#pageDown").die().live("click",function(){
+		if ($(this).parent().parent().nextAll(".dataTables_wrapper").find("tbody input[type='checkbox']").length > 0){
+			var count = 0;
+			var idsVal = new Array();
+			$(this).parent().parent().nextAll(".dataTables_wrapper").find("tbody input[type='checkbox']").each(function() {
+				if ($(this).attr("checked")&& $(this).val() != null&& $(this).val().length > 0) {
+					idsVal.push($(this).val());
+					count++;
+				}
+			});
+			var sData = idsVal.join(",");
+			if(count>0){
+				//Processing
+			} else {
+				noty({"text" : "请选择要下架的页面","layout" : "center","type" : "error"});
+			}
+		}
+	});
+}
+
+
+//Home page publishing
 function indexPublish(otd){
-	$("#indexPublish").live("click",function(){
+	$("#indexPublish").die().live("click",function(){
 		if ($(this).parent().parent().nextAll(".dataTables_wrapper").find("tbody input[type='checkbox']").length > 0){
 			var count = 0;
 			var idsVal = new Array();
@@ -151,7 +211,7 @@ function indexPublish(otd){
 							otd.fnDraw();
 							setTimeout("isCheckboxStyle();",300);
 							$('#noticeModal').modal('hide');
-							noty({"text" : "发布成功","layout" : "center","type" : "alert","animateOpen" : {"opacity" : "show"}});
+							noty({"text" : "发布成功","layout" : "center","type" : "success","animateOpen" : {"opacity" : "show"}});
 						},
 						error : function(data) {
 							btnPrimary.attr("disabled", false).siblings(".loading").hide();

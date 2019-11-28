@@ -26,6 +26,8 @@
 							<div class="btn-toolbar floatl" id="addbtn">
 								<div class="btn-group">
 									<a class="btn btn-small" id="indexPublish"><i class="icon-plus"></i> 首页发布</a>
+									<a class="btn btn-small" id="pageUp"><i class=" icon-chevron-up"></i>页面上架</a>
+									<a class="btn btn-small" id="pageDown"><i class=" icon-chevron-down"></i>页面下架</a>
 								</div>
 							</div>
 							<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered bootstrap-datatable trHoverEdit " id="pageDatas">

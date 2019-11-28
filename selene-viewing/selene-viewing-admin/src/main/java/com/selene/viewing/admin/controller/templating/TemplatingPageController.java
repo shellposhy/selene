@@ -30,7 +30,7 @@ import com.selene.common.datatable.DataTableArray;
 import com.selene.common.datatable.DataTableResult;
 import com.selene.common.result.ListResult;
 import com.selene.common.result.ObjectResult;
-import com.selene.common.tree.DefaultTreeNode;
+import com.selene.common.tree.support.PageTreeNode;
 import com.selene.common.util.Containers;
 import com.selene.templating.model.TemplatingModel;
 import com.selene.templating.model.TemplatingPage;
@@ -119,11 +119,10 @@ public class TemplatingPageController extends BaseController {
 	@RequestMapping(value = "/tree", method = RequestMethod.POST)
 	@ResponseBody
 	public MappingJacksonValue tree(String callback, HttpServletRequest request) {
-		ObjectResult<DefaultTreeNode> result = new ObjectResult<DefaultTreeNode>(HttpStatus.OK.code(),
+		ObjectResult<PageTreeNode> result = new ObjectResult<PageTreeNode>(HttpStatus.OK.code(),
 				HttpStatus.OK.message());
 		Customer customer = commonService.user(request);
-		List<TemplatingPage> list = templatingService.findByLicense(customer.getLicense());
-		DefaultTreeNode treeNode = DefaultTreeNode.parseTree(list);
+		PageTreeNode treeNode = templatingService.pageTree(customer.getLicense());
 		treeNode.setName("根节点");
 		result.setData(treeNode);
 		MappingJacksonValue mv = new MappingJacksonValue(result);
