@@ -148,6 +148,26 @@ function pagePutOn(otd){
 			var sData = idsVal.join(",");
 			if(count>0){
 				//Processing
+				var spData = {name : "ids",value : sData};
+				$.ajax({
+					type : 'POST',
+					contentType : "application/json",
+					url : appPath + "/admin/templating/page/1/transfer",
+					data : JSON.stringify(spData),
+					beforeSend: function(request) {//beforeSend
+		                request.setRequestHeader("token", token);
+		                request.setRequestHeader("refreshToken",refreshToken);
+		             },
+					success : function(data) {
+						otd.fnDraw();
+						setTimeout("isCheckboxStyle();",300);
+						noty({"text" : "页面上架成功","layout" : "center","type" : "success","animateOpen" : {"opacity" : "show"}});
+					},
+					error : function(data) {
+						btnPrimary.attr("disabled", false).siblings(".loading").hide();
+						noty({"text" : "操作失败，请重试","layout" : "center","type" : "error"});
+					}
+				});
 			} else {
 				noty({"text" : "请选择要上架的页面","layout" : "center","type" : "error"});
 			}
@@ -170,13 +190,32 @@ function pagePutOff(otd){
 			var sData = idsVal.join(",");
 			if(count>0){
 				//Processing
+				var spData = {name : "ids",value : sData};
+				$.ajax({
+					type : 'POST',
+					contentType : "application/json",
+					url : appPath + "/admin/templating/page/0/transfer",
+					data : JSON.stringify(spData),
+					beforeSend: function(request) {//beforeSend
+		                request.setRequestHeader("token", token);
+		                request.setRequestHeader("refreshToken",refreshToken);
+		             },
+					success : function(data) {
+						otd.fnDraw();
+						setTimeout("isCheckboxStyle();",300);
+						noty({"text" : "页面下架成功","layout" : "center","type" : "success","animateOpen" : {"opacity" : "show"}});
+					},
+					error : function(data) {
+						btnPrimary.attr("disabled", false).siblings(".loading").hide();
+						noty({"text" : "操作失败，请重试","layout" : "center","type" : "error"});
+					}
+				});
 			} else {
 				noty({"text" : "请选择要下架的页面","layout" : "center","type" : "error"});
 			}
 		}
 	});
 }
-
 
 //Home page publishing
 function indexPublish(otd){
