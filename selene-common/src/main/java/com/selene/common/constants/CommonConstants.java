@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
  */
 public interface CommonConstants {
 
+	String SELENE_LOGGER = "slf4j";
+
 	String LOGIN_SESSION_USER = "login_session_user";
 
 	String SELENE = "selene";
