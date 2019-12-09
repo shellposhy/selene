@@ -20,7 +20,7 @@ public class FailsafeLogger implements Logger {
 	}
 
 	private String appendContextMessage(String msg) {
-		return " [Selene] " + msg + ", current host: " + Protocols.ip();
+		return " [Selene] " + msg + " [current host: " + Protocols.ip() + "]";
 	}
 
 	@Override

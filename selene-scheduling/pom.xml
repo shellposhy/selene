@@ -23,6 +23,11 @@
 			<artifactId>selene-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.selene</groupId>
+			<artifactId>selene-logging-model</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 
 	<!-- Properties -->

@@ -1,7 +1,7 @@
 package com.selene.merchants.provider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.selene.logging.model.Logger;
+import com.selene.logging.model.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class MerchantsBootstrap {

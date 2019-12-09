@@ -1,8 +1,9 @@
 package com.selene.templating.provider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.selene.logging.model.Logger;
+import com.selene.logging.model.LoggerFactory;
 
 public class TemplatingBootstrap {
 	private static final Logger LOG = LoggerFactory.getLogger(TemplatingBootstrap.class.getName());
@@ -15,8 +16,7 @@ public class TemplatingBootstrap {
 				LOG.info("Templating Server is started!");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.error("Templating Server is started fail!");
+			LOG.error("Templating Server is started fail!", e);
 		}
 	}
 
