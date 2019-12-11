@@ -6,21 +6,15 @@ import static cn.com.lemon.base.Strings.split;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.apache.lucene.document.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.nanshan.papaya.rpc.client.Client;
-import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.FieldsConstants;
 import com.selene.common.constants.ServiceConstants;
@@ -50,12 +44,13 @@ import com.selene.dataing.model.service.DataingDataModelFieldMapService;
 import com.selene.dataing.model.service.DataingDataModelService;
 import com.selene.dataing.model.service.DataingDataTableService;
 import com.selene.dataing.model.service.DataingDataTagService;
-import com.selene.dataing.model.service.DataingDataTaskService;
-import com.selene.dataing.model.service.DataingDataTaskSubService;
 import com.selene.dataing.model.service.DataingDatabaseFieldMapService;
 import com.selene.dataing.model.service.DataingDatabaseService;
 import com.selene.dataing.model.service.DataingJdbcTemplateService;
 import com.selene.dataing.model.util.DataingUtil;
+import com.selene.logging.model.Logger;
+import com.selene.logging.model.LoggerFactory;
+import com.selene.viewing.admin.service.config.ServiceConfigure;
 import com.selene.viewing.admin.service.searching.SearchingService;
 
 import cn.com.lemon.base.Strings;
@@ -63,47 +58,14 @@ import cn.com.lemon.base.Strings;
 @Service
 public class DataService {
 	private final static Logger LOG = LoggerFactory.getLogger(DataService.class.getName());
-	private ServiceConfiger dataingConfiger;
-	private Map<String, Object> services = new HashMap<String, Object>();
+	private final static String DATAING_KEY = ServiceConstants.DATAING_KEY;
 	private StringBuilder sb = new StringBuilder(100);
-	@Resource
-	private Client client;
 	@Resource
 	private RedisClient redisClient;
 	@Resource
 	private SearchingService searchingService;
-
-	@PostConstruct
-	@SuppressWarnings("static-access")
-	public void init() {
-		LOG.info("[selene-viewing-admin] init " + ServiceConfiger.class.getName() + " service!");
-		// Initialization dataing service registry address
-		dataingConfiger = new ServiceConfiger(
-				DataService.class.getResource("/").getPath() + "selene.sevice.properties");
-		String dataingService = dataingConfiger.value(ServiceConstants.DATAING_KEY);
-		LOG.info("dataing service address=" + dataingService);
-		// Initialization dataing service
-		services.put(/* DataModel */DataingDataModelService.class.getName(),
-				client.create(DataingDataModelService.class, dataingService));
-		services.put(/* DataModelFiled */DataingDataModelFieldMapService.class.getName(),
-				client.create(DataingDataModelFieldMapService.class, dataingService));
-		services.put(/* DataField */DataingDataFieldService.class.getName(),
-				client.create(DataingDataFieldService.class, dataingService));
-		services.put(/* DataTag */DataingDataTagService.class.getName(),
-				client.create(DataingDataTagService.class, dataingService));
-		services.put(/* DataTask */DataingDataTaskService.class.getName(),
-				client.create(DataingDataTaskService.class, dataingService));
-		services.put(/* DataTaskSub */DataingDataTaskSubService.class.getName(),
-				client.create(DataingDataTaskSubService.class, dataingService));
-		services.put(/* Database */DataingDatabaseService.class.getName(),
-				client.create(DataingDatabaseService.class, dataingService));
-		services.put(/* DatabaseFieldMap */DataingDatabaseFieldMapService.class.getName(),
-				client.create(DataingDatabaseFieldMapService.class, dataingService));
-		services.put(/* DataTable */DataingDataTableService.class.getName(),
-				client.create(DataingDataTableService.class, dataingService));
-		services.put(/* JdbcTemplate */DataingJdbcTemplateService.class.getName(),
-				client.create(DataingJdbcTemplateService.class, dataingService));
-	}
+	@Resource
+	private ServiceConfigure serviceConfigure;
 
 	/**
 	 * Find image path
@@ -113,6 +75,7 @@ public class DataService {
 	 * @return {@code String}
 	 */
 	public String image(Integer tableId, Integer dataId) {
+		LOG.debug("");
 		DataingBaseData data = select(tableId, dataId);
 		List<String> imgList = DataUtil.imgs(data.get(FieldsConstants.CONTENT).toString());
 		return imgList != null && imgList.size() > 0 ? imgList.get(0).replace('\\', '/').replace("//", "/") : "#";
@@ -128,8 +91,8 @@ public class DataService {
 	 */
 	public DataingBaseData select(Integer tableId, Integer dataId) {
 		// Initialize the required services
-		DataingJdbcTemplateService templateService = (DataingJdbcTemplateService) services
-				.get(DataingJdbcTemplateService.class.getName());
+		DataingJdbcTemplateService templateService = serviceConfigure.service(DataingJdbcTemplateService.class,
+				DataingJdbcTemplateService.class.getName(), DATAING_KEY);
 		// Business process
 		return templateService.select(tableId, dataId);
 	}
@@ -142,8 +105,8 @@ public class DataService {
 	 */
 	public DataingDataTable findTable(Integer id) {
 		// Initialize the required services
-		DataingDataTableService dataTableService = (DataingDataTableService) services
-				.get(DataingDataTableService.class.getName());
+		DataingDataTableService dataTableService = serviceConfigure.service(DataingDataTableService.class,
+				DataingDataTableService.class.getName(), DATAING_KEY);
 		// Business process
 		return dataTableService.find(id);
 	}
@@ -156,14 +119,14 @@ public class DataService {
 	 */
 	public int saveData(DataingBaseData data) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
-		DataingJdbcTemplateService jdbcTemplateService = (DataingJdbcTemplateService) services
-				.get(DataingJdbcTemplateService.class.getName());
-		DataingDataTableService dataTableService = (DataingDataTableService) services
-				.get(DataingDataTableService.class.getName());
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
+		DataingJdbcTemplateService jdbcTemplateService = serviceConfigure.service(DataingJdbcTemplateService.class,
+				DataingJdbcTemplateService.class.getName(), DATAING_KEY);
+		DataingDataTableService dataTableService = serviceConfigure.service(DataingDataTableService.class,
+				DataingDataTableService.class.getName(), DATAING_KEY);
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
 		// Business process
 		if (data.getBaseId() == null) {
 			return 0;
@@ -234,8 +197,8 @@ public class DataService {
 	 */
 	public Map<String, DataingDataField> findFieldMapByBaseId(Integer baseId) {
 		// Initialize the required services
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
 		// Business process
 		List<DataingDataField> fieldList = dataFieldService.findFieldsByBaseId(baseId);
 		Map<String, DataingDataField> result = new LinkedHashMap<String, DataingDataField>();
@@ -253,14 +216,14 @@ public class DataService {
 	 */
 	public DataingDataTable findDataTableByBaseId(Integer baseId) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
-		DataingJdbcTemplateService jdbcTemplateService = (DataingJdbcTemplateService) services
-				.get(DataingJdbcTemplateService.class.getName());
-		DataingDataTableService dataTableService = (DataingDataTableService) services
-				.get(DataingDataTableService.class.getName());
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
+		DataingJdbcTemplateService jdbcTemplateService = serviceConfigure.service(DataingJdbcTemplateService.class,
+				DataingJdbcTemplateService.class.getName(), DATAING_KEY);
+		DataingDataTableService dataTableService = serviceConfigure.service(DataingDataTableService.class,
+				DataingDataTableService.class.getName(), DATAING_KEY);
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
 		// Business process
 		DataingDatabase database = /**/ databaseService.find(baseId);
 		String tableName = tableName(database, false);
@@ -282,8 +245,8 @@ public class DataService {
 	 */
 	public int installTag(String license) {
 		// Initialize the required services
-		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
-				.get(DataingDataTagService.class.getName());
+		DataingDataTagService /* data tag service */ tagService = serviceConfigure.service(DataingDataTagService.class,
+				DataingDataTagService.class.getName(), DATAING_KEY);
 		// Business process
 		DataingDataTag dataTag = new DataingDataTag();
 		dataTag./* New merchants license */setLicense(license);
@@ -310,8 +273,8 @@ public class DataService {
 	 */
 	public int deleteTag(Integer id) {
 		// Initialize the required services
-		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
-				.get(DataingDataTagService.class.getName());
+		DataingDataTagService /* data tag service */ tagService = serviceConfigure.service(DataingDataTagService.class,
+				DataingDataTagService.class.getName(), DATAING_KEY);
 		// Business process
 		return tagService.delete(id);
 	}
@@ -325,8 +288,8 @@ public class DataService {
 	 */
 	public int saveTag(DataingDataTag dataTag) {
 		// Initialize the required services
-		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
-				.get(DataingDataTagService.class.getName());
+		DataingDataTagService /* data tag service */ tagService = serviceConfigure.service(DataingDataTagService.class,
+				DataingDataTagService.class.getName(), DATAING_KEY);
 		// Business process
 		if (dataTag.getId() == null) {
 			return tagService.insert(dataTag);
@@ -343,8 +306,8 @@ public class DataService {
 	 */
 	public DataingDataTag findTagById(Integer id) {
 		// Initialize the required services
-		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
-				.get(DataingDataTagService.class.getName());
+		DataingDataTagService /* data tag service */ tagService = serviceConfigure.service(DataingDataTagService.class,
+				DataingDataTagService.class.getName(), DATAING_KEY);
 		// Business process
 		return tagService.find(id);
 	}
@@ -359,8 +322,8 @@ public class DataService {
 	 */
 	public List<DataingDataTag> findTagByType(String license, Integer type) {
 		// Initialize the required services
-		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
-				.get(DataingDataTagService.class.getName());
+		DataingDataTagService /* data tag service */ tagService = serviceConfigure.service(DataingDataTagService.class,
+				DataingDataTagService.class.getName(), DATAING_KEY);
 		// Business process
 		return tagService.findByLicenseAndType(license, type);
 	}
@@ -374,8 +337,8 @@ public class DataService {
 	 */
 	public List<DataingDataTag> findSubTag(String license, Integer parentId) {
 		// Initialize the required services
-		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
-				.get(DataingDataTagService.class.getName());
+		DataingDataTagService /* data tag service */ tagService = serviceConfigure.service(DataingDataTagService.class,
+				DataingDataTagService.class.getName(), DATAING_KEY);
 		// Business process
 		return tagService.findByLicenseAndParentId(license, parentId);
 	}
@@ -389,8 +352,8 @@ public class DataService {
 	 */
 	public List<DataingDataTag> findTag(String license, String word) {
 		// Initialize the required services
-		DataingDataTagService /* data tag service */ tagService = (DataingDataTagService) services
-				.get(DataingDataTagService.class.getName());
+		DataingDataTagService /* data tag service */ tagService = serviceConfigure.service(DataingDataTagService.class,
+				DataingDataTagService.class.getName(), DATAING_KEY);
 		// Business process
 		if (isNullOrEmpty(word)) {
 			return tagService.findByLicense(license);
@@ -407,14 +370,14 @@ public class DataService {
 	 */
 	public int deleteLibrary(Integer id) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
-		DataingDataTableService dataTableService = (DataingDataTableService) services
-				.get(DataingDataTableService.class.getName());
-		DataingDatabaseFieldMapService databaseFieldMapService = (DataingDatabaseFieldMapService) services
-				.get(DataingDatabaseFieldMapService.class.getName());
-		DataingJdbcTemplateService jdbcTemplateService = (DataingJdbcTemplateService) services
-				.get(DataingJdbcTemplateService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
+		DataingDataTableService dataTableService = serviceConfigure.service(DataingDataTableService.class,
+				DataingDataTableService.class.getName(), DATAING_KEY);
+		DataingDatabaseFieldMapService databaseFieldMapService = serviceConfigure.service(
+				DataingDatabaseFieldMapService.class, DataingDatabaseFieldMapService.class.getName(), DATAING_KEY);
+		DataingJdbcTemplateService jdbcTemplateService = serviceConfigure.service(DataingJdbcTemplateService.class,
+				DataingJdbcTemplateService.class.getName(), DATAING_KEY);
 		// Business process
 		List<DataingDataTable>/* Delete data and data table */ tableList = dataTableService.findByBaseId(id);
 		if (tableList != null && tableList.size() > 0) {
@@ -440,8 +403,8 @@ public class DataService {
 	 */
 	public boolean checkPreDeleteLibrary(Integer id) {
 		// Initialize the required services
-		DataingDataTableService dataTableService = (DataingDataTableService) services
-				.get(DataingDataTableService.class.getName());
+		DataingDataTableService dataTableService = serviceConfigure.service(DataingDataTableService.class,
+				DataingDataTableService.class.getName(), DATAING_KEY);
 		// Business process
 		List<DataingDataTable>/* Data table */ tableList = dataTableService.findByBaseId(id);
 		if (tableList != null && tableList.size() > 0) {
@@ -463,16 +426,16 @@ public class DataService {
 	 */
 	public int saveLibrary(DataingDatabase database) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
-		DataingDataTableService dataTableService = (DataingDataTableService) services
-				.get(DataingDataTableService.class.getName());
-		DataingDatabaseFieldMapService databaseFieldMapService = (DataingDatabaseFieldMapService) services
-				.get(DataingDatabaseFieldMapService.class.getName());
-		DataingJdbcTemplateService jdbcTemplateService = (DataingJdbcTemplateService) services
-				.get(DataingJdbcTemplateService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
+		DataingDataTableService dataTableService = serviceConfigure.service(DataingDataTableService.class,
+				DataingDataTableService.class.getName(), DATAING_KEY);
+		DataingDatabaseFieldMapService databaseFieldMapService = serviceConfigure.service(
+				DataingDatabaseFieldMapService.class, DataingDatabaseFieldMapService.class.getName(), DATAING_KEY);
+		DataingJdbcTemplateService jdbcTemplateService = serviceConfigure.service(DataingJdbcTemplateService.class,
+				DataingJdbcTemplateService.class.getName(), DATAING_KEY);
 		// Business process
 		DataingDatabase /* Is exist parent and set path code */ parent = databaseService.find(database.getParentId());
 		if (parent != null) {
@@ -536,8 +499,8 @@ public class DataService {
 	 */
 	public int saveLibraryFields(DataingDatabase database) {
 		// Initialize the required services
-		DataingDatabaseFieldMapService databaseFieldMapService = (DataingDatabaseFieldMapService) services
-				.get(DataingDatabaseFieldMapService.class.getName());
+		DataingDatabaseFieldMapService databaseFieldMapService = serviceConfigure.service(
+				DataingDatabaseFieldMapService.class, DataingDatabaseFieldMapService.class.getName(), DATAING_KEY);
 		// Business process
 		if (database != null && database.getFieldList() != null && database.getFieldList().size() > 0) {
 			String[] /* Fields for display */ newShowFields = Strings.isNullOrEmpty(database.getDataFieldsStr()) ? null
@@ -571,10 +534,10 @@ public class DataService {
 	 */
 	public DataingDataTable saveLibraryTable(DataingDatabase database) {
 		// Initialize the required services
-		DataingJdbcTemplateService jdbcTemplateService = (DataingJdbcTemplateService) services
-				.get(DataingJdbcTemplateService.class.getName());
-		DataingDataTableService dataTableService = (DataingDataTableService) services
-				.get(DataingDataTableService.class.getName());
+		DataingJdbcTemplateService jdbcTemplateService = serviceConfigure.service(DataingJdbcTemplateService.class,
+				DataingJdbcTemplateService.class.getName(), DATAING_KEY);
+		DataingDataTableService dataTableService = serviceConfigure.service(DataingDataTableService.class,
+				DataingDataTableService.class.getName(), DATAING_KEY);
 		// Business process
 		String tableName = tableName(database, true);
 		DataingTable table = new DataingTable(tableName, database.getFieldList());
@@ -620,8 +583,8 @@ public class DataService {
 	 */
 	public int deleteDirectory(Integer id) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		return databaseService.delete(id);
 	}
@@ -635,8 +598,8 @@ public class DataService {
 	 */
 	public int saveDirectory(DataingDatabase database) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		DataingDatabase parent = databaseService.find(database.getParentId());
 		if (parent != null) {
@@ -664,8 +627,8 @@ public class DataService {
 	 */
 	public List<DataingDatabase> findBaseByParentId(String license, ELibraryType type, Integer parentId) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		return databaseService.findByParentId(license, type, parentId);
 	}
@@ -678,8 +641,8 @@ public class DataService {
 	 */
 	public DataingDatabase findDatabase(Integer id) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		return databaseService.find(id);
 	}
@@ -692,8 +655,8 @@ public class DataService {
 	 */
 	public String findDataBaseName(List<Integer> list) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		return databaseService.findDataNodeNameByIds(list);
 	}
@@ -706,8 +669,8 @@ public class DataService {
 	 */
 	public List<Integer> findDataBaseNodes(List<Integer> list) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		return databaseService.findDataNodeByIds(list);
 	}
@@ -721,8 +684,8 @@ public class DataService {
 	 */
 	public List<DataingDatabase> emptyTreeList(String license, ELibraryType type) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		List<DataingDatabase> list = databaseService.findEmptyDirectory(license, type);
 		return list;
@@ -738,8 +701,8 @@ public class DataService {
 	 */
 	public List<DataingDatabase> databaseList(String license, String word, ELibraryType type) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		return databaseService.findByNameType(license, Strings.nullToEmpty(word), type);
 	}
@@ -753,8 +716,8 @@ public class DataService {
 	 */
 	public DefaultTreeNode tree(String license, ELibraryType type) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		List<DataingDatabase> list = databaseService.list(license, Strings.nullToEmpty(null), type);
 		return DefaultTreeNode.parseTree(list);
@@ -770,8 +733,8 @@ public class DataService {
 	 */
 	public LibraryTreeNode tree(String license, String word, ELibraryType type) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		List<DataingDatabase> list = databaseService.list(license, Strings.nullToEmpty(word), type);
 		return LibraryTreeNode.parseTree(LibraryTreeNode.class, list,
@@ -799,12 +762,12 @@ public class DataService {
 	 */
 	public int saveDataModel(DataingDataModel dataModel) {
 		// Initialize the required services
-		DataingDataFieldService /* DataField */ dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
-		DataingDataModelService /* DataModel */ dataModelService = (DataingDataModelService) services
-				.get(DataingDataModelService.class.getName());
-		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = (DataingDataModelFieldMapService) services
-				.get(DataingDataModelFieldMapService.class.getName());
+		DataingDataFieldService /* DataField */ dataFieldService = serviceConfigure
+				.service(DataingDataFieldService.class, DataingDataFieldService.class.getName(), DATAING_KEY);
+		DataingDataModelService /* DataModel */ dataModelService = serviceConfigure
+				.service(DataingDataModelService.class, DataingDataModelService.class.getName(), DATAING_KEY);
+		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = serviceConfigure.service(
+				DataingDataModelFieldMapService.class, DataingDataModelFieldMapService.class.getName(), DATAING_KEY);
 		// Business process
 		String[] /* New model fields */ newFieldIdArray = split(CommonConstants.COMMA_SEPARATOR,
 				dataModel.getModelFieldIds());
@@ -861,10 +824,10 @@ public class DataService {
 	 */
 	public int deleteModel(Integer id) {
 		// Initialize the required services
-		DataingDataModelService /* DataModel */ dataModelService = (DataingDataModelService) services
-				.get(DataingDataModelService.class.getName());
-		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = (DataingDataModelFieldMapService) services
-				.get(DataingDataModelFieldMapService.class.getName());
+		DataingDataModelService /* DataModel */ dataModelService = serviceConfigure
+				.service(DataingDataModelService.class, DataingDataModelService.class.getName(), DATAING_KEY);
+		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = serviceConfigure.service(
+				DataingDataModelFieldMapService.class, DataingDataModelFieldMapService.class.getName(), DATAING_KEY);
 		// Business process
 		List<DataingDataModelFieldMap> /* Delete model old field list */ oldModelFieldList = dataModelFieldMapService
 				.findByModelId(id);
@@ -885,8 +848,8 @@ public class DataService {
 	 */
 	public boolean checkPreDeleteModel(String license, Integer modelId) {
 		// Initialize the required services
-		DataingDatabaseService databaseService = (DataingDatabaseService) services
-				.get(DataingDatabaseService.class.getName());
+		DataingDatabaseService databaseService = serviceConfigure.service(DataingDatabaseService.class,
+				DataingDatabaseService.class.getName(), DATAING_KEY);
 		// Business process
 		List<?> baseList = databaseService.findByModelId(license, modelId);
 		return baseList != null && baseList.size() > 0 ? true : false;
@@ -900,10 +863,10 @@ public class DataService {
 	 */
 	public DataingDataModel findModelById(Integer id) {
 		// Initialize the required services
-		DataingDataModelService /* DataModel */ dataModelService = (DataingDataModelService) services
-				.get(DataingDataModelService.class.getName());
-		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = (DataingDataModelFieldMapService) services
-				.get(DataingDataModelFieldMapService.class.getName());
+		DataingDataModelService /* DataModel */ dataModelService = serviceConfigure
+				.service(DataingDataModelService.class, DataingDataModelService.class.getName(), DATAING_KEY);
+		DataingDataModelFieldMapService/* DataModelFiled */ dataModelFieldMapService = serviceConfigure.service(
+				DataingDataModelFieldMapService.class, DataingDataModelFieldMapService.class.getName(), DATAING_KEY);
 		// Business process
 		DataingDataModel dataModel = dataModelService.find(id);
 		List<DataingDataModelFieldMap> modelFieldMap = dataModelFieldMapService.findByModelId(id);
@@ -927,8 +890,8 @@ public class DataService {
 	 */
 	public List<DataingDataField> findFieldsInBasesByAccess(EAccessType type, List<Integer> list) {
 		// Initialize the required services
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
 		// Business process
 		return dataFieldService.findFieldsInBasesByAccess(type.ordinal(), list, list.size());
 	}
@@ -941,8 +904,8 @@ public class DataService {
 	 */
 	public List<DataingDataField> findDisplayFieldsByModelId(Integer modelId) {
 		// Initialize the required services
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
 		// Business process
 		return dataFieldService.findDisplayFieldsByModelId(modelId);
 	}
@@ -955,8 +918,8 @@ public class DataService {
 	 */
 	public List<DataingDataField> findFieldByType(EDataFieldType type) {
 		// Initialize the required services
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
 		// Business process
 		return dataFieldService.findByType(type.ordinal());
 	}
@@ -969,8 +932,8 @@ public class DataService {
 	 */
 	public List<DataingDataField> findFieldsByBaseId(Integer baseId) {
 		// Initialize the required services
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
 		// Business process
 		return dataFieldService.findFieldsByBaseId(baseId);
 	}
@@ -983,8 +946,8 @@ public class DataService {
 	 */
 	public List<DataingDataField> findDisplayFieldsByBaseId(Integer baseId) {
 		// Initialize the required services
-		DataingDataFieldService dataFieldService = (DataingDataFieldService) services
-				.get(DataingDataFieldService.class.getName());
+		DataingDataFieldService dataFieldService = serviceConfigure.service(DataingDataFieldService.class,
+				DataingDataFieldService.class.getName(), DATAING_KEY);
 		// Business process
 		return dataFieldService.findDisplayFieldsByBaseId(baseId);
 	}
@@ -998,8 +961,8 @@ public class DataService {
 	 */
 	public List<DataingDataModel> findModelByType(ELibraryType modelType, String license) {
 		// Initialize the required services
-		DataingDataModelService dataModelService = (DataingDataModelService) services
-				.get(DataingDataModelService.class.getName());
+		DataingDataModelService dataModelService = serviceConfigure.service(DataingDataModelService.class,
+				DataingDataModelService.class.getName(), DATAING_KEY);
 		// Business process
 		return dataModelService.findByType(modelType.ordinal(), license);
 	}
@@ -1014,8 +977,8 @@ public class DataService {
 	 */
 	public ListResult<DataingDataModel> findModelByPage(String license, String name, Integer first, Integer size) {
 		// Initialize the required services
-		DataingDataModelService dataModelService = (DataingDataModelService) services
-				.get(DataingDataModelService.class.getName());
+		DataingDataModelService dataModelService = serviceConfigure.service(DataingDataModelService.class,
+				DataingDataModelService.class.getName(), DATAING_KEY);
 		// Business process
 		ListResult<DataingDataModel> result = new ListResult<DataingDataModel>();
 		if (/* Query all */isNullOrEmpty(name)) {

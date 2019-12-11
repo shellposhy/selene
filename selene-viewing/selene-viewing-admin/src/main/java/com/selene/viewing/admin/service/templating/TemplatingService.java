@@ -4,11 +4,8 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
@@ -16,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.nanshan.papaya.rpc.client.Client;
-import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.FieldsConstants;
 import com.selene.common.constants.ServiceConstants;
@@ -43,6 +38,7 @@ import com.selene.templating.model.service.TemplatingModelService;
 import com.selene.templating.model.service.TemplatingPageService;
 import com.selene.templating.model.util.PageConfigers;
 import com.selene.viewing.admin.service.ResourceService;
+import com.selene.viewing.admin.service.config.ServiceConfigure;
 import com.selene.viewing.admin.service.dataing.DataService;
 import com.selene.viewing.admin.service.searching.SearchingService;
 import com.selene.common.tree.DefaultTreeNode.PropertySetter;
@@ -52,10 +48,7 @@ import static cn.com.lemon.base.Strings.isNullOrEmpty;
 @Service
 public class TemplatingService {
 	private final static Logger LOG = LoggerFactory.getLogger(TemplatingService.class.getName());
-	private ServiceConfiger templatingConfiger;
-	private Map<String, Object> services = new HashMap<String, Object>();
-	@Resource
-	private Client client;
+	private final static String TEMPLATING_KEY = ServiceConstants.TEMPLATING_KEY;
 	@Resource
 	private RedisClient redisClient;
 	@Resource
@@ -64,28 +57,8 @@ public class TemplatingService {
 	private DataService dataService;
 	@Resource
 	private ResourceService resourceService;
-
-	@PostConstruct
-	@SuppressWarnings("static-access")
-	public void init() {
-		LOG.info("[selene-viewing-admin] init " + ServiceConfiger.class.getName() + " service!");
-		// Initialization templating service registry address
-		templatingConfiger = new ServiceConfiger(
-				TemplatingService.class.getResource("/").getPath() + "selene.sevice.properties");
-		String templatingService = templatingConfiger.value(ServiceConstants.TEMPLATING_KEY);
-		LOG.info("templating service address=" + templatingService);
-		// Initialization searching service
-		services.put(TemplatingModelBillService.class.getName(),
-				client.create(TemplatingModelBillService.class, templatingService));
-		services.put(TemplatingModelService.class.getName(),
-				client.create(TemplatingModelService.class, templatingService));
-		services.put(TemplatingPageService.class.getName(),
-				client.create(TemplatingPageService.class, templatingService));
-		services.put(TemplatingItemService.class.getName(),
-				client.create(TemplatingItemService.class, templatingService));
-		services.put(TemplatingContentService.class.getName(),
-				client.create(TemplatingContentService.class, templatingService));
-	}
+	@Resource
+	private ServiceConfigure serviceConfigure;
 
 	/* ======Templating content process====== */
 
@@ -96,9 +69,10 @@ public class TemplatingService {
 	 * @return
 	 */
 	public int saveContent(TemplatingContent content) {
+		LOG.debug("");
 		// Initialize the required services
-		TemplatingContentService contentService = (TemplatingContentService) services
-				.get(TemplatingContentService.class.getName());
+		TemplatingContentService contentService = serviceConfigure.service(TemplatingContentService.class,
+				TemplatingContentService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		if (content.getId() != null) {
 			return contentService.update(content);
@@ -116,8 +90,8 @@ public class TemplatingService {
 	 */
 	public TemplatingContent findContentByPageIdAndItemId(Integer pageId, Integer itemId) {
 		// Initialize the required services
-		TemplatingContentService contentService = (TemplatingContentService) services
-				.get(TemplatingContentService.class.getName());
+		TemplatingContentService contentService = serviceConfigure.service(TemplatingContentService.class,
+				TemplatingContentService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return contentService.findByPageIdAndItemId(pageId, itemId);
 	}
@@ -133,10 +107,10 @@ public class TemplatingService {
 	public ListArticle packagePageData(Integer pageId, Integer itemId) {
 		ListArticle result = new ListArticle();
 		// Initialize the required services
-		TemplatingContentService contentService = (TemplatingContentService) services
-				.get(TemplatingContentService.class.getName());
-		TemplatingItemService itemService = /**/ (TemplatingItemService) services
-				.get(TemplatingItemService.class.getName());
+		TemplatingContentService contentService = serviceConfigure.service(TemplatingContentService.class,
+				TemplatingContentService.class.getName(), TEMPLATING_KEY);
+		TemplatingItemService itemService = /**/ serviceConfigure.service(TemplatingItemService.class,
+				TemplatingItemService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		TemplatingContent content = contentService.findByPageIdAndItemId(pageId, itemId);
 		TemplatingPage page = findPageById(pageId);
@@ -223,8 +197,8 @@ public class TemplatingService {
 	 */
 	public TemplatingItem findItemByModelIdAndCode(Integer modelId, String code) {
 		// Initialize the required services
-		TemplatingItemService itemService = (TemplatingItemService) /* Page */services
-				.get(TemplatingItemService.class.getName());
+		TemplatingItemService itemService = serviceConfigure.service(TemplatingItemService.class,
+				TemplatingItemService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return itemService.findByModelIdAndCode(modelId, code);
 	}
@@ -237,8 +211,8 @@ public class TemplatingService {
 	 */
 	public List<TemplatingItem> findModelItems(Integer modelId) {
 		// Initialize the required services
-		TemplatingItemService itemService = (TemplatingItemService) /* Page */services
-				.get(TemplatingItemService.class.getName());
+		TemplatingItemService itemService = serviceConfigure.service(TemplatingItemService.class,
+				TemplatingItemService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return itemService.findByModelId(modelId);
 	}
@@ -252,8 +226,8 @@ public class TemplatingService {
 	 */
 	public int savePage(TemplatingPage page) {
 		// Initialize the required services
-		TemplatingPageService pageService = (TemplatingPageService) /* Page */services
-				.get(TemplatingPageService.class.getName());
+		TemplatingPageService pageService = serviceConfigure.service(TemplatingPageService.class,
+				TemplatingPageService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		if (page.getId() == null) {
 			return pageService.insert(page);
@@ -270,8 +244,8 @@ public class TemplatingService {
 	 */
 	public TemplatingPage findPageById(Integer id) {
 		// Initialize the required services
-		TemplatingPageService pageService = (TemplatingPageService) /* Page */services
-				.get(TemplatingPageService.class.getName());
+		TemplatingPageService pageService = serviceConfigure.service(TemplatingPageService.class,
+				TemplatingPageService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return pageService.find(id);
 	}
@@ -302,8 +276,8 @@ public class TemplatingService {
 	 */
 	public List<TemplatingPage> findByLicense(String license) {
 		// Initialize the required services
-		TemplatingPageService pageService = (TemplatingPageService) /* Page */services
-				.get(TemplatingPageService.class.getName());
+		TemplatingPageService pageService = serviceConfigure.service(TemplatingPageService.class,
+				TemplatingPageService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return pageService.findByLicense(license);
 	}
@@ -317,8 +291,8 @@ public class TemplatingService {
 	 */
 	public List<TemplatingPage> findByModelId(String license, Integer modelId) {
 		// Initialize the required services
-		TemplatingPageService pageService = (TemplatingPageService) /* Page */services
-				.get(TemplatingPageService.class.getName());
+		TemplatingPageService pageService = serviceConfigure.service(TemplatingPageService.class,
+				TemplatingPageService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return pageService.findByModelId(license, modelId);
 	}
@@ -332,10 +306,10 @@ public class TemplatingService {
 	 */
 	public synchronized int scanModel(Integer modelId, File template) {
 		// Initialize the required services
-		TemplatingItemService itemService = /**/ (TemplatingItemService) services
-				.get(TemplatingItemService.class.getName());
-		TemplatingContentService contentService = (TemplatingContentService) services
-				.get(TemplatingContentService.class.getName());
+		TemplatingItemService itemService = /**/ serviceConfigure.service(TemplatingItemService.class,
+				TemplatingItemService.class.getName(), TEMPLATING_KEY);
+		TemplatingContentService contentService = serviceConfigure.service(TemplatingContentService.class,
+				TemplatingContentService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		if (template.exists() && template.isFile()) {
 			try {
@@ -389,8 +363,8 @@ public class TemplatingService {
 	 */
 	public List<TemplatingModel> findModelByType(String license, EModelType type) {
 		// Initialize the required services
-		TemplatingModelService modelService = (TemplatingModelService) services
-				.get(TemplatingModelService.class.getName());
+		TemplatingModelService modelService = serviceConfigure.service(TemplatingModelService.class,
+				TemplatingModelService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return modelService.findByLicenseAndType(license, type);
 	}
@@ -403,8 +377,8 @@ public class TemplatingService {
 	 */
 	public int deleteModel(Integer modelId) {
 		// Initialize the required services
-		TemplatingModelService modelService = (TemplatingModelService) services
-				.get(TemplatingModelService.class.getName());
+		TemplatingModelService modelService = serviceConfigure.service(TemplatingModelService.class,
+				TemplatingModelService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return modelService.delete(modelId);
 	}
@@ -417,8 +391,8 @@ public class TemplatingService {
 	 */
 	public int saveModel(TemplatingModel model) {
 		// Initialize the required services
-		TemplatingModelService modelService = (TemplatingModelService) services
-				.get(TemplatingModelService.class.getName());
+		TemplatingModelService modelService = serviceConfigure.service(TemplatingModelService.class,
+				TemplatingModelService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		if (model.getId() == null) {
 			int result = modelService.insert(model);
@@ -437,8 +411,8 @@ public class TemplatingService {
 	 */
 	public TemplatingModel findModelById(Integer id) {
 		// Initialize the required services
-		TemplatingModelService modelService = (TemplatingModelService) services
-				.get(TemplatingModelService.class.getName());
+		TemplatingModelService modelService = serviceConfigure.service(TemplatingModelService.class,
+				TemplatingModelService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return modelService.find(id);
 	}
@@ -452,8 +426,8 @@ public class TemplatingService {
 	 */
 	public List<TemplatingModel> findModelByLicenseAndBillId(String license, Integer billId) {
 		// Initialize the required services
-		TemplatingModelService modelService = (TemplatingModelService) services
-				.get(TemplatingModelService.class.getName());
+		TemplatingModelService modelService = serviceConfigure.service(TemplatingModelService.class,
+				TemplatingModelService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return modelService.findByLicenseAndBillId(license, billId);
 	}
@@ -467,8 +441,8 @@ public class TemplatingService {
 	 */
 	public int saveModelBill(TemplatingModelBill modelBill) {
 		// Initialize the required services
-		TemplatingModelBillService modelBillService = (TemplatingModelBillService) services
-				.get(TemplatingModelBillService.class.getName());
+		TemplatingModelBillService modelBillService = serviceConfigure.service(TemplatingModelBillService.class,
+				TemplatingModelBillService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		if (modelBill.getId() == null) {
 			int result = modelBillService.insert(modelBill);
@@ -487,8 +461,8 @@ public class TemplatingService {
 	 */
 	public TemplatingModelBill findModelBillById(Integer id) {
 		// Initialize the required services
-		TemplatingModelBillService modelBillService = (TemplatingModelBillService) services
-				.get(TemplatingModelBillService.class.getName());
+		TemplatingModelBillService modelBillService = serviceConfigure.service(TemplatingModelBillService.class,
+				TemplatingModelBillService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return modelBillService.find(id);
 	}
@@ -501,8 +475,8 @@ public class TemplatingService {
 	 */
 	public List<TemplatingModelBill> findModelBillByLicense(String license) {
 		// Initialize the required services
-		TemplatingModelBillService modelBillService = (TemplatingModelBillService) services
-				.get(TemplatingModelBillService.class.getName());
+		TemplatingModelBillService modelBillService = serviceConfigure.service(TemplatingModelBillService.class,
+				TemplatingModelBillService.class.getName(), TEMPLATING_KEY);
 		// Business process
 		return modelBillService.findByLicense(license);
 	}

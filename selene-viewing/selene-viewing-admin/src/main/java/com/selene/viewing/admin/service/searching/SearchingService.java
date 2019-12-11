@@ -1,23 +1,16 @@
 package com.selene.viewing.admin.service.searching;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.apache.lucene.document.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.nanshan.papaya.rpc.client.Client;
 import com.pepper.lucene.common.PepperResult;
 import com.pepper.lucene.comparator.base.PepperSortField;
 import com.selene.common.HttpStatus;
-import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.FieldsConstants;
 import com.selene.common.constants.ServiceConstants;
@@ -27,33 +20,20 @@ import com.selene.common.util.DataUtil;
 import com.selene.common.util.RedisClient;
 import com.selene.dataing.model.jdbc.DataingData;
 import com.selene.dataing.model.util.DataingUtil;
+import com.selene.logging.model.Logger;
+import com.selene.logging.model.LoggerFactory;
 import com.selene.searching.model.service.SearchingIndexService;
+import com.selene.viewing.admin.service.config.ServiceConfigure;
 
 import static cn.com.lemon.base.Strings.isNullOrEmpty;
 
 @Service
 public class SearchingService {
 	private final static Logger LOG = LoggerFactory.getLogger(SearchingService.class.getName());
-	private ServiceConfiger searchingConfiger;
-	private Map<String, Object> services = new HashMap<String, Object>();
-	@Resource
-	private Client client;
 	@Resource
 	private RedisClient redisClient;
-
-	@PostConstruct
-	@SuppressWarnings("static-access")
-	public void init() {
-		LOG.info("[selene-viewing-admin] init " + ServiceConfiger.class.getName() + " service!");
-		// Initialization searching service registry address
-		searchingConfiger = new ServiceConfiger(
-				SearchingService.class.getResource("/").getPath() + "selene.sevice.properties");
-		String searchingService = searchingConfiger.value(ServiceConstants.SEARCHING_KEY);
-		LOG.info("searching service address=" + searchingService);
-		// Initialization searching service
-		services.put(SearchingIndexService.class.getName(),
-				client.create(SearchingIndexService.class, searchingService));
-	}
+	@Resource
+	private ServiceConfigure serviceConfigure;
 
 	/**
 	 * Query search index
@@ -94,8 +74,8 @@ public class SearchingService {
 		ListResult<DataingData> result = new ListResult<DataingData>(HttpStatus.OK.code(), HttpStatus.OK.message());
 		result.setPageSize(size);
 		// Initialize the required services
-		SearchingIndexService searchingIndexService = (SearchingIndexService) services
-				.get(SearchingIndexService.class.getName());
+		SearchingIndexService searchingIndexService = serviceConfigure.service(SearchingIndexService.class,
+				SearchingIndexService.class.getName(), ServiceConstants.SEARCHING_KEY);
 		// Business process
 		String[] paths = /* Index path */searchingIndexService.indexPaths(baseIds);
 		PepperSortField[] /* Results sort by date decrease */ newSortFields = {
@@ -110,6 +90,7 @@ public class SearchingService {
 		}
 		queryString = isNullOrEmpty(queryString) ? /* Search all */CommonConstants.SEARCH_INDEX_ALL : queryString;
 		PepperResult docResult = null;
+		LOG.info("queryString=" + queryString);
 		try {
 			docResult = /* Searching result */searchingIndexService.search(queryString, numHits, newSortFields,
 					newHightLightFields, first, size, paths);
@@ -141,8 +122,8 @@ public class SearchingService {
 	 */
 	public boolean index(Document doc, Integer baseId) {
 		// Initialize the required services
-		SearchingIndexService searchingIndexService = (SearchingIndexService) services
-				.get(SearchingIndexService.class.getName());
+		SearchingIndexService searchingIndexService = serviceConfigure.service(SearchingIndexService.class,
+				SearchingIndexService.class.getName(), ServiceConstants.SEARCHING_KEY);
 		// Business process
 		return searchingIndexService.add(doc, searchingIndexService.indexPath(baseId));
 	}
@@ -157,8 +138,8 @@ public class SearchingService {
 	 */
 	public boolean update(Document doc, Integer baseId, String uuid) {
 		// Initialize the required services
-		SearchingIndexService searchingIndexService = (SearchingIndexService) services
-				.get(SearchingIndexService.class.getName());
+		SearchingIndexService searchingIndexService = serviceConfigure.service(SearchingIndexService.class,
+				SearchingIndexService.class.getName(), ServiceConstants.SEARCHING_KEY);
 		// Business process
 		if (searchingIndexService.delete(uuid, searchingIndexService.indexPath(baseId))) {
 			return searchingIndexService.add(doc, searchingIndexService.indexPath(baseId));

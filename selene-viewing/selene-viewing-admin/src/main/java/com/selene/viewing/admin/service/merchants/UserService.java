@@ -2,22 +2,15 @@ package com.selene.viewing.admin.service.merchants;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.nanshan.papaya.rpc.client.Client;
 import com.selene.common.Node;
-import com.selene.common.config.service.ServiceConfiger;
 import com.selene.common.constants.CommonConstants;
 import com.selene.common.constants.ServiceConstants;
 import com.selene.common.result.ListResult;
@@ -25,6 +18,8 @@ import com.selene.common.token.login.LoginToken;
 import com.selene.common.tree.DefaultTreeNode;
 import com.selene.common.util.Hanyus;
 import com.selene.common.util.RedisClient;
+import com.selene.logging.model.Logger;
+import com.selene.logging.model.LoggerFactory;
 import com.selene.merchants.model.Merchants;
 import com.selene.merchants.model.MerchantsAction;
 import com.selene.merchants.model.MerchantsLoginToken;
@@ -47,6 +42,7 @@ import com.selene.merchants.model.service.MerchantsRoleService;
 import com.selene.merchants.model.service.MerchantsUserRoleService;
 import com.selene.merchants.model.service.MerchantsUserService;
 import com.selene.viewing.admin.framework.vo.Customer;
+import com.selene.viewing.admin.service.config.ServiceConfigure;
 
 import cn.com.lemon.common.enums.EGender;
 
@@ -58,37 +54,11 @@ import static cn.com.lemon.base.Strings.split;
 @Service
 public class UserService {
 	private final static Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
-	private ServiceConfiger merchantsConfiger;
-	private Map<String, Object> services = new HashMap<String, Object>();
-	@Resource
-	private Client client;
+	private final static String MERCHANTS_KEY = ServiceConstants.MERCHANTS_KEY;
 	@Resource
 	private RedisClient redisClient;
-
-	@PostConstruct
-	@SuppressWarnings("static-access")
-	public void init() {
-		LOG.info("[selene-viewing-admin] init " + ServiceConfiger.class.getName() + " service!");
-		// Initialization merchants service registry address
-		merchantsConfiger = new ServiceConfiger(
-				UserService.class.getResource("/").getPath() + "selene.sevice.properties");
-		String merchantsService = merchantsConfiger.value(ServiceConstants.MERCHANTS_KEY);
-		LOG.info("merchants service address=" + merchantsService);
-		// Initialization merchants service
-		services.put(MerchantsOrgService.class.getName(), client.create(MerchantsOrgService.class, merchantsService));
-		services.put(MerchantsRoleService.class.getName(), client.create(MerchantsRoleService.class, merchantsService));
-		services.put(MerchantsUserService.class.getName(), client.create(MerchantsUserService.class, merchantsService));
-		services.put(MerchantsActionService.class.getName(),
-				client.create(MerchantsActionService.class, merchantsService));
-		services.put(MerchantsUserRoleService.class.getName(),
-				client.create(MerchantsUserRoleService.class, merchantsService));
-		services.put(MerchantsLoginTokenService.class.getName(),
-				client.create(MerchantsLoginTokenService.class, merchantsService));
-		services.put(MerchantsOrgRoleService.class.getName(),
-				client.create(MerchantsOrgRoleService.class, merchantsService));
-		services.put(MerchantsRoleActionService.class.getName(),
-				client.create(MerchantsRoleActionService.class, merchantsService));
-	}
+	@Resource
+	private ServiceConfigure serviceConfigure;
 
 	/**
 	 * Delete the role by id
@@ -98,10 +68,10 @@ public class UserService {
 	 */
 	public int deleteRole(Integer id) {
 		// Initialize the required services
-		MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
-				.get(MerchantsRoleService.class.getName());
-		MerchantsRoleActionService/* Role action services */ roleActionService = (MerchantsRoleActionService) services
-				.get(MerchantsRoleActionService.class.getName());
+		MerchantsRoleService /* Role services */ roleService = serviceConfigure.service(MerchantsRoleService.class,
+				MerchantsRoleService.class.getName(), MERCHANTS_KEY);
+		MerchantsRoleActionService/* Role action services */ roleActionService = serviceConfigure
+				.service(MerchantsRoleActionService.class, MerchantsRoleActionService.class.getName(), MERCHANTS_KEY);
 		// Business process
 		if (roleActionService.deleteByGroupId(id) > 0) {
 			return roleService.delete(id);
@@ -117,10 +87,10 @@ public class UserService {
 	 */
 	public boolean checkPreDeleteRole(Integer roleId) {
 		// Initialize the required services
-		MerchantsOrgRoleService /* Role for organization */ orgRoleService = (MerchantsOrgRoleService) services
-				.get(MerchantsOrgRoleService.class.getName());
-		MerchantsUserRoleService/* Role for user */ userRoleService = (MerchantsUserRoleService) services
-				.get(MerchantsUserRoleService.class.getName());
+		MerchantsOrgRoleService /* Role for organization */ orgRoleService = serviceConfigure
+				.service(MerchantsOrgRoleService.class, MerchantsOrgRoleService.class.getName(), MERCHANTS_KEY);
+		MerchantsUserRoleService/* Role for user */ userRoleService = serviceConfigure
+				.service(MerchantsUserRoleService.class, MerchantsUserRoleService.class.getName(), MERCHANTS_KEY);
 		// Business process
 		List<MerchantsOrgRole> roleList = orgRoleService.findByGroupId(roleId);
 		if (roleList != null && roleList.size() > 0) {
@@ -142,8 +112,8 @@ public class UserService {
 	 */
 	public MerchantsRole findRoleById(Integer id) {
 		// Initialize the required services
-		MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
-				.get(MerchantsRoleService.class.getName());
+		MerchantsRoleService /* Role services */ roleService = serviceConfigure.service(MerchantsRoleService.class,
+				MerchantsRoleService.class.getName(), MERCHANTS_KEY);
 		// Business process
 		return roleService.find(id);
 	}
@@ -156,8 +126,8 @@ public class UserService {
 	 */
 	public List<Integer> findRoleActionIdByRoleId(Integer roleId) {
 		// Initialize the required services
-		MerchantsRoleActionService /* Role services */ roleActionService = (MerchantsRoleActionService) services
-				.get(MerchantsRoleActionService.class.getName());
+		MerchantsRoleActionService /* Role services */ roleActionService = serviceConfigure
+				.service(MerchantsRoleActionService.class, MerchantsRoleActionService.class.getName(), MERCHANTS_KEY);
 		// Business process
 		return roleActionService.findActionIdsByGroupIdAndType(roleId, EActionUserType.Admin.ordinal());
 	}
@@ -171,10 +141,10 @@ public class UserService {
 	 */
 	public int saveMerchantsRole(MerchantsRole merchantsRole) {
 		// Initialize the required services
-		MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
-				.get(MerchantsRoleService.class.getName());
-		MerchantsRoleActionService/* Role action services */ roleActionService = (MerchantsRoleActionService) services
-				.get(MerchantsRoleActionService.class.getName());
+		MerchantsRoleService /* Role services */ roleService = serviceConfigure.service(MerchantsRoleService.class,
+				MerchantsRoleService.class.getName(), MERCHANTS_KEY);
+		MerchantsRoleActionService/* Role action services */ roleActionService = serviceConfigure
+				.service(MerchantsRoleActionService.class, MerchantsRoleActionService.class.getName(), MERCHANTS_KEY);
 		// Business process
 		List<Integer> newRoleActionIdList = new ArrayList<Integer>();
 		String[] newRoleActionIdArray = split(CommonConstants.COMMA_SEPARATOR, merchantsRole.getTreeSelId());
@@ -218,8 +188,8 @@ public class UserService {
 	 */
 	public DefaultTreeNode findActionTreeByType(EActionUserType type) {
 		// Initialize the required services
-		MerchantsActionService actionService = (MerchantsActionService) services
-				.get(MerchantsActionService.class.getName());
+		MerchantsActionService actionService = serviceConfigure.service(MerchantsActionService.class,
+				MerchantsActionService.class.getName(), MERCHANTS_KEY);
 		// Business process
 		List<MerchantsAction> list = actionService.findByType(EActionUserType.Admin.ordinal());
 		return DefaultTreeNode.parseTree(list);
@@ -235,7 +205,8 @@ public class UserService {
 	 */
 	public ListResult<MerchantsRole> findRoleByPage(String name, String license, Integer firstSize, Integer size) {
 		// Initialize the required services
-		MerchantsRoleService roleService = (MerchantsRoleService) services.get(MerchantsRoleService.class.getName());
+		MerchantsRoleService roleService = serviceConfigure.service(MerchantsRoleService.class,
+				MerchantsRoleService.class.getName(), MERCHANTS_KEY);
 		// Business process
 		ListResult<MerchantsRole> result = new ListResult<MerchantsRole>();
 		if (!isNullOrEmpty(name)) {
@@ -258,16 +229,16 @@ public class UserService {
 	public int saveInstall(Merchants merchants) {
 		if (!isNullOrEmpty(merchants.getLicense())) {
 			// Initialize the required services
-			MerchantsRoleService /* Role services */ roleService = (MerchantsRoleService) services
-					.get(MerchantsRoleService.class.getName());
-			MerchantsOrgService /* Organization services */ orgService = (MerchantsOrgService) services
-					.get(MerchantsOrgService.class.getName());
-			MerchantsOrgRoleService /* Organization role services */ orgRoleService = (MerchantsOrgRoleService) services
-					.get(MerchantsOrgRoleService.class.getName());
-			MerchantsUserService /* Organization user services */ merchantsUserService = (MerchantsUserService) services
-					.get(MerchantsUserService.class.getName());
-			MerchantsUserRoleService/* Organization user role services */ userRoleService = (MerchantsUserRoleService) services
-					.get(MerchantsUserRoleService.class.getName());
+			MerchantsRoleService /* Role services */ roleService = serviceConfigure.service(MerchantsRoleService.class,
+					MerchantsRoleService.class.getName(), MERCHANTS_KEY);
+			MerchantsOrgService /* Organization services */ orgService = serviceConfigure
+					.service(MerchantsOrgService.class, MerchantsOrgService.class.getName(), MERCHANTS_KEY);
+			MerchantsOrgRoleService /* Organization role services */ orgRoleService = serviceConfigure
+					.service(MerchantsOrgRoleService.class, MerchantsOrgRoleService.class.getName(), MERCHANTS_KEY);
+			MerchantsUserService /* Organization user services */ merchantsUserService = serviceConfigure
+					.service(MerchantsUserService.class, MerchantsUserService.class.getName(), MERCHANTS_KEY);
+			MerchantsUserRoleService/* Organization user role services */ userRoleService = serviceConfigure
+					.service(MerchantsUserRoleService.class, MerchantsUserRoleService.class.getName(), MERCHANTS_KEY);
 			// business process
 			String newLicense = merchants.getLicense();
 			List<MerchantsOrg> /* The new license is using */ checkLicense = orgService.findByLicense(newLicense);
@@ -316,10 +287,10 @@ public class UserService {
 	 */
 	public int deleteUser(MerchantsUser user) {
 		// Initialize the required services
-		MerchantsUserService merchantsUserService = (MerchantsUserService) services
-				.get(MerchantsUserService.class.getName());
-		MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
-				.get(MerchantsUserRoleService.class.getName());
+		MerchantsUserService merchantsUserService = serviceConfigure.service(MerchantsUserService.class,
+				MerchantsUserService.class.getName(), MERCHANTS_KEY);
+		MerchantsUserRoleService userRoleService = serviceConfigure.service(MerchantsUserRoleService.class,
+				MerchantsUserRoleService.class.getName(), MERCHANTS_KEY);
 		// business process
 		List<Integer> needDeleteUserRoleList = userRoleService.findGroupIdsByUserId(user.getId());
 		if (/* If user not super and delete roles */needDeleteUserRoleList != null
@@ -338,12 +309,12 @@ public class UserService {
 	 */
 	public int saveMerchantsUser(MerchantsUser merchantsUser) {
 		// Initialize the required services
-		MerchantsOrgRoleService orgRoleService = (MerchantsOrgRoleService) services
-				.get(MerchantsOrgRoleService.class.getName());
-		MerchantsUserService merchantsUserService = (MerchantsUserService) services
-				.get(MerchantsUserService.class.getName());
-		MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
-				.get(MerchantsUserRoleService.class.getName());
+		MerchantsOrgRoleService orgRoleService = serviceConfigure.service(MerchantsOrgRoleService.class,
+				MerchantsOrgRoleService.class.getName(), MERCHANTS_KEY);
+		MerchantsUserService merchantsUserService = serviceConfigure.service(MerchantsUserService.class,
+				MerchantsUserService.class.getName(), MERCHANTS_KEY);
+		MerchantsUserRoleService userRoleService = serviceConfigure.service(MerchantsUserRoleService.class,
+				MerchantsUserRoleService.class.getName(), MERCHANTS_KEY);
 		// business process
 		Set<Integer> newRoleSet = new TreeSet<Integer>();
 		String[] newRoleArray = split(CommonConstants.COMMA_SEPARATOR, merchantsUser.getTreeSelId());
@@ -400,10 +371,12 @@ public class UserService {
 	 * @return {@code int} if {@code int }>0 true else false
 	 */
 	public int deleteMerchantsOrg(Integer orgId) {
-		if (/* Delete organization */((MerchantsOrgService) services.get(MerchantsOrgService.class.getName()))
+		if (/* Delete organization */serviceConfigure
+				.service(MerchantsOrgService.class, MerchantsOrgService.class.getName(), MERCHANTS_KEY)
 				.delete(orgId) > 0) {
-			return (/* Delete organization role */(MerchantsOrgRoleService) services
-					.get(MerchantsOrgRoleService.class.getName())).deleteByOrgId(orgId);
+			return /* Delete organization role */serviceConfigure
+					.service(MerchantsOrgRoleService.class, MerchantsOrgRoleService.class.getName(), MERCHANTS_KEY)
+					.deleteByOrgId(orgId);
 		}
 		return 0;
 	}
@@ -417,13 +390,14 @@ public class UserService {
 	 */
 	public int saveMerchantsOrg(MerchantsOrg merchantsOrg) {
 		// Initialize the required services
-		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
-		MerchantsOrgRoleService orgRoleService = (MerchantsOrgRoleService) services
-				.get(MerchantsOrgRoleService.class.getName());
-		MerchantsUserService merchantsUserService = (MerchantsUserService) services
-				.get(MerchantsUserService.class.getName());
-		MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
-				.get(MerchantsUserRoleService.class.getName());
+		MerchantsOrgService orgService = serviceConfigure.service(MerchantsOrgService.class,
+				MerchantsOrgService.class.getName(), MERCHANTS_KEY);
+		MerchantsOrgRoleService orgRoleService = serviceConfigure.service(MerchantsOrgRoleService.class,
+				MerchantsOrgRoleService.class.getName(), MERCHANTS_KEY);
+		MerchantsUserService merchantsUserService = serviceConfigure.service(MerchantsUserService.class,
+				MerchantsUserService.class.getName(), MERCHANTS_KEY);
+		MerchantsUserRoleService userRoleService = serviceConfigure.service(MerchantsUserRoleService.class,
+				MerchantsUserRoleService.class.getName(), MERCHANTS_KEY);
 		// business process
 		Set<Integer> newRoleSet = new TreeSet<Integer>();
 		String[] newRoleArray = split(CommonConstants.COMMA_SEPARATOR, merchantsOrg.getTreeSelId());
@@ -504,7 +478,8 @@ public class UserService {
 	 * @return {@link List}
 	 */
 	public List<MerchantsOrg> findMerchantsOrgByParentId(Integer parentId) {
-		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
+		MerchantsOrgService orgService = serviceConfigure.service(MerchantsOrgService.class,
+				MerchantsOrgService.class.getName(), MERCHANTS_KEY);
 		String license = orgService.find(parentId).getLicense();
 		return orgService.findByParentId(parentId, license);
 	}
@@ -516,8 +491,8 @@ public class UserService {
 	 * @return int
 	 */
 	public int countByOrgId(Integer orgId) {
-		return ((MerchantsUserService) services.get(MerchantsUserService.class.getName())).countByOrgId(orgId,
-				EActionUserType.Admin);
+		return serviceConfigure.service(MerchantsUserService.class, MerchantsUserService.class.getName(), MERCHANTS_KEY)
+				.countByOrgId(orgId, EActionUserType.Admin);
 	}
 
 	/**
@@ -527,7 +502,8 @@ public class UserService {
 	 * @return {@code List}
 	 */
 	public List<Integer> findMerchantsUserRoleById(Integer id) {
-		return ((MerchantsUserRoleService) services.get(MerchantsUserRoleService.class.getName()))
+		return serviceConfigure
+				.service(MerchantsUserRoleService.class, MerchantsUserRoleService.class.getName(), MERCHANTS_KEY)
 				.findGroupIdsByUserId(id);
 	}
 
@@ -538,7 +514,8 @@ public class UserService {
 	 * @return {@code List}
 	 */
 	public List<Integer> findMerchantsOrgRoleById(Integer id) {
-		return ((MerchantsOrgRoleService) services.get(MerchantsOrgRoleService.class.getName()))
+		return serviceConfigure
+				.service(MerchantsOrgRoleService.class, MerchantsOrgRoleService.class.getName(), MERCHANTS_KEY)
 				.findGroupIdsByOrgId(id);
 	}
 
@@ -549,7 +526,8 @@ public class UserService {
 	 * @return {@code MerchantsOrg}
 	 */
 	public MerchantsOrg findMerchantsOrgById(Integer id) {
-		return ((MerchantsOrgService) services.get(MerchantsOrgService.class.getName())).find(id);
+		return serviceConfigure.service(MerchantsOrgService.class, MerchantsOrgService.class.getName(), MERCHANTS_KEY)
+				.find(id);
 	}
 
 	/**
@@ -560,7 +538,8 @@ public class UserService {
 	 * @return {@link List}
 	 */
 	public List<Node<Integer, String>> findRoleByLicense(String license) {
-		List<MerchantsRole> list = ((MerchantsRoleService) services.get(MerchantsRoleService.class.getName()))
+		List<MerchantsRole> list = serviceConfigure
+				.service(MerchantsRoleService.class, MerchantsRoleService.class.getName(), MERCHANTS_KEY)
 				.findByLicense(license);
 		if (list != null && list.size() > 0) {
 			List<Node<Integer, String>> result = new ArrayList<Node<Integer, String>>();
@@ -586,7 +565,8 @@ public class UserService {
 	 */
 	public ListResult<MerchantsUser> findOrgUserByPage(Integer orgId, String name, Integer firstSize, Integer size) {
 		// Initialize the required services
-		MerchantsUserService userService = (MerchantsUserService) services.get(MerchantsUserService.class.getName());
+		MerchantsUserService userService = serviceConfigure.service(MerchantsUserService.class,
+				MerchantsUserService.class.getName(), MERCHANTS_KEY);
 		// business process
 		ListResult<MerchantsUser> result = new ListResult<MerchantsUser>();
 		if (isNullOrEmpty(name)) {
@@ -607,7 +587,8 @@ public class UserService {
 	 */
 	public DefaultTreeNode findUserOrgTree(Integer userId) {
 		// Initialize the required services
-		MerchantsOrgService orgService = (MerchantsOrgService) services.get(MerchantsOrgService.class.getName());
+		MerchantsOrgService orgService = serviceConfigure.service(MerchantsOrgService.class,
+				MerchantsOrgService.class.getName(), MERCHANTS_KEY);
 		// business process
 		String license = orgService.findOrgLicenseByUserId(userId);
 		List<MerchantsOrg> list = /* Super Administrator */ (userId.intValue() == CommonConstants.SUPER_ADMIN)
@@ -624,8 +605,8 @@ public class UserService {
 	 */
 	public MerchantsUser findByNameAndPass(String name, String password) {
 		// business process
-		return ((MerchantsUserService) services.get(MerchantsUserService.class.getName())).findByNamePassword(name,
-				password, EActionUserType.Admin);
+		return serviceConfigure.service(MerchantsUserService.class, MerchantsUserService.class.getName(), MERCHANTS_KEY)
+				.findByNamePassword(name, password, EActionUserType.Admin);
 	}
 
 	/**
@@ -636,7 +617,8 @@ public class UserService {
 	 */
 	public MerchantsUser find(Integer id) {
 		// business process
-		return ((MerchantsUserService) services.get(MerchantsUserService.class.getName())).find(id);
+		return serviceConfigure.service(MerchantsUserService.class, MerchantsUserService.class.getName(), MERCHANTS_KEY)
+				.find(id);
 	}
 
 	/**
@@ -648,10 +630,10 @@ public class UserService {
 	 */
 	public Customer findMenuTreeByUser(Customer userVO) {
 		// Initialize the required services
-		MerchantsActionService actionService = (MerchantsActionService) services
-				.get(MerchantsActionService.class.getName());
-		MerchantsUserRoleService userRoleService = (MerchantsUserRoleService) services
-				.get(MerchantsUserRoleService.class.getName());
+		MerchantsActionService actionService = serviceConfigure.service(MerchantsActionService.class,
+				MerchantsActionService.class.getName(), MERCHANTS_KEY);
+		MerchantsUserRoleService userRoleService = serviceConfigure.service(MerchantsUserRoleService.class,
+				MerchantsUserRoleService.class.getName(), MERCHANTS_KEY);
 		// business process
 		List<Integer> roleIdList = userRoleService.findAdminGroupIdsByUserId(userVO.getId());
 		boolean allAction = null != roleIdList && roleIdList.size() > 0 ? true : false;
@@ -676,7 +658,8 @@ public class UserService {
 	 */
 	public String findLicenseByUserId(Integer userId) {
 		// business process
-		return ((MerchantsOrgService) services.get(MerchantsOrgService.class.getName())).findOrgLicenseByUserId(userId);
+		return serviceConfigure.service(MerchantsOrgService.class, MerchantsOrgService.class.getName(), MERCHANTS_KEY)
+				.findOrgLicenseByUserId(userId);
 	}
 
 	/**
@@ -699,10 +682,11 @@ public class UserService {
 	 * @return {@link MerchantsLoginToken}
 	 */
 	public MerchantsLoginToken token(Integer userId, String appKey, boolean tokenType, boolean refreshType) {
+		LOG.info("");
 		MerchantsLoginToken loginToken = null;
 		// Initialize the required services
-		MerchantsLoginTokenService loginTokenService = (MerchantsLoginTokenService) services
-				.get(MerchantsLoginTokenService.class.getName());
+		MerchantsLoginTokenService loginTokenService = serviceConfigure.service(MerchantsLoginTokenService.class,
+				MerchantsLoginTokenService.class.getName(), MERCHANTS_KEY);
 		// business process
 		loginToken = loginTokenService.findByUserId(userId);
 		// The first login

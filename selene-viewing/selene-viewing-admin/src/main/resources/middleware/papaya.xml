@@ -26,4 +26,9 @@
 	<bean id="protalClient" class="com.nanshan.papaya.rpc.client.Client">
 		<constructor-arg name="serviceDiscovery" ref="serviceDiscovery" />
 	</bean>
+	
+	<!-- rpc service configure  -->
+	<bean id="serviceConfigure" class="com.selene.viewing.admin.service.config.ServiceConfigure">
+		<property name="client" ref="protalClient" />
+	</bean>
 </beans>
