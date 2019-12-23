@@ -59,7 +59,7 @@ import cn.com.lemon.base.Strings;
 public class DataService {
 	private final static Logger LOG = LoggerFactory.getLogger(DataService.class.getName());
 	private final static String DATAING_KEY = ServiceConstants.DATAING_KEY;
-	private StringBuilder sb = new StringBuilder(100);
+	private StringBuffer sb = new StringBuffer(200);
 	@Resource
 	private RedisClient redisClient;
 	@Resource
