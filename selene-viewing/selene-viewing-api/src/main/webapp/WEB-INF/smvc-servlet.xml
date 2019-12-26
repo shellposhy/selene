@@ -11,14 +11,10 @@
         http://www.springframework.org/schema/mvc
 		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 	<mvc:default-servlet-handler />
-	<mvc:resources mapping="/admin/img/**" location="/admin/img/" />
-	<mvc:resources mapping="/admin/css/**" location="/admin/css/" />
-	<mvc:resources mapping="/admin/js/**" location="/admin/js/" />
-	<mvc:resources mapping="/admin/jscript/**" location="/admin/jscript/" />
-	<mvc:resources mapping="/admin/dataing/**/*.jpg" location="/pic/upic/" />
 	<mvc:resources mapping="/static/**" location="/static/" />
 	<mvc:resources mapping="/page/**" location="/page/"/>
-	<context:component-scan base-package="com.selene.viewing.api"></context:component-scan>
+	
+	<context:component-scan base-package="com.selene.viewing.api"/>
 	<mvc:annotation-driven />
 
 	<!--interceptor -->

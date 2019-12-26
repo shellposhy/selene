@@ -3,8 +3,8 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
-	<display-name>viewing-admin</display-name>
-	<description>viewing-admin</description>
+	<display-name>viewing-api</display-name>
+	<description>viewing-api</description>
 
 	<!-- spring configuration -->
 	<context-param>
@@ -40,17 +40,17 @@
 		<filter-name>SetCharacterEncoding</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+
 	<!-- url filter -->
 	<filter>
 		<filter-name>UrlFilter</filter-name>
-		<filter-class>com.selene.viewing.admin.framework.filter.BaseFilter</filter-class>
+		<filter-class>com.selene.viewing.api.filter.BaseFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>UrlFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+
 	<!-- servlet -->
 	<session-config>
 		<session-timeout>-1</session-timeout>
@@ -78,21 +78,4 @@
 		<param-name>spring.liveBeansView.mbeanDomain</param-name>
 		<param-value>dev</param-value>
 	</context-param>
-
-	<!-- view -->
-	<welcome-file-list>
-		<welcome-file>/index.html</welcome-file>
-	</welcome-file-list>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/static/404.html</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/static/500.html</location>
-	</error-page>
-	<error-page>
-		<error-code>403</error-code>
-		<location>/static/403.html</location>
-	</error-page>
 </web-app>
