@@ -5,12 +5,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>${appName}-首次安装</title>
-		<link href="${appPath}/admin/css/bootstrap-responsive.css" rel="stylesheet" />
+		<link href="${appPath}/admin/css/bootstrap-responsive.min.css" rel="stylesheet" />
 		<link href="${appPath}/admin/css/charisma-app.css" rel="stylesheet" />
 		<link href="${appPath}/admin/css/bootstrap-cerulean.css" rel="stylesheet" />
-		<link rel="stylesheet" href="${appPath}/admin/css/base.css" type="text/css" />
-		<script type="text/javascript" src="${appPath}/admin/js/jquery-1.8.2.min.js"></script>
-		<script type="text/javascript" src="${appPath}/admin/js/jquery.validate.min.js"></script>
+		<link rel="stylesheet" href="${appPath}/admin/css/main.css" type="text/css" />
+		<script type="text/javascript" src="${appPath}/admin/js/min/jquery/1.8.2.min.js"></script>
+		<script type="text/javascript" src="${appPath}/admin/js/min/jquery/form/1.10.0.validate.min.js"></script>
 		<script type="text/javascript">var appPath = "${appPath}"</script>
 	</head>
 	<body>
@@ -22,8 +22,8 @@
 					</div>
 				</div>
 				<div class="row-fluid">
-					<div class="well span5 center login-box mt20">
-						<div class="mt30">
+					<div class="well span5 center login-box">
+						<div class="">
 							<form:form modelAttribute="merchants" id="install_form" action="${appPath}/admin/install/save" method="post" class="mt10">
 								<fieldset>
 									<div class="input-prepend" title="orgName" style="margin-bottom: 20px;">
@@ -96,7 +96,7 @@
 					</div>
 					<div class="row-fluid" style="position: fixed; bottom: 0px;">
 						<div class="span12 center">
-							<p>Copyright © 2019, All Rights Reserved</p>
+							<p>Copyright © 2020, All Rights Reserved</p>
 						</div>
 					</div>
 				</div>

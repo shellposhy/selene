@@ -4,12 +4,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>登录</title>
-		<link href="${appPath}/admin/css/bootstrap-responsive.css" rel="stylesheet" />
+		<link href="${appPath}/admin/css/bootstrap-responsive.min.css" rel="stylesheet" />
 		<link href="${appPath}/admin/css/charisma-app.css" rel="stylesheet" />
 		<link href="${appPath}/admin/css/bootstrap-cerulean.css" rel="stylesheet" />
-		<link rel="stylesheet" href="${appPath}/admin/css/base.css" type="text/css" />
-		<script type="text/javascript" src="${appPath}/admin/js/jquery-1.8.2.min.js"></script>
-		<script type="text/javascript" src="${appPath}/admin/js/jquery.validate.min.js"></script>
+		<link rel="stylesheet" href="${appPath}/admin/css/main.css" type="text/css" />
+		<script type="text/javascript" src="${appPath}/admin/js/min/jquery/1.8.2.min.js"></script>
+		<script type="text/javascript" src="${appPath}/admin/js/min/jquery/form/1.10.0.validate.min.js"></script>
 		<script type="text/javascript">var appPath = "${appPath}"</script>
 	</head>
 	<body>
@@ -45,14 +45,15 @@
 					</div>
 					<div class="row-fluid" style="position: fixed; bottom: 0px;">
 						<div class="span12 center">
-							<p>Copyright © 2019, All Rights Reserved</p>
+							<p>Copyright © 2020, All Rights Reserved</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript">
-			$(function(){$("#login_form").validate({rules:{username:{required:true},password:{required:true}},messages:{username:{required:"账户名不能为空"},password:{required:"密码不能为空"}}})});
+			$(function(){
+				$("#login_form").validate({rules:{username:{required:true},password:{required:true}},messages:{username:{required:"账户名不能为空"},password:{required:"密码不能为空"}}})});
 		</script>
 	</body>
 </html>
