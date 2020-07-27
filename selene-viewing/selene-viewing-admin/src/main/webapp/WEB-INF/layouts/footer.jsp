@@ -1,4 +1,6 @@
 <%@ page language="java" pageEncoding="UTF-8" %>
+
+<!-- Common delete modal -->
 <div class="modal hide fade form-horizontal" id="delModal">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">×</button>
@@ -13,7 +15,7 @@
 	</div>
 </div>
 
-<!-- model start -->
+<!-- Common operate modal -->
 <div class="modal hide fade form-horizontal" id="comOperModal">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">×</button>
@@ -27,7 +29,6 @@
 			<a href="#" class="btn backBtn" data-dismiss="modal">取消</a>
 	</div>
 </div>
-<!-- model end -->
 
 <!-- footer -->
 <div id="foot">
@@ -35,8 +36,7 @@
 		&copy; <a href="${appPath}/index.html" target="_blank">${appName }</a> 2020
 	</p>
 	<p class="pull-right" style="padding-right: 10px;line-height: 50px;">
-		技术支持: <a href="#">南山智慧谷(北京)科技有限公司</a>
+		技术支持: <a href="#">南山智慧谷（北京）科技有限公司</a>
 	</p>
 	<a id="back-to-top" href="#"></a>
 </div>
-<!-- / footer -->
