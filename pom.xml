@@ -32,6 +32,7 @@
 		<module>selene-dataing</module>
 		<module>selene-viewing</module>
 		<module>selene-templating</module>
+		<module>selene-workflow</module>
 	</modules>
 
 	<!-- properties -->
