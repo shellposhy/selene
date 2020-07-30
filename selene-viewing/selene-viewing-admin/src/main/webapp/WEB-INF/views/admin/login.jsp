@@ -7,9 +7,14 @@
 		<link href="${appPath}/admin/css/bootstrap-responsive.min.css" rel="stylesheet" />
 		<link href="${appPath}/admin/css/charisma-app.css" rel="stylesheet" />
 		<link href="${appPath}/admin/css/bootstrap-cerulean.css" rel="stylesheet" />
+		<link href='${appPath}/admin/css/jquery.noty.css' rel='stylesheet' />
+		<link href='${appPath}/admin/css/jquery.noty.theme.css' rel='stylesheet' />
 		<link rel="stylesheet" href="${appPath}/admin/css/main.css" type="text/css" />
 		<script type="text/javascript" src="${appPath}/admin/js/min/jquery/1.8.2.min.js"></script>
 		<script type="text/javascript" src="${appPath}/admin/js/min/jquery/form/1.10.0.validate.min.js"></script>
+		<!-- noty -->
+		<script type="text/javascript" src="${appPath}/admin/js/min/jquery/noty/1.2.1.min.js"></script>
+		<script type="text/javascript" src="${appPath}/admin/js/min/util/browser.min.js"></script>
 		<script type="text/javascript">var appPath = "${appPath}"</script>
 	</head>
 	<body>
@@ -31,13 +36,16 @@
 										<input autofocus class="input-large floatl" name="username" id="username" type="text" placeholder="用户名"  autocomplete="off"/>
 									</div>
 									<div class="clearfix"></div>
-									<div class="input-prepend" title="password" style="margin-bottom: 20px;">
+									<div class="input-prepend" title="password" style="margin-bottom: 10px;">
 										<span class="add-on floatl"><i class="icon-lock"></i></span>
 										<input class="input-large floatl" name="password" id="password" type="password" placeholder="密码"  autocomplete="off"/>
 									</div>
 									<div class="clearfix"></div>
+									<label id="downChrome" style="display: none;">
+										<a href="/chrome.html">下载Chrome浏览器</a>
+									</label>
 									<p class="center span3">
-										<button type="submit" class="btn btn-success" style="margin-top: 0px">登录</button>
+										<button type="submit" class="btn btn-success" style="margin-top: 10px">登录</button>
 									</p>
 								</fieldset>
 							</form>
@@ -53,7 +61,31 @@
 		</div>
 		<script type="text/javascript">
 			$(function(){
-				$("#login_form").validate({rules:{username:{required:true},password:{required:true}},messages:{username:{required:"账户名不能为空"},password:{required:"密码不能为空"}}})});
+				//
+				if(testBrowser()!='Chrome'){
+					noty({layout : 'center',type: 'warning',text: '为了更好的用户体验和使用效果，推荐使用Chrome浏览器！'});
+					$("#downChrome").show();
+				}
+				//validate
+				$("#login_form").validate({
+					rules : {
+						username : {
+							required : true
+						},
+						password : {
+							required : true
+						}
+					},
+					messages : {
+						username : {
+							required : "账户名不能为空"
+						},
+						password : {
+							required : "密码不能为空"
+						}
+					}
+				});
+			});
 		</script>
 	</body>
 </html>
