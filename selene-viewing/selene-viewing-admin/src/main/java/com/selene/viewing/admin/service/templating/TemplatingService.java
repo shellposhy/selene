@@ -104,15 +104,13 @@ public class TemplatingService {
 	 * @param itemId
 	 * @return {@link List}
 	 */
-	public ListArticle packagePageData(Integer pageId, Integer itemId) {
+	public ListArticle packagePageData(Integer pageId, TemplatingItem item) {
 		ListArticle result = new ListArticle();
 		// Initialize the required services
 		TemplatingContentService contentService = serviceConfigure.service(TemplatingContentService.class,
 				TemplatingContentService.class.getName(), TEMPLATING_KEY);
-		TemplatingItemService itemService = /**/ serviceConfigure.service(TemplatingItemService.class,
-				TemplatingItemService.class.getName(), TEMPLATING_KEY);
 		// Business process
-		TemplatingContent content = contentService.findByPageIdAndItemId(pageId, itemId);
+		TemplatingContent content = contentService.findByPageIdAndItemId(pageId, item.getId());
 		TemplatingPage page = findPageById(pageId);
 		if (content != null) {
 			DataingDatabase database = content.getBaseId() != null ? dataService.findDatabase(content.getBaseId())
@@ -121,38 +119,36 @@ public class TemplatingService {
 			result.setTitle(isNullOrEmpty(content.getContentName()) ? "" : content.getContentName());
 			result.setImg(isNullOrEmpty(content.getContentThumb()) ? "" : content.getContentThumb());
 			result.setSummary(isNullOrEmpty(content.getContentSummary()) ? "" : content.getContentSummary());
+			/* Redirect url configuration */
+			result.setHref("#");
 			switch (page.getPageType()) {
 			case Site:
 			case Home:
 			case Subject:
 				if (database != null) {
-					String filePath = resourceService.realRelativePage(database.getPathCode());
-					filePath = filePath.replace('\\', '/').replace("//", "/");
+					String filePath = (resourceService.realRelativePage(database.getPathCode())).replace('\\', '/')
+							.replace("//", "/");
 					result.setHref(filePath.endsWith("/") ? filePath + CommonConstants.DEFAULT_FREEMARKER_INDEX_HTML
 							: filePath + "/" + CommonConstants.DEFAULT_FREEMARKER_INDEX_HTML);
-				} else {
-					result.setHref("#");
 				}
 				break;
 			case List:
-				result.setHref("#");
-				break;
 			case Detail:
 			default:
-				result.setHref("#");
 				break;
 			}
 			/** Init article data list */
 			/** Find data on searching index */
 			if (database != null) {
+				/* Searching index condition */
 				String queryString = ((null != content.getFilterCondition()
 						&& content.getFilterStatus() == EFilterStatus.Normal) ? content.getFilterCondition()
 								: CommonConstants.SEARCH_INDEX_ALL);
-				TemplatingItem item = itemService.find(itemId);
 				int start = 0;
 				int size = item.getLineSize();
 				Integer[] baseIds = { database.getId() };
 				ListResult<DataingData> listResult = null;
+				/* Searching index data */
 				switch (item.getItemType()) {
 				case Default:
 					listResult = searchingService.search(queryString, start, size, baseIds);

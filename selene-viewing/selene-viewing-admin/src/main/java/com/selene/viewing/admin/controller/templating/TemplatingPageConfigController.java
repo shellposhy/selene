@@ -71,7 +71,7 @@ public class TemplatingPageConfigController extends BaseController {
 		TemplatingModel model = templatingService.findModelById(page.getPageModelId());
 		List<TemplatingItem> itemList = templatingService.findModelItems(model.getId());
 		for (TemplatingItem item : itemList) {
-			ListArticle listArticle = templatingService.packagePageData(pageId, item.getId());
+			ListArticle listArticle = templatingService.packagePageData(pageId, item);
 			request.setAttribute(item.getItemCode(), listArticle);
 		}
 		String templateFileName = model.getModelFile();

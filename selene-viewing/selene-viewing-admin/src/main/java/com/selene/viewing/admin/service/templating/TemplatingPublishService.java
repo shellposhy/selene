@@ -41,19 +41,20 @@ public class TemplatingPublishService {
 	 * @return
 	 */
 	public void home(Integer pageId) {
+		/* ftl path */
 		String ftlDir = CLASSPATH.substring(0, CLASSPATH.indexOf("WEB-INF")) + "WEB-INF"
 				+ ResourceConstants.BASE_TEMPLATE_PATH;
 		Map<String, Object> data = new HashMap<String, Object>();
 		TemplatingPage page = templatingService.findPageById(pageId);
+		/* Publishing processing */
 		if (null != pageId) {
 			TemplatingModel model = templatingService.findModelById(page.getPageModelId());
-			String ftlFullName = model.getModelFile();
-			File /* Ftl template file */ ftlFile = new File(ftlDir + ftlFullName);
+			File /* Ftl template file */ ftlFile = new File(ftlDir + model.getModelFile());
 			LOG.info("ftl path=" + ftlFile.getAbsolutePath());
 			if (ftlFile.exists() && ftlFile.isFile()) {
 				List<TemplatingItem> itemList = templatingService.findModelItems(model.getId());
 				for (TemplatingItem item : itemList) {
-					ListArticle listArticle = templatingService.packagePageData(pageId, item.getId());
+					ListArticle listArticle = templatingService.packagePageData(pageId, item);
 					data.put(item.getItemCode(), listArticle);
 				}
 				String /* Output dir */ outputDir = resourceService.realPage();
