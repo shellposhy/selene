@@ -81,6 +81,16 @@
 			License=#{license} AND Page_Type = #{pageType} AND Page_Status = #{pageStatus}
 	</select>
 	
+	<select id="findByParentId" resultMap="resultMap" parameterType="java.util.Map">
+		SELECT
+			ID,License,Parent_ID,Page_Model_ID,Page_Name,Page_Code,Page_Path_Code,Page_Type,Status,
+			Page_Status,Page_Html_Path,Publish_Time,Creator_ID,Create_Time,Updater_ID,Update_Time
+		FROM 
+			templating_page 
+		WHERE 
+			License=#{license} AND Parent_ID = #{parentId}
+	</select>
+	
 	<insert id="insert">
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()

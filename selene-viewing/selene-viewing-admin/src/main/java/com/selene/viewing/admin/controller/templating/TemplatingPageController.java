@@ -104,10 +104,13 @@ public class TemplatingPageController extends BaseController {
 		return mv;
 	}
 
+	@SuppressWarnings("unused")
 	@RequestMapping("/{parentId}/new")
-	public String preNew(@PathVariable Integer parentId, Model model) {
+	public String preNew(HttpServletRequest request, @PathVariable Integer parentId, Model model) {
 		TemplatingPage templatingPage = new TemplatingPage();
 		templatingPage.setParentId(parentId);
+		Customer customer = commonService.user(request);
+		List<TemplatingPage> subPageList = templatingService.findByParentId(customer.getLicense(), parentId);
 		model.addAttribute("templatingPage", templatingPage);
 		return "/admin/templating/page/edit";
 	}

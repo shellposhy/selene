@@ -265,6 +265,21 @@ public class TemplatingService {
 	}
 
 	/**
+	 * Find {@code TemplatingPage} by {@code ParentId} and {@code License}.
+	 * 
+	 * @param license
+	 * @param parentId
+	 * @return {@code List}
+	 */
+	public List<TemplatingPage> findByParentId(String license, Integer parentId) {
+		// Initialize the required services
+		TemplatingPageService pageService = serviceConfigure.service(TemplatingPageService.class,
+				TemplatingPageService.class.getName(), TEMPLATING_KEY);
+		// Business process
+		return pageService.findByParentId(license, parentId);
+	}
+
+	/**
 	 * Find {@code TemplatingPage} by license.
 	 * 
 	 * @param license

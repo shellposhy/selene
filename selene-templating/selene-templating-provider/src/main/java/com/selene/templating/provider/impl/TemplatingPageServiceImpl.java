@@ -57,6 +57,11 @@ public class TemplatingPageServiceImpl implements TemplatingPageService {
 	}
 
 	@Override
+	public List<TemplatingPage> findByParentId(String license, Integer parentId) {
+		return templatingPageMapper.findByParentId(license, parentId);
+	}
+
+	@Override
 	public int insert(TemplatingPage templatingPage) {
 		return templatingPageMapper.insert(templatingPage);
 	}

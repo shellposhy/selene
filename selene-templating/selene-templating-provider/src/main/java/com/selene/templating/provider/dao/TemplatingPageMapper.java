@@ -30,6 +30,8 @@ public interface TemplatingPageMapper {
 	public List<TemplatingPage> findByTypeAndStatus(@Param("license") String license,
 			@Param("pageType") EModelType pageType, @Param("pageStatus") EPageStatus pageStatus);
 
+	public List<TemplatingPage> findByParentId(@Param("license") String license, @Param("parentId") Integer parentId);
+
 	public int insert(TemplatingPage templatingPage);
 
 	public int update(TemplatingPage templatingPage);

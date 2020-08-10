@@ -25,6 +25,8 @@ public interface TemplatingPageService {
 
 	public List<TemplatingPage> findByTypeAndStatus(String license, EModelType pageType, EPageStatus status);
 
+	public List<TemplatingPage> findByParentId(String license, Integer parentId);
+
 	public int insert(TemplatingPage templatingPage);
 
 	public int update(TemplatingPage templatingPage);
