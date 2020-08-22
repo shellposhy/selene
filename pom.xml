@@ -49,7 +49,7 @@
 		<netty_version>4.1.16.Final</netty_version>
 		<!-- JSON -->
 		<fastjson_version>1.2.39</fastjson_version>
-		<jackson.version>2.9.4</jackson.version>
+		<jackson.version>2.11.2</jackson.version>
 		<orgjson.version>20200518</orgjson.version>
 		<!--Serialization -->
 		<hessian_version>4.0.51</hessian_version>
