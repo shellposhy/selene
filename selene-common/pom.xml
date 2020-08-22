@@ -60,6 +60,10 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+		</dependency>
 		<!-- Xstream -->
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
@@ -77,6 +81,11 @@
 		<dependency>
 			<groupId>com.dyuproject.protostuff</groupId>
 			<artifactId>protostuff-runtime</artifactId>
+		</dependency>
+		<!-- Httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
 		</dependency>
 		<!-- RPC -->
 		<dependency>

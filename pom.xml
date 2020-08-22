@@ -50,6 +50,7 @@
 		<!-- JSON -->
 		<fastjson_version>1.2.39</fastjson_version>
 		<jackson.version>2.9.4</jackson.version>
+		<orgjson.version>20200518</orgjson.version>
 		<!--Serialization -->
 		<hessian_version>4.0.51</hessian_version>
 		<protostuff_version>1.1.3</protostuff_version>
@@ -195,6 +196,11 @@
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
 				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>${orgjson.version}</version>
 			</dependency>
 			<!--Serialization -->
 			<dependency>
