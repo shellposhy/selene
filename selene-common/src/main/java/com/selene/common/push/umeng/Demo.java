@@ -16,7 +16,7 @@ public class Demo {
 	private String appMasterSecret = "kvslfgwr4t7ky0juad6wyqli9yzfdcoh";
 	@SuppressWarnings("unused")
 	private String timestamp = null;
-	private Pusher client = new Pusher();
+	private UMengPush client = new UMengPush();
 
 	public Demo(String key, String secret) {
 		try {

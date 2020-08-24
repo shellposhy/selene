@@ -12,7 +12,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 @SuppressWarnings("deprecation")
-public class Pusher {
+public class UMengPush {
 
 	// The user agent
 	protected final String USER_AGENT = "Mozilla/5.0";
