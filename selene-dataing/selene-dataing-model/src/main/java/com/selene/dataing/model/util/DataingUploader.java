@@ -36,7 +36,6 @@ import sun.misc.BASE64Decoder;
  * @author shishb
  * @version 1.0
  */
-@SuppressWarnings("restriction")
 public class DataingUploader {
 	private Logger log = LoggerFactory.getLogger(DataingUploader.class.getName());
 	private String url = "";
