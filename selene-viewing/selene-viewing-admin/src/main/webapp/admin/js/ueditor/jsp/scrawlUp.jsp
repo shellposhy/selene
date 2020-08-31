@@ -8,12 +8,12 @@
 <%@ page import="java.io.File"%>
 <%@ page import="java.io.FileOutputStream"%>
 <%@ page import="java.util.Date"%>
-<%@ page import="cn.com.cms.util.Uploader"%>
+<%@ page import="com.selene.dataing.model.util.DataingUploader"%>
 <%
 	request.setCharacterEncoding("utf-8");
 	response.setCharacterEncoding("utf-8");
 	String param = request.getParameter("action");
-	Uploader up = new Uploader(request);
+	DataingUploader up = new DataingUploader(request);
 	String path = "upload";
 	up.setSavePath(path);
 	String[] fileType = { ".gif", ".png", ".jpg", ".jpeg", ".bmp" };
