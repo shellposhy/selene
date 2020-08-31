@@ -32,3 +32,4 @@ hs_err_pid*
 /*/*/.project
 /*/*/.classpath
 /*/*/target
+/selene-viewing/selene-viewing-admin/.externalToolBuilders/*.launch
