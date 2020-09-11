@@ -77,6 +77,9 @@
 		<poi_version>3.9</poi_version>
 		<!-- Jodd -->
 		<jodd_version>3.6.3</jodd_version>
+		<!-- Mail -->
+		<activation_version>1.1.1</activation_version>
+		<mail_version>1.4.5</mail_version>
 		<!-- Tools -->
 		<objenesis_version>2.6</objenesis_version>
 		<lemon_version>1.4</lemon_version>
@@ -332,6 +335,22 @@
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-props</artifactId>
 				<version>${jodd_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-mail</artifactId>
+				<version>${jodd_version}</version>
+			</dependency>
+			<!-- Mail -->
+			<dependency>
+				<groupId>javax.activation</groupId>
+				<artifactId>activation</artifactId>
+				<version>${activation_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${mail_version}</version>
 			</dependency>
 			<!-- Tools -->
 			<dependency>

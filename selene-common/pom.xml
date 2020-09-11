@@ -227,6 +227,19 @@
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-props</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-mail</artifactId>
+		</dependency>
+		<!-- Mail -->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+		</dependency>
 		<!-- token -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
