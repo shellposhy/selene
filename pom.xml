@@ -38,7 +38,7 @@
 	<!-- properties -->
 	<properties>
 		<!-- Spring -->
-		<spring_version>4.3.10.RELEASE</spring_version>
+		<spring_version>4.3.29.RELEASE</spring_version>
 		<spring_data_version>1.8.6.RELEASE</spring_data_version>
 		<!-- Aspectj -->
 		<aspectj_version>1.8.10</aspectj_version>
