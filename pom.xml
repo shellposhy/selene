@@ -100,7 +100,7 @@
 		<commons-fileupload.version>1.4</commons-fileupload.version>
 		<!--Database -->
 		<tomcat_version>7.0.47</tomcat_version>
-		<mysql_version>5.1.28</mysql_version>
+		<mysql_version>8.0.28</mysql_version>
 		<oracle_version>11.2.0.1.1</oracle_version>
 		<mybatis_version>3.2.7</mybatis_version>
 		<mybatis_spring_version>1.2.2</mybatis_spring_version>
