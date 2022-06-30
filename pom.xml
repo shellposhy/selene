@@ -90,7 +90,7 @@
 		<servlet_version>3.0.1</servlet_version>
 		<thumbnailator_version>0.4.8</thumbnailator_version>
 		<oro_version>2.0.8</oro_version>
-		<zip_version>1.3.2</zip_version>
+		<zip_version>2.10.0</zip_version>
 		<htmlparser_version>2.1</htmlparser_version>
 		<jsoup_version>1.10.2</jsoup_version>
 		<!-- Commons -->
